@@ -1,50 +1,28 @@
-# React + TypeScript + Vite
+# ECE Pathmaker
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+ECE Pathmaker is an unofficial alternative to UofT's electrical and computer engineering Magellan. It provides a UI-based drag-and-drop course planner for 3rd and 4th-year UofT ECE students.
 
-Currently, two official plugins are available:
+** Tech Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+The project is built using the following technologies:
+- **Frontend**: React, TypeScript, HTML, Tailwind CSS, dnd-kit (drag-and-drop)
+- **Backend**: Java, Spring Boot, SQL
+- **Testing**: Jest, manual testing
+- **Build Tools**: Vite, PostCSS
+- **CI/CD**: Hosted with continuous integration and deployment
 
-## Expanding the ESLint configuration
+## Feedback
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+We value your feedback! Please provide your feedback [here](https://forms.gle/YjY4d6zPToQ9c2Ea6).
 
-- Configure the top-level `parserOptions` property like this:
+## Getting Started
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+To get started with the project, follow these steps:
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+1. Clone the repository
+2. Install dependencies: `npm install`
+3. Start the development server: `npm run dev`
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+## Contributing
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+Contributions are welcome! Please fork the repository and submit a pull request.
