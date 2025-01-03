@@ -8,7 +8,6 @@ describe('CourseCard', () => {
         name: 'I made this up',
         preq: ['ECE345'],
         stream1: true,
-        stream1Kernel: true,
         onlyF: true,
         isCS: true,
     };
@@ -21,7 +20,7 @@ describe('CourseCard', () => {
         expect(screen.getByText(/I made this up/)).toBeInTheDocument();
         
         // Check stream 1 indicator
-        expect(screen.getByText(/1 \(kernel\)/i)).toBeInTheDocument();
+        expect(screen.getByText("Streams: 1")).toBeInTheDocument();
         
         // Check prerequisite
         expect(screen.getByText('Prerequisites: ECE345')).toBeInTheDocument();

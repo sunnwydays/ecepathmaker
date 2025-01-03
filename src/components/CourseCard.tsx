@@ -5,12 +5,12 @@ import { CourseCardProps } from '../types/CourseTypes';
 const CourseCard:FC<CourseCardProps> = (props) => {
     const getStreamLabels = () => {
         const streams = [];
-        if (props.stream1 || props.stream1Kernel) streams.push(`1${props.stream1Kernel ? ' (kernel)' : ''}`);
-        else if (props.stream2 || props.stream2Kernel) streams.push(`2${props.stream2Kernel ? ' (kernel)' : ''}`);
-        else if (props.stream3 || props.stream3Kernel) streams.push(`3${props.stream3Kernel ? ' (kernel)' : ''}`);
-        else if (props.stream4 || props.stream4Kernel) streams.push(`4${props.stream4Kernel ? ' (kernel)' : ''}`);
-        else if (props.stream5 || props.stream5Kernel) streams.push(`5${props.stream5Kernel ? ' (kernel)' : ''}`);
-        else if (props.stream6 || props.stream6Kernel) streams.push(`6${props.stream6Kernel ? ' (kernel)' : ''}`);
+        if (props.stream1) streams.push("1");
+        if (props.stream2) streams.push("2");
+        if (props.stream3) streams.push("3");
+        if (props.stream4) streams.push("4");
+        if (props.stream5) streams.push("5");
+        if (props.stream6) streams.push("6");
         return streams.length ? streams.join(', ') : 'None';
     };
 
