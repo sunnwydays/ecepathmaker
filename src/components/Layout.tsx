@@ -12,7 +12,7 @@ const Layout: FC<LayoutProps> = ({ children }) => {
     <div className="min-h-screen flex flex-col">
       <div className="h-24 md:block hidden" />
       <Navbar />
-      <main className="flex-grow mx-auto xl:wp lg:w-wpl w-wps">
+      <main className="flex-grow mx-auto xl:wp lg:w-wpl w-wps my-12">
         {children}
       </main>
       <Footer />
