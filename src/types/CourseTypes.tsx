@@ -14,14 +14,13 @@ export interface StreamFlags {
     stream6?: boolean;
 }
 
-export interface StreamKernelFlags {
-    stream1Kernel?: boolean;
-    stream2Kernel?: boolean;
-    stream3Kernel?: boolean;
-    stream4Kernel?: boolean;
-    stream5Kernel?: boolean;
-    stream6Kernel?: boolean;
-}
+type ValidStreamKernels = 
+    {stream1Kernel?: true;} |
+    {stream2Kernel?: true;} |
+    {stream3Kernel?: true;} |
+    {stream4Kernel?: true;} |
+    {stream5Kernel?: true;} |
+    {stream6Kernel?: true;};
 
 type ValidTermAvailability = {
     onlyF?: boolean;
@@ -49,6 +48,6 @@ type ValidCourseTypeFlags = {
 export type CourseCardProps = 
     CourseIdentifier & 
     Partial<StreamFlags> &
-    Partial<StreamKernelFlags> &
+    ValidStreamKernels &
     ValidTermAvailability &
     ValidCourseTypeFlags;
