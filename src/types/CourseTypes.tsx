@@ -3,7 +3,7 @@ export interface CourseIdentifier {
     name: string;
     preq: string[];
     color?: string;
-}
+};
 
 export interface StreamFlags {
     stream1?: boolean;
@@ -12,33 +12,21 @@ export interface StreamFlags {
     stream4?: boolean;
     stream5?: boolean;
     stream6?: boolean;
-}
-
-type ValidTermAvailability = {
-    onlyF?: boolean;
-    onlyS?: boolean;
-} & {
-    onlyF?: true;
-    onlyS?: false;
-} | {
-    onlyF?: false;
-    onlyS?: true;
-} | {
-    onlyF?: false;
-    onlyS?: false;
 };
 
-type ValidCourseTypeFlags = {
+export interface ValidTermAvailability {
+    onlyF?: boolean;
+    onlyS?: boolean;
+};
+
+export interface ValidCourseTypeFlags {
     isCS?: boolean;
     isHSS?: boolean;
     isArtSci?: boolean;
-} & (
-    | { isCS: true; isHSS?: boolean }
-    | { isCS?: false; isHSS?: false }
-);
+};
 
 export type CourseCardProps = 
     CourseIdentifier & 
-    Partial<StreamFlags> &
+    StreamFlags &
     ValidTermAvailability &
     ValidCourseTypeFlags;
