@@ -1,9 +1,5 @@
 import { CourseCardProps } from "../types/CourseTypes";
-
-interface GridPosition {
-    term: string; // 3F, 3S, 4F, 4S, XX
-    slot: number; // 1-5
-}
+import { GridPosition } from "../types/GridTypes";
 
 interface SaveString {
     courses: CourseCardProps[];
