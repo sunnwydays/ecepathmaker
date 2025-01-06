@@ -1,7 +1,12 @@
 import { FC } from 'react';
 import { CourseCardProps } from '../types/CourseTypes';
+import Draggable from '../components/Draggable';
 
-const MakerCard:FC<CourseCardProps> = (props) => {
+interface MakerCardProps extends CourseCardProps {
+    id: string;
+}
+
+const MakerCard:FC<MakerCardProps> = (props) => {
     const getStreamLabels = () => {
         const streams = [];
         if (props.stream1) streams.push("1");
@@ -22,12 +27,14 @@ const MakerCard:FC<CourseCardProps> = (props) => {
     };
 
     return (
-        <article className={`bg-${props.color ? "#"+props.color : "neutral1"} text-sm size-32 flex flex-col items-center justify-center text-black`}>
-            <h1 className="text-xl font-medium">{props.code}</h1> 
-            <p className="w-28 text-center">{props.name}</p>
-            { getStreamLabels() !== 'None' && <p>Streams: {getStreamLabels()}</p> }
-            { getOtherLabels() !== 'None' && <p>{getOtherLabels()} </p> }
-        </article>
+        <Draggable id={props.id}>
+            <article className={`bg-${props.color ? "#"+props.color : "neutral1"} text-sm size-32 flex flex-col items-center justify-center text-black`}>
+                <h1 className="text-xl font-medium">{props.code}</h1> 
+                <p className="w-28 text-center">{props.name}</p>
+                { getStreamLabels() !== 'None' && <p>Stream: {getStreamLabels()}</p> }
+                { getOtherLabels() !== 'None' && <p>{getOtherLabels()} </p> }
+            </article>
+        </Draggable>
     );
 };
 
