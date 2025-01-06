@@ -18,9 +18,9 @@ export default {
         neutral3: '#BDBDBD',
       },
       width: {
-        'wp': '60%', // width percent
-        'wpl': '75%', // wp large
-        'wps': '85%', // wp small
+        'wp': '65%', // width percent
+        'wpl': '80%', // wp large
+        'wps': '95%', // wp small
       }
     },
   },
