@@ -19,7 +19,7 @@ export default {
       },
       width: {
         'wp': '60%', // width percent
-        'wpl': '70%', // wp large
+        'wpl': '75%', // wp large
         'wps': '85%', // wp small
       }
     },
