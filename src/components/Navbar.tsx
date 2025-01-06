@@ -1,12 +1,27 @@
 import { IoIosMenu, IoIosClose } from "react-icons/io";
-import { FC, useState } from 'react';
+import { FC, useState, useEffect } from 'react';
 import logo from '../assets/logo.png';
 
 const Navbar:FC = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [prevScrollPos, setPrevScrollPos] = useState(0);
+    const [visible, setVisible] = useState(true);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            const currentScrollPos = window.scrollY;
+            setVisible(prevScrollPos > currentScrollPos || currentScrollPos < 10);
+            setPrevScrollPos(currentScrollPos);
+        };
+
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, [prevScrollPos]);
 
     return (
-        <nav className="md:fixed top-0 left-0 right-0 bg-white transition-transform duration-300 z-50 shadow-lg">
+        <nav className={`md:fixed top-0 left-0 right-0 bg-white transition-transform duration-300 z-50 shadow-lg ${
+            visible ? 'md:transform md:translate-y-0' : 'md:transform md:-translate-y-full'
+        }`}>
             <div className="mx-auto xl:wp lg:w-wpl w-wps flex justify-between items-center py-2 h-24">
                 <a href="/" className="w-56 z-50"><img src={logo} alt="ECE Pathmaker logo" /></a>
                 <div className="z-30 flex items-center">
