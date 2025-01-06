@@ -24,7 +24,7 @@ const MakerCard:FC<CourseCardProps> = (props) => {
     return (
         <article className={`bg-${props.color ? "#"+props.color : "neutral1"} text-sm size-32 flex flex-col items-center justify-center text-black`}>
             <h1 className="text-xl font-medium">{props.code}</h1> 
-            <p className="w-28">{props.name}</p>
+            <p className="w-28 text-center">{props.name}</p>
             { getStreamLabels() !== 'None' && <p>Streams: {getStreamLabels()}</p> }
             { getOtherLabels() !== 'None' && <p>{getOtherLabels()} </p> }
         </article>
