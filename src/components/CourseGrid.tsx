@@ -64,7 +64,7 @@ const CourseGrid:FC<{courses: CourseList;}> = ({ courses }) => {
                     <h2 className="mb-8 text-xl font-medium">👈 Drag courses into the grid</h2>
                     <div className="grid xl:grid-cols-2 grid-cols-1">
                         {Object.entries(isCourseUsed)
-                            .filter(([_, isUsed]) => !isUsed)
+                            .filter(([, isUsed]) => !isUsed)
                             .map(([courseCode]) => (
                                 <MakerCard 
                                     key={courseCode}
