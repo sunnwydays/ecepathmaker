@@ -1,12 +1,35 @@
-import {DndContext, DragEndEvent, UniqueIdentifier} from '@dnd-kit/core';
-import Draggable from '../components/Draggable';
-import Droppable from '../components/Droppable';
-
 import { useState } from 'react';
 import { HexColorPicker, HexColorInput } from "react-colorful";
+import { CourseList } from '../types/CourseTypes';
 import CourseGrid from '../components/CourseGrid';
+import { parseString } from '../components/parseString';
 
 const Maker = () => {
+    // const {courses, positions} = parseString(course);
+
+    // const [customCourse, setCustomCourse] = useState('');
+
+    // const handleCourseChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    //     setCustomCourse(e.target.value);
+    //     // parse string
+    //     parseString(e.target.value);
+    // }
+    const mockCourses: CourseList = {
+        'ECE456': {
+            name: 'Test Course',
+            preq: ['ECE345'],
+            stream1: true,
+            onlyF: true,
+            isCS: true,
+        },
+        'APS310': {
+            name: 'Test Course',
+            stream3: true,
+        },
+    };
+
+
+
     const [color, setColor] = useState("F7F7F7");
     const [errors, setErrors] = useState({
         code: false,
@@ -34,15 +57,10 @@ const Maker = () => {
         if (name === 'preq') setErrors(prev => ({...prev, preq: validatePrerequisites(value)}));
     };
     
-    const handleDragEnd = (e:DragEndEvent) => {
-        const {over} = e;
-        setParent(over ? over.id : '');
-    }
-
     return (
         <div>
-            <CourseGrid courses={[]} positions={new Map()} />
-            <div className="grid md:grid-cols-2 grid-cols-1 gap-8">
+            <CourseGrid courses={mockCourses} />
+            <section className="grid md:grid-cols-2 grid-cols-1 gap-8">
                 <div>
                     <h2 className="mt-12 mb-8 text-2xl font-semibold">Add more courses</h2>
                     <form onSubmit={e=>e.preventDefault()} className="flex flex-col gap-4 max-w-xl">
@@ -175,7 +193,7 @@ const Maker = () => {
                         <p className="mt-6 max-w-xl">Copy the string above and paste it somewhere to save for later or paste your previously copied string to load it</p>
                     </form>
                 </div>
-            </div>
+            </section>
         </div>
     )
 }
