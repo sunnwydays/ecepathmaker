@@ -29,14 +29,16 @@ const CourseGrid:FC<{courses: CourseList;}> = ({ courses }) => {
     const handleDragEnd = (e:DragEndEvent) => {
         const {over} = e;
 
+        // jest testing good for setting objectives
+        // console logging very useful for debugging here along with dev tools
         if (over) {
             setCoursesOnGrid(prev => ({...prev, [over.id]: over.id}));
-            console.log(over.id);
-            setIsCourseUsed({...isCourseUsed, [over.id]: true});
+            console.log(over.id+". . "+e.active.id+"active");
+            setIsCourseUsed({...isCourseUsed, [e.active.id]: true});
 
         } else {
             setCoursesOnGrid(prev => ({...prev, [e.active.id]: ''}));
-            console.log(e.active.id);
+            console.log(e.active.id+"inactive");
             setIsCourseUsed({...isCourseUsed, [e.active.id]: false});
         }
     }
