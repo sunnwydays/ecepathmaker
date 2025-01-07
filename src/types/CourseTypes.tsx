@@ -30,3 +30,19 @@ export type CourseCardProps =
     StreamFlags &
     ValidTermAvailability &
     ValidCourseTypeFlags;
+
+interface CourseIdentifierWithoutCode {
+    name: string;
+    preq?: string[];
+    color?: string;
+};
+
+type CourseCardPropsWithoutCode = 
+    CourseIdentifierWithoutCode & 
+    StreamFlags &
+    ValidTermAvailability &
+    ValidCourseTypeFlags;
+
+export type CourseList = {
+    [code: string]: CourseCardPropsWithoutCode;
+}
