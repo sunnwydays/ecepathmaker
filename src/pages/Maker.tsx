@@ -2,11 +2,10 @@ import { useState } from 'react';
 import { HexColorPicker, HexColorInput } from "react-colorful";
 import { CourseList } from '../types/CourseTypes';
 import CourseGrid from '../components/CourseGrid';
-import { parseString } from '../components/parseString';
+// import { parseString } from '../components/parseString';
 
 const Maker = () => {
     // const {courses, positions} = parseString(course);
-
     // const [customCourse, setCustomCourse] = useState('');
 
     // const handleCourseChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -14,6 +13,7 @@ const Maker = () => {
     //     // parse string
     //     parseString(e.target.value);
     // }
+
     const mockCourses: CourseList = {
         'ECE456': {
             name: 'Test Course',
@@ -27,8 +27,6 @@ const Maker = () => {
             stream3: true,
         },
     };
-
-
 
     const [color, setColor] = useState("F7F7F7");
     const [errors, setErrors] = useState({
