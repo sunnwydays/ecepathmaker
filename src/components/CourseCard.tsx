@@ -23,13 +23,13 @@ const CourseCard:FC<CourseCardProps> = (props) => {
     };
 
     return (
-        <article className={`bg-${props.color ? "#"+props.color : "neutral1"}`}>
+        <article className={`bg-${props.color ? "#"+props.color : "neutral1"} flex flex-col`}>
             <h1>
                 <span data-testid="course-code">{props.code}</span>
                 <span>: {props.name}</span>
             </h1>
             <p>Streams: {getStreamLabels()}</p>
-            <p>Prerequisites: {props.preq.join(', ')}</p>
+            { props.preq && <p>Prerequisites: {props.preq.join(', ')}</p> }
             <p>Other labels (CS, HSS, or ArtSci): {getOtherLabels()} </p>
             {(props.onlyF || props.onlyS) && (
                 <p>{props.onlyF ? 'Fall (F)' : 'Winter (S)'} term only</p>

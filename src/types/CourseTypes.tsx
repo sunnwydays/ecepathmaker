@@ -1,7 +1,7 @@
 export interface CourseIdentifier {
     code: string;
     name: string;
-    preq: string[];
+    preq?: string[];
     color?: string;
 };
 
