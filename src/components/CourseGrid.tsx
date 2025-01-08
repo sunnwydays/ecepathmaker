@@ -34,7 +34,6 @@ const CourseGrid:FC<{courses: CourseList;}> = ({ courses }) => {
         // also looking online for documentation, videos, and examples
         const sourceContainer = isCourseUsed[active.id];
         if (over) {
-            console.log(`${active.id} : ${sourceContainer} -> ${over.id}`);
             setCoursesOnGrid(prev => ({
                 ...prev, 
                 [over.id]: e.active.id, 
@@ -42,13 +41,13 @@ const CourseGrid:FC<{courses: CourseList;}> = ({ courses }) => {
             }));
             setIsCourseUsed({...isCourseUsed, [active.id]: over.id as string});
         } else {
-            console.log(`${active.id} : ${sourceContainer} -> ${active.id}`);
             setCoursesOnGrid(prev => ({
                 ...prev, 
-                [sourceContainer]: ''
+                ...(sourceContainer && { [sourceContainer]: '' })
             }));
             setIsCourseUsed({...isCourseUsed, [active.id]: ''});
         }
+        console.log(`${active.id} : ${sourceContainer} -> ${over?.id}`);
     }
     
     return (
