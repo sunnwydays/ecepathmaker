@@ -5,12 +5,12 @@ import { FC, useState } from 'react';
 import MakerCard from './MakerCard';
 import { CourseList } from '../types/CourseTypes';
 
-type courseUsedType = Record<string, boolean>;
+type courseUsedType = Record<string, string>;
 
 const CourseGrid:FC<{courses: CourseList;}> = ({ courses }) => {
     const initializeIsCourseUsed = (courses: CourseList): courseUsedType => {
-        const posMap: { [key: string]: boolean } = {};
-        Object.keys(courses).map(courseCode => posMap[courseCode] = false);
+        const posMap: { [key: string]: string } = {};
+        Object.keys(courses).map(courseCode => posMap[courseCode] = '');
         return posMap;
     };
     
@@ -27,22 +27,30 @@ const CourseGrid:FC<{courses: CourseList;}> = ({ courses }) => {
     });
 
     const handleDragEnd = (e:DragEndEvent) => {
-        const {over} = e;
-
+        const {over, active} = e;
+        
         // jest testing good for setting objectives
         // console logging very useful for debugging here along with dev tools
+        // also looking online for documentation, videos, and examples
+        const sourceContainer = isCourseUsed[active.id];
         if (over) {
-            setCoursesOnGrid(prev => ({...prev, [over.id]: over.id}));
-            console.log(over.id+". . "+e.active.id+"active");
-            setIsCourseUsed({...isCourseUsed, [e.active.id]: true});
-
+            console.log(`${active.id} : ${sourceContainer} -> ${over.id}`);
+            setCoursesOnGrid(prev => ({
+                ...prev, 
+                [over.id]: e.active.id, 
+                ...(sourceContainer && { [sourceContainer]: '' })
+            }));
+            setIsCourseUsed({...isCourseUsed, [active.id]: over.id as string});
         } else {
-            setCoursesOnGrid(prev => ({...prev, [e.active.id]: ''}));
-            console.log(e.active.id+"inactive");
-            setIsCourseUsed({...isCourseUsed, [e.active.id]: false});
+            console.log(`${active.id} : ${sourceContainer} -> ${active.id}`);
+            setCoursesOnGrid(prev => ({
+                ...prev, 
+                [sourceContainer]: ''
+            }));
+            setIsCourseUsed({...isCourseUsed, [active.id]: ''});
         }
     }
-
+    
     return (
         <DndContext onDragEnd={handleDragEnd}>
             <section className="flex gap-8">
@@ -74,7 +82,8 @@ const CourseGrid:FC<{courses: CourseList;}> = ({ courses }) => {
                                     code={courseCode}
                                     {...courses[courseCode]}
                                 />
-                            ))}
+                            ))
+                        }
                     </div>
                 </div>
             </section>
