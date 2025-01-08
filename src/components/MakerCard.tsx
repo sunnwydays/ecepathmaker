@@ -15,7 +15,7 @@ const MakerCard:FC<MakerCardProps> = (props) => {
         if (props.stream4) streams.push("4");
         if (props.stream5) streams.push("5");
         if (props.stream6) streams.push("6");
-        return streams.length ? streams.join(', ') : 'None';
+        return streams.length ? streams.join(', ') : null;
     };
 
     const getOtherLabels = () => {
@@ -23,7 +23,7 @@ const MakerCard:FC<MakerCardProps> = (props) => {
         if (props.isCS) labels.push('CS');
         if (props.isHSS) labels.push('HSS');
         if (props.isArtSci) labels.push('ArtSci');
-        return labels.length ? labels.join(', ') : 'None';
+        return labels.length ? labels.join(', ') : null;
     };
 
     return (
@@ -31,8 +31,8 @@ const MakerCard:FC<MakerCardProps> = (props) => {
             <article className={`bg-${props.color ? "#"+props.color : "neutral1"} text-sm size-32 flex flex-col items-center justify-center text-black`}>
                 <h1 className="text-xl font-medium">{props.code}</h1> 
                 <p className="w-28 text-center">{props.name}</p>
-                { getStreamLabels() !== 'None' && <p>Stream: {getStreamLabels()}</p> }
-                { getOtherLabels() !== 'None' && <p>{getOtherLabels()} </p> }
+                { getStreamLabels() && <p>Stream: {getStreamLabels()}</p> }
+                { getOtherLabels() && <p>{getOtherLabels()} </p> }
             </article>
         </Draggable>
     );
