@@ -28,7 +28,14 @@ const MakerCard:FC<MakerCardProps> = (props) => {
 
     return (
         <Draggable id={props.id}>
-            <article className={`bg-${props.color ? "#"+props.color : "neutral1"} text-sm size-32 flex flex-col items-center justify-center text-black`}>
+            <article
+                className={`
+                    ${props.color ? `bg-[#${props.color}]` : 'bg-neutral2'}
+                    text-sm size-32 
+                    flex flex-col items-center justify-center 
+                    text-black
+                `}
+            >
                 <h1 className="text-xl font-medium">{props.code}</h1> 
                 <p className="w-28 text-center">{props.name}</p>
                 { getStreamLabels() && <p>Stream: {getStreamLabels()}</p> }
