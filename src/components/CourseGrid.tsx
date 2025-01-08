@@ -34,12 +34,27 @@ const CourseGrid:FC<{courses: CourseList;}> = ({ courses }) => {
         // also looking online for documentation, videos, and examples
         const sourceContainer = isCourseUsed[active.id];
         if (over) {
+            if (sourceContainer === over.id) return;
+            
             setCoursesOnGrid(prev => ({
                 ...prev, 
-                [over.id]: e.active.id, 
+                [over.id]: active.id, 
                 ...(sourceContainer && { [sourceContainer]: '' })
             }));
-            setIsCourseUsed({...isCourseUsed, [active.id]: over.id as string});
+
+            const courseAtDestination = coursesOnGrid[over.id as keyof typeof coursesOnGrid];
+
+            // destination is empty
+            if (courseAtDestination === '') {
+                setIsCourseUsed({...isCourseUsed, [active.id]: over.id as string});
+                return;
+            }
+            // destination already has a course
+            setIsCourseUsed({
+                ...isCourseUsed,
+                [active.id]: over.id as string, 
+                [courseAtDestination]: ''
+            });
         } else {
             setCoursesOnGrid(prev => ({
                 ...prev, 
