@@ -32,7 +32,7 @@ const MakerCard:FC<MakerCardProps> = (props) => {
                 <h1 className="text-xl font-medium">{props.code}</h1> 
                 <p className="w-28 text-center">{props.name}</p>
                 { getStreamLabels() && <p>Stream: {getStreamLabels()}</p> }
-                { getOtherLabels() && <p>{getOtherLabels()} </p> }
+                { getOtherLabels() && <p>{getOtherLabels()}</p> }
             </article>
         </Draggable>
     );
