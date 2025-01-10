@@ -31,6 +31,10 @@ export type CourseCardProps =
     ValidTermAvailability &
     ValidCourseTypeFlags;
 
+export interface DraggableCardProps extends CourseCardProps {
+    id: string;
+};
+
 interface CourseIdentifierWithoutCode {
     name: string;
     preq?: string[];

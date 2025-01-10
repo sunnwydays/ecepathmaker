@@ -1,12 +1,8 @@
 import { FC } from 'react';
-import { CourseCardProps } from '../types/CourseTypes';
+import { DraggableCardProps } from '../types/CourseTypes';
 import Draggable from '../components/Draggable';
 
-interface MakerCardProps extends CourseCardProps {
-    id: string;
-}
-
-const MakerCard:FC<MakerCardProps> = (props) => {
+const MakerCard:FC<DraggableCardProps> = (props) => {
     const getStreamLabels = () => {
         const streams = [];
         if (props.stream1) streams.push("1");
