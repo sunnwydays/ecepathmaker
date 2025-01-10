@@ -10,29 +10,11 @@ import {
     DragOverlay,
     DragStartEvent,
     UniqueIdentifier,
-    // closestCenter,
-    // KeyboardSensor,
-    // PointerSensor,
-    // useSensor,
-    // useSensors,
 } from '@dnd-kit/core';
-import {
-//     arrayMove,
-    SortableContext,
-//     sortableKeyboardCoordinates,
-//     verticalListSortingStrategy,
-} from '@dnd-kit/sortable';
 import { createPortal } from 'react-dom';
   
 
 const CourseGrid:FC<{courses: CourseList;}> = ({ courses }) => {
-    // const sensors = useSensors(
-    //     useSensor(PointerSensor),
-    //     useSensor(KeyboardSensor, {
-    //       coordinateGetter: sortableKeyboardCoordinates,
-    //     })
-    // );
-
     const initialCoursesUsed = useMemo(() => {
         const posMap: { [key: string]: string } = {};
         Object.keys(courses).forEach(courseCode => posMap[courseCode] = '');
@@ -49,7 +31,6 @@ const CourseGrid:FC<{courses: CourseList;}> = ({ courses }) => {
     
     const [coursesUsed, setCoursesUsed] = useState(initialCoursesUsed);
     const [coursesOnGrid, setCoursesOnGrid] = useState(initialCoursesOnGrid);
-    const coursesId = useMemo(() => Object.keys(courses), [courses]);
 
     const [activeCourse, setActiveCourse] = useState<UniqueIdentifier | null>(null);
 
@@ -65,8 +46,7 @@ const CourseGrid:FC<{courses: CourseList;}> = ({ courses }) => {
         // also looking online for documentation, videos, and examples
         const sourceContainer = coursesUsed[active.id];
         if (over) {
-            // dont overwrite the same container or unintentionally create a new container by dragging over another sortable
-            if (sourceContainer === over.id || over.data.current) return;
+            if (sourceContainer === over.id) return;
             
             setCoursesOnGrid(prev => ({
                 ...prev, 
@@ -120,19 +100,17 @@ const CourseGrid:FC<{courses: CourseList;}> = ({ courses }) => {
                     {/* Courses to choose from */}
                     <h2 className="mb-8 text-xl font-medium">👈 Drag courses into the grid</h2>
                     <div className="lg:grid xl:grid-cols-2 lg:grid-cols-1 flex gap-2 max-h-[90vh] overflow-y-auto">
-                        <SortableContext items={coursesId}>
-                            {Object.entries(coursesUsed)
-                                .filter(([, isUsed]) => !isUsed)
-                                .map(([courseCode]) => (
-                                    <MakerCard 
-                                        key={courseCode}
-                                        id={courseCode}
-                                        code={courseCode}
-                                        {...courses[courseCode]}
-                                    />
-                                ))
-                            }
-                        </SortableContext>
+                        {Object.entries(coursesUsed)
+                            .filter(([, isUsed]) => !isUsed)
+                            .map(([courseCode]) => (
+                                <MakerCard 
+                                    key={courseCode}
+                                    id={courseCode}
+                                    code={courseCode}
+                                    {...courses[courseCode]}
+                                />
+                            ))
+                        }
                     </div>
                 </div>
             </section>
