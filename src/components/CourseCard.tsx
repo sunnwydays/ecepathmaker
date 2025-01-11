@@ -1,8 +1,36 @@
 import { FC } from 'react';
-import { CourseCardProps } from '../types/CourseTypes';
+import { DraggableCardProps } from '../types/CourseTypes';
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 
+const CourseCard:FC<DraggableCardProps> = (props) => {
+    const {
+        setNodeRef, 
+        attributes,
+        listeners,
+        transform,
+        transition,
+        isDragging,
+    } = useSortable({ 
+        id: props.id,
+    });
+    const style = {
+        transition,
+        transform: CSS.Transform.toString(transform),
+    }
 
-const CourseCard:FC<CourseCardProps> = (props) => {
+    if (isDragging) {
+        return (
+            <div 
+                className="bg-red-500 h-16"
+                style={style}
+                ref={setNodeRef}
+            >
+                hello
+            </div>
+        );
+    }
+
     const getStreamLabels = () => {
         const streams = [];
         if (props.stream1) streams.push("1");
@@ -23,7 +51,13 @@ const CourseCard:FC<CourseCardProps> = (props) => {
     };
 
     return (
-        <article className={`bg-${props.color ? "#"+props.color : "neutral1"} flex flex-col`}>
+        <article 
+            className={`bg-${props.color ? "#"+props.color : "neutral1"} flex flex-col`}
+            ref={setNodeRef}
+            style={style}
+            {...attributes}
+            {...listeners}
+        >
             <h1>
                 <span data-testid="course-code">{props.code}</span>
                 <span>: {props.name}</span>
