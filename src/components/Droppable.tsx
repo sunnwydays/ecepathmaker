@@ -11,19 +11,17 @@ const Droppable:FC<DroppableProps> = (props) => {
     id: props.id,
   });
   const styleClasses = `
-        absolute 
         transition-all
         flex items-center justify-center
         text-neutral3
+        rounded-md
         ${isOver ? 'bg-green1 size-36' : 'bg-neutral1 size-32'}
     `;
   
   return (
     <div className="relative size-32 flex items-center justify-center">
         <div ref={setNodeRef} className={styleClasses}>
-            <div className="relative z-10 opacity-90">
-                {props.children}
-            </div>
+          {props.children}
         </div>
     </div>
   );
