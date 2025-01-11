@@ -1,6 +1,6 @@
 import Droppable from '../components/Droppable';
 
-import { FC, useMemo, useState } from 'react';
+import { FC, useEffect, useMemo, useState } from 'react';
 import MakerCard from './MakerCard';
 import { CourseList } from '../types/CourseTypes';
 
@@ -15,6 +15,12 @@ import { createPortal } from 'react-dom';
   
 
 const CourseGrid:FC<{courses: CourseList;}> = ({ courses }) => {
+    // breadth
+    // depth
+    // cs, hss
+    // if you graduate (conditions above + below + au + technical experience)
+    // not checked (put it into magellan and see after you're done here, you'll have to do it anyways): ce/ee, free elective, technical elective, kernels, minor/cert, sci/math, exclusion
+
     const initialCoursesUsed = useMemo(() => {
         const posMap: { [key: string]: string } = {};
         Object.keys(courses).forEach(courseCode => posMap[courseCode] = '');
@@ -33,6 +39,27 @@ const CourseGrid:FC<{courses: CourseList;}> = ({ courses }) => {
     const [coursesOnGrid, setCoursesOnGrid] = useState(initialCoursesOnGrid);
 
     const [activeCourse, setActiveCourse] = useState<UniqueIdentifier | null>(null);
+
+    const conditions = useMemo(() => {
+        const gridCourses = Object.values(coursesOnGrid).filter(code => code !== '');
+        
+        return {
+            numCS: gridCourses.filter(code => courses[code]?.isCS).length,
+            numHSS: gridCourses.filter(code => courses[code]?.isHSS).length,
+            breadth: new Set(
+                gridCourses
+                    .filter(code => courses[code])
+                    .map(code => courses[code].stream)
+            ).size,
+            depth: gridCourses
+                .filter(code => courses[code])
+                .reduce((acc, code) => {
+                    const stream = courses[code].stream;
+                    acc[stream] = (acc[stream] || 0) + 1;
+                    return acc;
+                }, {} as Record<string, number>)
+        };
+    }, [coursesOnGrid, courses]);
 
     const handleDragStart = (e:DragStartEvent) => {
         setActiveCourse(e.active.id);

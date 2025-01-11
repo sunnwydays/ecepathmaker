@@ -71,18 +71,19 @@ const Courses = () => {
     return (
         <div>
             <div>
-                filter here
+                <form>
+                </form>
             </div>
             <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
                 <SortableContext items={coursesId}>
                     <div className="grid xl:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4">
-                            {coursesId.map((course) => (
-                                <CourseCard
-                                    id={course}
-                                    code={course}
-                                    {...mockCourses[course]}
-                                />
-                            ))}
+                        {coursesId.map((course) => (
+                            <CourseCard
+                                id={course}
+                                code={course}
+                                {...mockCourses[course]}
+                            />
+                        ))}
                     </div>
                 </SortableContext>
                 {activeCourse && (
