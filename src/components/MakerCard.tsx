@@ -30,6 +30,7 @@ const MakerCard:FC<DraggableCardProps> = (props) => {
                     text-sm size-32 
                     flex flex-col items-center justify-center 
                     text-black
+                    rounded-md
                 `}
             >
                 <h1 className="text-xl font-medium">{props.code}</h1> 
