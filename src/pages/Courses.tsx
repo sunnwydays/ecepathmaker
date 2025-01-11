@@ -74,9 +74,8 @@ const Courses = () => {
                 filter here
             </div>
             <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
-                <div className="flex flex-col gap-4">
-                    <SortableContext items={coursesId}>
-                        <div>
+                <SortableContext items={coursesId}>
+                    <div className="flex flex-col gap-4">
                             {coursesId.map((course) => (
                                 <CourseCard
                                     id={course}
@@ -84,9 +83,8 @@ const Courses = () => {
                                     {...mockCourses[course]}
                                 />
                             ))}
-                        </div>
-                    </SortableContext>
-                </div>
+                    </div>
+                </SortableContext>
                 {activeCourse && (
                     createPortal(
                         <DragOverlay>
