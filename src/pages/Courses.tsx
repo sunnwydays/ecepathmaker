@@ -75,7 +75,7 @@ const Courses = () => {
             </div>
             <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
                 <SortableContext items={coursesId}>
-                    <div className="flex flex-col gap-4">
+                    <div className="grid xl:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4">
                             {coursesId.map((course) => (
                                 <CourseCard
                                     id={course}
