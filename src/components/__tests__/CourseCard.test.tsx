@@ -1,9 +1,10 @@
 import { render, screen } from '@testing-library/react';
 import CourseCard from '../CourseCard';
-import { CourseCardProps } from '../../types/CourseTypes';
+import { DraggableCardProps } from '../../types/CourseTypes';
 
 describe('CourseCard', () => {
-    const courseDetails: CourseCardProps = {
+    const courseDetails: DraggableCardProps = {
+        id: 'ECE452',
         code: 'ECE452',
         name: 'I made this up',
         preq: ['ECE345'],
@@ -32,7 +33,7 @@ describe('CourseCard', () => {
         expect(screen.getByText(/Fall/i)).toBeInTheDocument();
 
         // Check background colour
-        const cardContainer = screen.getByRole('article');
+        const cardContainer = screen.getByTestId('card-container');
         expect(cardContainer).toHaveClass('bg-neutral1');
     });
 });

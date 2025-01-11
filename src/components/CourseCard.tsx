@@ -52,6 +52,7 @@ const CourseCard:FC<DraggableCardProps> = (props) => {
 
     return (
         <article 
+            data-testid="card-container"
             className={`bg-${props.color ? "#"+props.color : "neutral1"} flex flex-col`}
             ref={setNodeRef}
             style={style}
