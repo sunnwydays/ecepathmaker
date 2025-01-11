@@ -18,19 +18,7 @@ const CourseCard:FC<DraggableCardProps> = (props) => {
         transition,
         transform: CSS.Transform.toString(transform),
     }
-
-    if (isDragging) {
-        return (
-            <div 
-                className="bg-red-500 h-16"
-                style={style}
-                ref={setNodeRef}
-            >
-                hello
-            </div>
-        );
-    }
-
+    
     const getStreamLabels = () => {
         const streams = [];
         if (props.stream1) streams.push("1");
@@ -41,7 +29,7 @@ const CourseCard:FC<DraggableCardProps> = (props) => {
         if (props.stream6) streams.push("6");
         return streams.length ? streams.join(', ') : 'None';
     };
-
+    
     const getOtherLabels = () => {
         const labels = [];
         if (props.isCS) labels.push('CS');
@@ -49,20 +37,40 @@ const CourseCard:FC<DraggableCardProps> = (props) => {
         if (props.isArtSci) labels.push('ArtSci');
         return labels.length ? labels.join(', ') : 'None';
     };
-
+    
+    if (isDragging) {
+        return (
+            <div 
+                className="
+                    bg-comp1
+                    h-[11rem]
+                    opacity-25
+                    rounded-md
+                    ring-2 ring-comp2
+                "
+                style={style}
+                ref={setNodeRef}
+            />
+        );
+    }
+    
     return (
         <article 
             data-testid="card-container"
             className={`
                 ${props.color ? `bg-[#${props.color}]` : 'bg-neutral2'}
-                flex flex-col`
-            }
+                flex flex-col justify-center 
+                text-black
+                p-8
+                h-[11rem]
+                rounded-md
+            `}
             ref={setNodeRef}
             style={style}
             {...attributes}
             {...listeners}
         >
-            <h1>
+            <h1 className='text-lg font-medium'>
                 <span data-testid="course-code">{props.code}</span>
                 <span>: {props.name}</span>
             </h1>
