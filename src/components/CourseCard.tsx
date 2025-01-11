@@ -17,6 +17,7 @@ const CourseCard:FC<DraggableCardProps> = (props) => {
     const style = {
         transition,
         transform: CSS.Transform.toString(transform),
+        backgroundColor: props.color ? `#${props.color}` : undefined,
     }
     
     const getStreamLabels = () => {
@@ -58,12 +59,12 @@ const CourseCard:FC<DraggableCardProps> = (props) => {
         <article 
             data-testid="card-container"
             className={`
-                ${props.color ? `bg-[#${props.color}]` : 'bg-neutral2'}
                 flex flex-col justify-center 
                 text-black
                 p-8
                 h-[11rem]
                 rounded-md
+                ${!props.color && 'bg-neutral2'}
             `}
             ref={setNodeRef}
             style={style}

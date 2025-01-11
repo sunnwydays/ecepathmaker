@@ -26,12 +26,13 @@ const MakerCard:FC<DraggableCardProps> = (props) => {
         <Draggable id={props.id}>
             <article
                 className={`
-                    ${props.color ? `bg-[#${props.color}]` : 'bg-neutral2'}
                     text-sm size-32 
                     flex flex-col items-center justify-center 
                     text-black
                     rounded-md
+                    ${!props.color && 'bg-neutral2'}
                 `}
+                style={{backgroundColor: props.color ? `#${props.color}` : undefined}}
             >
                 <h1 className="text-xl font-medium">{props.code}</h1> 
                 <p className="w-28 text-center">{props.name}</p>
