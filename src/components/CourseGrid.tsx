@@ -18,6 +18,7 @@ const CourseGrid:FC<{courses: CourseList;}> = ({ courses }) => {
     // breadth
     // depth
     // cs, hss
+    // preq
     // if you graduate (conditions above + below + au + technical experience)
     // not checked (put it into magellan and see after you're done here, you'll have to do it anyways): ce/ee, free elective, technical elective, kernels, minor/cert, sci/math, exclusion
 
@@ -46,6 +47,12 @@ const CourseGrid:FC<{courses: CourseList;}> = ({ courses }) => {
         return {
             numCS: gridCourses.filter(code => courses[code]?.isCS).length,
             numHSS: gridCourses.filter(code => courses[code]?.isHSS).length,
+            numStream1: gridCourses.filter(code => courses[code]?.stream1).length,
+            numStream2: gridCourses.filter(code => courses[code]?.stream2).length,
+            numStream3: gridCourses.filter(code => courses[code]?.stream3).length,
+            numStream4: gridCourses.filter(code => courses[code]?.stream4).length,
+            numStream5: gridCourses.filter(code => courses[code]?.stream5).length,
+            numStream6: gridCourses.filter(code => courses[code]?.stream6).length,
             breadth: new Set(
                 gridCourses
                     .filter(code => courses[code])
