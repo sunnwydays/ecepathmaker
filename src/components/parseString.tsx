@@ -1,14 +1,47 @@
 import { CourseList, CourseCardPropsWithoutCode } from "../types/CourseTypes";
+import { CourseGridProps } from "../types/CourseTypes";
 
-interface SaveString {
-    courses: CourseList;
-    coursesOnGrid: {
-        [key: string]: string;
-    }
-    coursesUsed: {
-        [key: string]: string;
-    }
-}
+export const isValidString = (str: string): boolean => {
+    // Check empty string
+    if (!str) return false;
+
+    // Split into terms
+    const terms = str.split('@@');
+    if (terms.length > 5) return false;
+
+    const validOptionChars = new Set(['f', 's', '1', '2', '3', '4', '5', '6', 'c', 'h', 'a', 'p', '#']);
+
+    return terms.every(term => {
+        // Check each term
+        const courses = term.split('$$');
+        if (courses.length > 5) return false;
+
+        return courses.every(course => {
+            if (!course) return true; // Empty slots are allowed
+
+            // Check course format
+            const parts = course.split('**');
+            if (parts.length !== 2) return false;
+
+            const [codeAndName, options] = parts;
+            if (codeAndName.length < 6) return false;
+
+            // Validate options
+            for (let i = 0; i < options.length; i++) {
+                const char = options[i];
+                if (!validOptionChars.has(char)) {
+                    if (char === 'p' || char === '#') {
+                        // Skip next 6 characters for preq codes and colors
+                        i += 6;
+                        continue;
+                    }
+                    return false;
+                }
+            }
+            return true;
+        });
+    });
+};
 
 export const parseString = (str: string): SaveString | null => {
     const terms = str.split('@@');
