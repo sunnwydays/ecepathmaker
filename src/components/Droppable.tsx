@@ -11,6 +11,7 @@ const Droppable:FC<DroppableProps> = (props) => {
     id: props.id,
   });
   const styleClasses = `
+        absolute
         transition-all
         flex items-center justify-center
         text-neutral3
