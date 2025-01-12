@@ -161,8 +161,9 @@ const CourseGrid:FC<{courses: CourseList;}> = ({ courses }) => {
                 </div>
                 <div>
                     {/* Courses to choose from */}
-                    <h2 className="mb-8 text-xl font-medium">👈 Drag courses into the grid</h2>
-                    <div className="lg:grid xl:grid-cols-2 lg:grid-cols-1 flex gap-2 max-h-[90vh] overflow-y-auto p-4">
+                    <h2 className="mb-2 text-xl font-medium">👈 Drag courses into the grid</h2>
+                    <h2 className="mb-8 ">🔍 Click a course to view more details</h2>
+                    <div className="lg:grid xl:grid-cols-2 lg:grid-cols-1 flex gap-2 max-h-[90vh] overflow-y-auto">
                         {Object.entries(coursesUsed)
                             .filter(([, isUsed]) => !isUsed)
                             .map(([courseCode]) => (

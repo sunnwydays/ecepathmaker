@@ -20,10 +20,12 @@ const MakerCard:FC<DraggableCardProps> = (props) => {
     };
 
     return (
-        <Draggable id={props.id}>
+        <Draggable id={props.id}>{(isExpanded) =>
             <article
                 className={`
-                    text-xs size-32 
+                    text-xs
+                    ${isExpanded ? 'size-[10rem] border-2 border-black border-opacity-20' : 'size-32'}
+                    hover:transition-[width,height]
                     flex flex-col items-center justify-center 
                     text-black
                     rounded-md
@@ -33,10 +35,23 @@ const MakerCard:FC<DraggableCardProps> = (props) => {
             >
                 <h1 className="text-xl font-medium">{props.code}</h1> 
                 <p className="w-28 text-center line-clamp-2 text-sm">{props.name}</p>
-                { getStreamLabels() && <p>Stream: {getStreamLabels()}</p> }
-                { getOtherLabels() && <p>{getOtherLabels()}</p> }
+                {isExpanded ? (
+                    <>
+                        { getStreamLabels() && <p>Stream: {getStreamLabels()}</p> }
+                        { getOtherLabels() && <p>{getOtherLabels()}</p> }
+                        { props.preq && <p>Preq: {props.preq.join(', ')}</p> }
+                        {(props.onlyF || props.onlyS) && (
+                            <p>{props.onlyF ? 'Fall' : 'Winter'} only</p>
+                        )}
+                    </>
+                ) : (
+                    <>
+                        { getStreamLabels() && <p>Stream: {getStreamLabels()}</p> }
+                        { getOtherLabels() && <p>{getOtherLabels()}</p> }
+                    </>
+                )}
             </article>
-        </Draggable>
+        }</Draggable>
     );
 };
 
