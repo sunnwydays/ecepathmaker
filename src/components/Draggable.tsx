@@ -16,7 +16,6 @@ const Draggable:FC<DraggableProps> = (props) => {
 
   const styleClasses = `
     size-32 
-    truncate 
     flex items-center justify-center 
     text-black
     ${isDragging ? 'z-30' : 'z-20'}
