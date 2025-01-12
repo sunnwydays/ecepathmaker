@@ -8,7 +8,7 @@ describe('CourseCard', () => {
         code: 'ECE452',
         name: 'I made this up',
         preq: ['ECE345'],
-        stream1: true,
+        streams: [1],
         onlyF: true,
         isCS: true,
     };

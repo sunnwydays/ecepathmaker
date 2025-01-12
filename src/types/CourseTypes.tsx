@@ -3,15 +3,7 @@ export interface CourseIdentifier {
     name: string;
     preq?: string[];
     color?: string;
-};
-
-export interface StreamFlags {
-    stream1?: boolean;
-    stream2?: boolean;
-    stream3?: boolean;
-    stream4?: boolean;
-    stream5?: boolean;
-    stream6?: boolean;
+    streams?: number[];
 };
 
 export interface ValidTermAvailability {
@@ -27,7 +19,6 @@ export interface ValidCourseTypeFlags {
 
 export type CourseCardProps = 
     CourseIdentifier & 
-    StreamFlags &
     ValidTermAvailability &
     ValidCourseTypeFlags;
 
@@ -39,11 +30,11 @@ interface CourseIdentifierWithoutCode {
     name: string;
     preq?: string[];
     color?: string;
+    streams?: number[];
 };
 
 type CourseCardPropsWithoutCode = 
     CourseIdentifierWithoutCode & 
-    StreamFlags &
     ValidTermAvailability &
     ValidCourseTypeFlags;
 
