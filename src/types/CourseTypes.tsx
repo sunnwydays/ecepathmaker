@@ -51,3 +51,19 @@ export interface StreamRequirements {
     hasCS: boolean;
     hasHSS: boolean;
 };
+
+export interface CourseGridProps {
+    courses: CourseList;
+    coursesUsed: {
+        [key: string]: string;
+    };
+    setCoursesUsed?: React.Dispatch<React.SetStateAction<{
+        [key: string]: string;
+    }>>;
+    coursesOnGrid: {
+        [key: string]: string;
+    };
+    setCoursesOnGrid?: React.Dispatch<React.SetStateAction<{
+        [key: string]: string;
+    }>>;
+}
