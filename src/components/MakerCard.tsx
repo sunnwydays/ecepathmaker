@@ -4,14 +4,11 @@ import Draggable from '../components/Draggable';
 
 const MakerCard:FC<DraggableCardProps> = (props) => {
     const getStreamLabels = () => {
-        const streams = [];
-        if (props.stream1) streams.push("1");
-        if (props.stream2) streams.push("2");
-        if (props.stream3) streams.push("3");
-        if (props.stream4) streams.push("4");
-        if (props.stream5) streams.push("5");
-        if (props.stream6) streams.push("6");
-        return streams.length ? streams.join(', ') : null;
+        if (!props.streams?.length) return 'None';
+        return props.streams
+            .map(stream => stream.toString())
+            .sort((a, b) => a.localeCompare(b))
+            .join(', ');
     };
 
     const getOtherLabels = () => {
