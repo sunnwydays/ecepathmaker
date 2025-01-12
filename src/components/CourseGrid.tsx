@@ -9,7 +9,10 @@ import {
     DragEndEvent,
     DragOverlay,
     DragStartEvent,
+    PointerSensor,
     UniqueIdentifier,
+    useSensor,
+    useSensors,
 } from '@dnd-kit/core';
 import { createPortal } from 'react-dom';
   
@@ -74,6 +77,14 @@ const CourseGrid:FC<{courses: CourseList;}> = ({ courses }) => {
         } as StreamRequirements;
     }, [coursesOnGrid, courses]);
 
+    const sensors = useSensors(
+        useSensor(PointerSensor, {
+            activationConstraint: {
+                distance: 5,
+            }
+        })
+    );
+
     const handleDragStart = (e:DragStartEvent) => {
         setActiveCourse(e.active.id);
     }
@@ -129,7 +140,7 @@ const CourseGrid:FC<{courses: CourseList;}> = ({ courses }) => {
     }
 
     return (
-        <DndContext onDragEnd={handleDragEnd} onDragStart={handleDragStart} >
+        <DndContext onDragEnd={handleDragEnd} onDragStart={handleDragStart} sensors={sensors}>
             <section className="flex lg:flex-row flex-col gap-8">
                 <div className="grid grid-cols-5 gap-2 size-max">
                     {Object.entries(coursesOnGrid).map(([slot, courseCode]) => (
@@ -149,7 +160,7 @@ const CourseGrid:FC<{courses: CourseList;}> = ({ courses }) => {
                 <div>
                     {/* Courses to choose from */}
                     <h2 className="mb-8 text-xl font-medium">👈 Drag courses into the grid</h2>
-                    <div className="lg:grid xl:grid-cols-2 lg:grid-cols-1 flex gap-2 max-h-[90vh] overflow-y-auto">
+                    <div className="lg:grid xl:grid-cols-2 lg:grid-cols-1 flex gap-2 max-h-[90vh] overflow-y-auto p-4">
                         {Object.entries(coursesUsed)
                             .filter(([, isUsed]) => !isUsed)
                             .map(([courseCode]) => (
