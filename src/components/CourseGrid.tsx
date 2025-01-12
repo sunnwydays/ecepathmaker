@@ -98,12 +98,14 @@ const CourseGrid:FC<{courses: CourseList;}> = ({ courses }) => {
         const sourceContainer = coursesUsed[active.id];
         if (over) {
             // term offering restrictions
-            const targetTerm = (over.id as string).includes('F') ? 'F' : 'S';
-            const course = courses[active.id as string];
-            
-            if ((course.onlyF && targetTerm === 'S') || 
-                (course.onlyS && targetTerm === 'F')) {
-                return;
+            if (!(over.id as string).includes('X')) {
+                const targetTerm = (over.id as string).includes('F') ? 'F' : 'S';
+                const course = courses[active.id as string];
+                
+                if ((course.onlyF && targetTerm === 'S') || 
+                    (course.onlyS && targetTerm === 'F')) {
+                    return;
+                }
             }
 
             // same slot
