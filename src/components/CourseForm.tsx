@@ -4,13 +4,13 @@ import { useState } from "react";
 import { CourseCardProps } from "../types/CourseTypes";
 
 const CourseForm = () => {
-    const [color, setColor] = useState("F7F7F7");
+    const [color, setColor] = useState("E0E0E0");
 
     const [courseInfo, setCourseInfo] = useState<CourseCardProps>({
         code: "",
         name: "",
         preq: [],
-        color: "F7F7F7",
+        color: "E0E0E0",
         streams: [],
         isCS: false,
         isHSS: false,
@@ -73,10 +73,10 @@ const CourseForm = () => {
                     {errors.preq && <p className="text-comp3 text-sm">{errorMessages.preq}</p>}
                     <HexColorPicker color={color} onChange={setColor} />
                     <div className="flex gap-2">
-                        <HexColorInput color={color} onChange={setColor} placeholder="Colour (e.g. F7F7F7)" className="w-full p-2 border rounded span" />
+                        <HexColorInput color={color} onChange={setColor} placeholder="Colour (e.g. E0E0E0)" className="w-full p-2 border rounded span" />
                         <button 
                             className="bg-neutral3 text-white px-4 py-2 rounded hover:bg-neutral2 transition-all"
-                            onClick={() => setColor('F7F7F7')}
+                            onClick={() => setColor('E0E0E0')}
                         >
                             reset
                         </button>
