@@ -33,7 +33,7 @@ interface CourseIdentifierWithoutCode {
     streams?: number[];
 };
 
-type CourseCardPropsWithoutCode = 
+export type CourseCardPropsWithoutCode = 
     CourseIdentifierWithoutCode & 
     ValidTermAvailability &
     ValidCourseTypeFlags;
