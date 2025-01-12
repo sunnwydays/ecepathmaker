@@ -31,6 +31,7 @@ const Courses = () => {
 
     return (
         <div>
+            <h2 className="mb-12 text-2xl font-medium">🗂️ Explore and rearrange courses in my database!</h2>
             <div>
                 <form>
                 </form>
