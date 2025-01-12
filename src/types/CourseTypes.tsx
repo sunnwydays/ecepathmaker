@@ -1,4 +1,4 @@
-export interface CourseIdentifier {
+interface CourseIdentifier {
     code: string;
     name: string;
     preq?: string[];
@@ -6,18 +6,18 @@ export interface CourseIdentifier {
     streams?: number[];
 };
 
-export interface ValidTermAvailability {
+interface ValidTermAvailability {
     onlyF?: boolean;
     onlyS?: boolean;
 };
 
-export interface ValidCourseTypeFlags {
+interface ValidCourseTypeFlags {
     isCS?: boolean;
     isHSS?: boolean;
     isArtSci?: boolean;
 };
 
-export type CourseCardProps = 
+type CourseCardProps = 
     CourseIdentifier & 
     ValidTermAvailability &
     ValidCourseTypeFlags;
