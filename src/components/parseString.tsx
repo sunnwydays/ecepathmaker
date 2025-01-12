@@ -1,15 +1,34 @@
-import { CourseCardProps } from "../types/CourseTypes";
-import { GridPosition } from "../types/GridTypes";
+import { CourseList, CourseCardPropsWithoutCode } from "../types/CourseTypes";
 
 interface SaveString {
-    courses: CourseCardProps[];
-    positions: Map<string, GridPosition>;
+    courses: CourseList;
+    coursesOnGrid: {
+        [key: string]: string;
+    }
+    coursesUsed: {
+        [key: string]: string;
+    }
 }
 
-export const parseString = (str: string): SaveString => {
+export const parseString = (str: string): SaveString | null => {
     const terms = str.split('@@');
-    const courses:CourseCardProps[] = [];
-    const positions = new Map<string, GridPosition>();
+    const courses:CourseList = {};
+    const coursesOnGrid: { [key: string]: string } = {
+        '3F.1': '', '3F.2': '', '3F.3': '', '3F.4': '', '3F.5': '',
+        '3S.1': '', '3S.2': '', '3S.3': '', '3S.4': '', '3S.5': '',
+        '4F.1': '', '4F.2': '', '4F.3': '', '4F.4': '', '4F.5': '',
+        '4S.1': '', '4S.2': '', '4S.3': '', '4S.4': '', '4S.5': '',
+        'XX.1': '', 'XX.2': '', 'XX.3': '', 'XX.4': '', 'XX.5': '',
+    };
+    const coursesUsed: { [key: string]: string } = {};
+
+    const termMap: { [key: number]: string } = {
+        0: '3F',
+        1: '3S',
+        2: '4F',
+        3: '4S',
+        4: 'XX'
+    };
 
     terms.forEach((term, termIndex) => {
         const coursesInTerm = term.split('$$');
@@ -20,12 +39,11 @@ export const parseString = (str: string): SaveString => {
             const code = codeAndName.substring(0, 6);
             const name = codeAndName.substring(6);
 
-            const course: CourseCardProps = {
-                code,
+            const course: CourseCardPropsWithoutCode = {
                 name,
                 preq: [],
                 color: '',
-                stream1: false,
+                streams: [],
                 isCS: false,
                 isHSS: false,
                 isArtSci: false
@@ -36,17 +54,17 @@ export const parseString = (str: string): SaveString => {
                 switch(options[i]) {
                     case 'f': course.onlyF = true; break;
                     case 's': course.onlyS = true; break;
-                    case '1': course.stream1 = true; break;
-                    case '2': course.stream2 = true; break;
-                    case '3': course.stream3 = true; break;
-                    case '4': course.stream4 = true; break;
-                    case '5': course.stream5 = true; break;
-                    case '6': course.stream6 = true; break;
+                    case '1': course.streams?.push(1); break;
+                    case '2': course.streams?.push(2); break;
+                    case '3': course.streams?.push(3); break;
+                    case '4': course.streams?.push(4); break;
+                    case '5': course.streams?.push(5); break;
+                    case '6': course.streams?.push(6); break;
                     case 'c': course.isCS = true; break;
                     case 'h': course.isHSS = true; course.isCS = true; break;
                     case 'a': course.isArtSci = true; break;
                     case 'p': {
-                        course.preq.push(options.substring(i + 1, i + 7));
+                        course.preq?.push(options.substring(i + 1, i + 7));
                         i += 6;
                         break;
                     }
@@ -58,13 +76,12 @@ export const parseString = (str: string): SaveString => {
                 }
             }
 
-            courses.push(course);
-            positions.set(code, {
-                term: ['3F', '3S', '4F', '4S', 'XX'][termIndex],
-                slot: slotIndex + 1
-            });
+            courses[code] = course;
+            const position = `${termMap[termIndex]}.${slotIndex + 1}`;
+            coursesOnGrid[position] = code;
+            coursesUsed[code] = position;
         });
     });
 
-    return { courses, positions };
+    return { courses, coursesOnGrid, coursesUsed };
 };
