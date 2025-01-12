@@ -23,7 +23,7 @@ const MakerCard:FC<DraggableCardProps> = (props) => {
         <Draggable id={props.id}>
             <article
                 className={`
-                    text-sm size-32 
+                    text-xs size-32 
                     flex flex-col items-center justify-center 
                     text-black
                     rounded-md
@@ -32,7 +32,7 @@ const MakerCard:FC<DraggableCardProps> = (props) => {
                 style={{backgroundColor: props.color ? `#${props.color}` : undefined}}
             >
                 <h1 className="text-xl font-medium">{props.code}</h1> 
-                <p className="w-28 text-center line-clamp-2">{props.name}</p>
+                <p className="w-28 text-center line-clamp-2 text-sm">{props.name}</p>
                 { getStreamLabels() && <p>Stream: {getStreamLabels()}</p> }
                 { getOtherLabels() && <p>{getOtherLabels()}</p> }
             </article>
