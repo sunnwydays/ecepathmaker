@@ -1,6 +1,6 @@
 # ECE Pathmaker
 
-ECE Pathmaker is an unofficial alternative to UofT's electrical and computer engineering Magellan. It provides a UI-based drag-and-drop course planner for 3rd and 4th-year UofT ECE students.
+ECE Pathmaker is an unofficial alternative to UofT's electrical and computer engineering Magellan. It provides a UI-based drag-and-drop course planner for UofT ECE students.
 
 ## Tech Stack
 
