@@ -2,7 +2,7 @@ import Droppable from '../components/Droppable';
 
 import { FC, useEffect, useMemo, useState } from 'react';
 import MakerCard from './MakerCard';
-import { CourseList } from '../types/CourseTypes';
+import { CourseList, StreamRequirements } from '../types/CourseTypes';
 
 import {
     DndContext, 
@@ -44,28 +44,34 @@ const CourseGrid:FC<{courses: CourseList;}> = ({ courses }) => {
     const conditions = useMemo(() => {
         const gridCourses = Object.values(coursesOnGrid).filter(code => code !== '');
         
+        // Count courses per stream
+        const streamCounts = gridCourses.reduce((acc, code) => {
+            const courseStreams = courses[code]?.streams || [];
+            courseStreams.forEach(stream => {
+                acc[stream] = (acc[stream] || 0) + 1;
+            });
+            return acc;
+        }, {} as Record<number, number>);
+    
+        // Get streams meeting requirements
+        const depthStreams = Object.entries(streamCounts)
+            .filter(([, count]) => count >= 3)
+            .map(([stream]) => Number(stream));
+
+        const breadthStreams = Object.entries(streamCounts)
+            .filter(([, count]) => count >= 1)
+            .map(([stream]) => Number(stream))
+            .filter(stream => !depthStreams.includes(stream));
+        
         return {
-            numCS: gridCourses.filter(code => courses[code]?.isCS).length,
-            numHSS: gridCourses.filter(code => courses[code]?.isHSS).length,
-            numStream1: gridCourses.filter(code => courses[code]?.stream1).length,
-            numStream2: gridCourses.filter(code => courses[code]?.stream2).length,
-            numStream3: gridCourses.filter(code => courses[code]?.stream3).length,
-            numStream4: gridCourses.filter(code => courses[code]?.stream4).length,
-            numStream5: gridCourses.filter(code => courses[code]?.stream5).length,
-            numStream6: gridCourses.filter(code => courses[code]?.stream6).length,
-            breadth: new Set(
-                gridCourses
-                    .filter(code => courses[code])
-                    .map(code => courses[code].stream)
-            ).size,
-            depth: gridCourses
-                .filter(code => courses[code])
-                .reduce((acc, code) => {
-                    const stream = courses[code].stream;
-                    acc[stream] = (acc[stream] || 0) + 1;
-                    return acc;
-                }, {} as Record<string, number>)
-        };
+            hasCS: gridCourses.filter(code => courses[code]?.isCS).length >= 4,
+            hasHSS: gridCourses.filter(code => courses[code]?.isHSS).length >= 2,
+            streamCounts,
+            breadthStreams,
+            depthStreams,
+            hasBreadth: breadthStreams.length >= 2,
+            hasDepth: depthStreams.length >= 2
+        } as StreamRequirements;
     }, [coursesOnGrid, courses]);
 
     const handleDragStart = (e:DragStartEvent) => {
