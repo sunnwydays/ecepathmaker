@@ -41,3 +41,13 @@ type CourseCardPropsWithoutCode =
 export type CourseList = {
     [code: string]: CourseCardPropsWithoutCode;
 }
+
+export interface StreamRequirements {
+    streamCounts: Record<number, number>;
+    breadthStreams: number[];
+    depthStreams: number[];
+    hasBreadth: boolean;
+    hasDepth: boolean;
+    hasCS: boolean;
+    hasHSS: boolean;
+};
