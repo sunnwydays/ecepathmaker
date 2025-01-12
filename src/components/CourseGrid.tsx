@@ -1,6 +1,6 @@
 import Droppable from '../components/Droppable';
 
-import { FC, useEffect, useMemo, useState } from 'react';
+import { FC, useMemo, useState } from 'react';
 import MakerCard from './MakerCard';
 import { CourseList, StreamRequirements } from '../types/CourseTypes';
 
@@ -62,7 +62,7 @@ const CourseGrid:FC<{courses: CourseList;}> = ({ courses }) => {
             .filter(([, count]) => count >= 1)
             .map(([stream]) => Number(stream))
             .filter(stream => !depthStreams.includes(stream));
-        
+    
         return {
             hasCS: gridCourses.filter(code => courses[code]?.isCS).length >= 4,
             hasHSS: gridCourses.filter(code => courses[code]?.isHSS).length >= 2,
