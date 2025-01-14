@@ -26,3 +26,12 @@ To get started with the project, follow these steps:
 ## Contributing
 
 Contributions are welcome! Please fork the repository and submit a pull request.
+
+## Future Work
+
+- [ ] Add more courses and course information in database
+- [ ] Google OAuth login
+- [ ] Store data in the URL
+- [ ] Use `localStorage` to store data in the browser
+- [ ] Proper mobile experience
+- [ ] Extend to other engineering disciplines
