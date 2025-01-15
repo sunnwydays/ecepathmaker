@@ -20,10 +20,13 @@ const LoadLayout:FC<LoadLayoutProps> = ({ courses, coursesOnGrid, coursesUsed, s
 
         const result = parseString(str);
 
-        // check this, might need spread operator
         setCoursesOnGrid(result.coursesOnGrid);
-        setCoursesUsed(result.coursesUsed);
-        setCourses(result.courses);
+        setCourses({...courses, ...result.courses});
+        Object.keys(coursesUsed).forEach(key => {
+            coursesUsed[key] = '';
+            console.log(key);
+        });
+        setCoursesUsed({...coursesUsed, ...result.coursesUsed});
     }
 
     return (
