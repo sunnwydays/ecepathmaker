@@ -4,7 +4,7 @@ import Draggable from '../components/Draggable';
 
 const MakerCard:FC<DraggableCardProps> = (props) => {
     const getStreamLabels = () => {
-        if (!props.streams?.length) return 'None';
+        if (!props.streams?.length) return null;
         return props.streams
             .map(stream => stream.toString())
             .sort((a, b) => a.localeCompare(b))
