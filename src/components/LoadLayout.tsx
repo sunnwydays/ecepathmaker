@@ -24,7 +24,6 @@ const LoadLayout:FC<LoadLayoutProps> = ({ courses, coursesOnGrid, coursesUsed, s
         setCourses({...courses, ...result.courses});
         Object.keys(coursesUsed).forEach(key => {
             coursesUsed[key] = '';
-            console.log(key);
         });
         setCoursesUsed({...coursesUsed, ...result.coursesUsed});
     }
