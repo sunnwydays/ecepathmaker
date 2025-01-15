@@ -8,7 +8,7 @@ export const isValidString = (str: string): boolean => {
     const terms = str.split('@@');
     if (terms.length > 5) return false;
 
-    const validOptionChars = new Set(['f', 's', '1', '2', '3', '4', '5', '6', 'c', 'h', 'a', 'p', '#']);
+    const validOptionChars = new Set(['f', 's', '1', '2', '3', '4', '5', '6', 'c', 'h', 'a']);
 
     return terms.every(term => {
         // Check each term
@@ -29,15 +29,13 @@ export const isValidString = (str: string): boolean => {
             for (let i = 0; i < options.length; i++) {
                 const char = options[i];
                 if (!validOptionChars.has(char)) {
-                    if (char === 'p' || char === '#') {
-                        // Skip next 6 characters for preq codes and colors
-                        i += 6;
-                        continue;
-                    }
-                    return false;
+                    if (char !== 'p' && char !== '#') return false;
+                    // Skip next 6 characters for preq codes and colors
+                    i += 6;
                 }
             }
             return true;
+
         });
     });
 };
