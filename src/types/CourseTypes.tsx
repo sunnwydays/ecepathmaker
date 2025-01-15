@@ -83,3 +83,8 @@ export interface LoadLayoutProps {
     setCoursesUsed: React.Dispatch<React.SetStateAction<CoursesUsed>>;
     setCoursesOnGrid: React.Dispatch<React.SetStateAction<CoursesOnGrid>>;
 }
+
+export interface StringDisplayProps {
+    courses: CourseList;
+    coursesOnGrid: CoursesOnGrid;
+}
