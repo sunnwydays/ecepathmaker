@@ -1,13 +1,12 @@
 
 import { HexColorPicker, HexColorInput } from "react-colorful";
 import { useState } from "react";
-import { CourseCardProps } from "../types/CourseTypes";
+import { CourseCardPropsWithoutCode } from "../types/CourseTypes";
 
 const CourseForm = () => {
     const [color, setColor] = useState("E0E0E0");
 
-    const [courseInfo, setCourseInfo] = useState<CourseCardProps>({
-        code: "",
+    const [courseInfo, setCourseInfo] = useState<CourseCardPropsWithoutCode>({
         name: "",
         preq: [],
         color: "E0E0E0",

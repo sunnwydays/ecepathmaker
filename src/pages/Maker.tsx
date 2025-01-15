@@ -40,12 +40,12 @@ const Maker = () => {
                 <CourseForm />
                 <div>
                     <h2 className="mt-12 mb-8 text-2xl font-semibold">Save/load layout</h2>
-                    <p className="max-w-xl">Copy this string and save it for later (triple click and ctrl+c)</p>
+                    <p className="max-w-xl">Copy this string and save it for later</p>
                     <StringDisplay
                         courses={courses}
                         coursesOnGrid={coursesOnGrid}
                     />
-                    <p className="mt-6 mb-4 max-w-xl">Paste your previously copied string below to load it. If nothing happens, your string is invalid.</p>
+                    <p className="mt-8 mb-4 max-w-xl">Paste your previously copied string below to load it. If nothing happens, your string is invalid.</p>
                     <LoadLayout 
                         courses={courses}
                         coursesUsed={coursesUsed} 
