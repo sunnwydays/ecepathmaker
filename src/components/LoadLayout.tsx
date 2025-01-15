@@ -2,7 +2,7 @@ import { FC, useState } from "react";
 import { isValidString, parseString } from "./parseString";
 import { LoadLayoutProps } from "../types/CourseTypes";
 
-const LoadLayout:FC<LoadLayoutProps> = ({ courses, coursesOnGrid, coursesUsed, setCourses, setCoursesOnGrid, setCoursesUsed }) => {
+const LoadLayout:FC<LoadLayoutProps> = ({ courses, coursesUsed, setCourses, setCoursesOnGrid, setCoursesUsed }) => {
     const [str, setStr] = useState('')
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {

@@ -40,7 +40,6 @@ const Maker = () => {
                 <LoadLayout 
                     courses={courses}
                     coursesUsed={coursesUsed} 
-                    coursesOnGrid={coursesOnGrid} 
                     setCourses={setCourses}
                     setCoursesUsed={setCoursesUsed}
                     setCoursesOnGrid={setCoursesOnGrid}

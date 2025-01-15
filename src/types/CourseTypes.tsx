@@ -79,7 +79,6 @@ export interface ParseString {
 export interface LoadLayoutProps {
     courses: CourseList;
     coursesUsed: CoursesUsed;
-    coursesOnGrid: CoursesOnGrid;
     setCourses: React.Dispatch<React.SetStateAction<CourseList>>;
     setCoursesUsed: React.Dispatch<React.SetStateAction<CoursesUsed>>;
     setCoursesOnGrid: React.Dispatch<React.SetStateAction<CoursesOnGrid>>;
