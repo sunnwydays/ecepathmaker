@@ -2,7 +2,7 @@ import Droppable from '../components/Droppable';
 
 import { FC, useMemo, useState } from 'react';
 import MakerCard from './MakerCard';
-import { CourseList, StreamRequirements } from '../types/CourseTypes';
+import { CourseGridProps, StreamRequirements } from '../types/CourseTypes';
 
 import {
     DndContext, 
@@ -15,32 +15,14 @@ import {
     useSensors,
 } from '@dnd-kit/core';
 import { createPortal } from 'react-dom';
-  
 
-const CourseGrid:FC<{courses: CourseList;}> = ({ courses }) => {
+const CourseGrid:FC<CourseGridProps> = ({ courses, coursesOnGrid, coursesUsed, setCoursesOnGrid, setCoursesUsed }) => {
     // breadth
     // depth
     // cs, hss
     // preq
     // if you graduate (conditions above + below + au + technical experience)
     // not checked (put it into magellan and see after you're done here, you'll have to do it anyways): ce/ee, free elective, technical elective, kernels, minor/cert, sci/math, exclusion
-
-    const initialCoursesUsed = useMemo(() => {
-        const posMap: { [key: string]: string } = {};
-        Object.keys(courses).forEach(courseCode => posMap[courseCode] = '');
-        return posMap;
-    }, [courses]);
-    
-    const initialCoursesOnGrid = useMemo(() => ({
-        '3F.1': '', '3F.2': '', '3F.3': '', '3F.4': '', '3F.5': '',
-        '3S.1': '', '3S.2': '', '3S.3': '', '3S.4': '', '3S.5': '',
-        '4F.1': '', '4F.2': '', '4F.3': '', '4F.4': '', '4F.5': '',
-        '4S.1': '', '4S.2': '', '4S.3': '', '4S.4': '', '4S.5': '',
-        'XX.1': '', 'XX.2': '', 'XX.3': '', 'XX.4': '', 'XX.5': '',
-    }), []);
-    
-    const [coursesUsed, setCoursesUsed] = useState(initialCoursesUsed);
-    const [coursesOnGrid, setCoursesOnGrid] = useState(initialCoursesOnGrid);
 
     const [activeCourse, setActiveCourse] = useState<UniqueIdentifier | null>(null);
 

@@ -1,9 +1,8 @@
-import { CourseList, CourseCardPropsWithoutCode } from "../types/CourseTypes";
-import { CourseGridProps } from "../types/CourseTypes";
+import { CourseList, CourseCardPropsWithoutCode, CoursesOnGrid, CoursesUsed, ParseString, GridPosition } from "../types/CourseTypes";
 
 export const isValidString = (str: string): boolean => {
     // Check empty string
-    if (!str) return false;
+    if (!str) return true;
 
     // Split into terms
     const terms = str.split('@@');
@@ -43,17 +42,17 @@ export const isValidString = (str: string): boolean => {
     });
 };
 
-export const parseString = (str: string): SaveString | null => {
+export const parseString = (str: string): ParseString => {
     const terms = str.split('@@');
     const courses:CourseList = {};
-    const coursesOnGrid: { [key: string]: string } = {
+    const coursesOnGrid:CoursesOnGrid= {
         '3F.1': '', '3F.2': '', '3F.3': '', '3F.4': '', '3F.5': '',
         '3S.1': '', '3S.2': '', '3S.3': '', '3S.4': '', '3S.5': '',
         '4F.1': '', '4F.2': '', '4F.3': '', '4F.4': '', '4F.5': '',
         '4S.1': '', '4S.2': '', '4S.3': '', '4S.4': '', '4S.5': '',
         'XX.1': '', 'XX.2': '', 'XX.3': '', 'XX.4': '', 'XX.5': '',
     };
-    const coursesUsed: { [key: string]: string } = {};
+    const coursesUsed:CoursesUsed = {};
 
     const termMap: { [key: number]: string } = {
         0: '3F',
@@ -111,7 +110,7 @@ export const parseString = (str: string): SaveString | null => {
 
             courses[code] = course;
             const position = `${termMap[termIndex]}.${slotIndex + 1}`;
-            coursesOnGrid[position] = code;
+            coursesOnGrid[position as GridPosition] = code;
             coursesUsed[code] = position;
         });
     });

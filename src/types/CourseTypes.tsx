@@ -52,7 +52,7 @@ export interface StreamRequirements {
     hasHSS: boolean;
 };
 
-type GridPosition = 
+export type GridPosition = 
     | '3F.1' | '3F.2' | '3F.3' | '3F.4' | '3F.5'
     | '3S.1' | '3S.2' | '3S.3' | '3S.4' | '3S.5'
     | '4F.1' | '4F.2' | '4F.3' | '4F.4' | '4F.5'
@@ -65,7 +65,22 @@ export type CoursesUsed = Record<string, string>;
 export interface CourseGridProps {
     courses: CourseList;
     coursesUsed: CoursesUsed;
-    setCoursesUsed?: React.Dispatch<React.SetStateAction<CoursesUsed>>;
+    setCoursesUsed: React.Dispatch<React.SetStateAction<CoursesUsed>>;
     coursesOnGrid: CoursesOnGrid;
-    setCoursesOnGrid?: React.Dispatch<React.SetStateAction<CoursesOnGrid>>;
+    setCoursesOnGrid: React.Dispatch<React.SetStateAction<CoursesOnGrid>>;
+}
+
+export interface ParseString {
+    courses: CourseList;
+    coursesOnGrid: CoursesOnGrid;
+    coursesUsed: CoursesUsed;
+}
+
+export interface LoadLayoutProps {
+    courses: CourseList;
+    coursesUsed: CoursesUsed;
+    coursesOnGrid: CoursesOnGrid;
+    setCourses: React.Dispatch<React.SetStateAction<CourseList>>;
+    setCoursesUsed: React.Dispatch<React.SetStateAction<CoursesUsed>>;
+    setCoursesOnGrid: React.Dispatch<React.SetStateAction<CoursesOnGrid>>;
 }
