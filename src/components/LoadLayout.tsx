@@ -3,20 +3,16 @@ import { isValidString, parseString } from "./parseString";
 import { LoadLayoutProps } from "../types/CourseTypes";
 
 const LoadLayout:FC<LoadLayoutProps> = ({ courses, coursesOnGrid, coursesUsed, setCourses, setCoursesOnGrid, setCoursesUsed }) => {
-    const [isValid, setIsValid] = useState(true);
     const [str, setStr] = useState('')
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const val = e.target.value;
         setStr(val);
-
-        // empty string is valid
-        setIsValid(isValidString(val));
     }
     
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        if (!str.length || !isValid) return;
+        if (!str.length || !isValidString(str)) return;
 
         const result = parseString(str);
 
@@ -47,16 +43,11 @@ const LoadLayout:FC<LoadLayoutProps> = ({ courses, coursesOnGrid, coursesUsed, s
                     className="
                         bg-green2 text-white px-4 py-2 rounded
                         hover:bg-green3 transition-all
-                        disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-green2
                     "
-                    disabled={!isValid}
                 >
                     Load layout
                 </button>
-                {isValid ? 
-                    <p className="mt-6 max-w-xl">Paste your previously copied string above to load it</p> :
-                    <p className="mt-6 max-w-xl text-comp3">String is invalid</p>
-                }
+                <p className="mt-6 max-w-xl">Paste your previously copied string above to load it. If nothing happens, your string is invalid.</p>
             </form>
         </section>
     );
