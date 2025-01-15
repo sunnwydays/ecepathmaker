@@ -151,7 +151,12 @@ const CourseForm = () => {
 
                 <button 
                     type="submit"
-                    className="bg-green2 text-white px-4 py-2 rounded hover:bg-green3 transition-all"
+                    className="
+                        bg-green2 text-white px-4 py-2 rounded 
+                        hover:bg-green3 transition-all
+                        disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-green2
+                    "
+                    // disabled={???}
                 >
                     Add Course
                 </button>

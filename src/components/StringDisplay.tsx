@@ -36,8 +36,8 @@ const StringDisplay:FC<StringDisplayProps> = ({ courses, coursesOnGrid }) => {
     , [coursesOnGrid, courses]);
     
     return (
-        <section>
-            <p className="">{str}</p>
+        <section className="mt-4">
+            <p className="p-2 border-2 border-neutral2 rounded-md bg-green1 bg-opacity-30">{str}</p>
         </section>
     );
 };

@@ -26,7 +26,6 @@ const LoadLayout:FC<LoadLayoutProps> = ({ courses, coursesUsed, setCourses, setC
 
     return (
         <section>
-            <h2 className="mt-12 mb-8 text-2xl font-semibold">Save/load layout</h2>
             <form onSubmit={handleSubmit} className="flex flex-col gap-4 max-w-xl">
                 <div className="space-y-2">
                     <input 
@@ -47,7 +46,6 @@ const LoadLayout:FC<LoadLayoutProps> = ({ courses, coursesUsed, setCourses, setC
                 >
                     Load layout
                 </button>
-                <p className="mt-6 max-w-xl">Paste your previously copied string above to load it. If nothing happens, your string is invalid.</p>
             </form>
         </section>
     );

@@ -1,6 +1,7 @@
 import CourseGrid from '../components/CourseGrid';
 import CourseForm from '../components/CourseForm';
 import LoadLayout from '../components/LoadLayout';
+import StringDisplay from '../components/StringDisplay';
 
 import mockCourses from '../components/mockCourses';
 import { useMemo, useState } from 'react';
@@ -37,13 +38,22 @@ const Maker = () => {
             />
             <div className="grid md:grid-cols-2 grid-cols-1 gap-8">
                 <CourseForm />
-                <LoadLayout 
-                    courses={courses}
-                    coursesUsed={coursesUsed} 
-                    setCourses={setCourses}
-                    setCoursesUsed={setCoursesUsed}
-                    setCoursesOnGrid={setCoursesOnGrid}
-                />
+                <div>
+                    <h2 className="mt-12 mb-8 text-2xl font-semibold">Save/load layout</h2>
+                    <p className="max-w-xl">Copy this string and save it for later (triple click and ctrl+c)</p>
+                    <StringDisplay
+                        courses={courses}
+                        coursesOnGrid={coursesOnGrid}
+                    />
+                    <p className="mt-6 mb-4 max-w-xl">Paste your previously copied string below to load it. If nothing happens, your string is invalid.</p>
+                    <LoadLayout 
+                        courses={courses}
+                        coursesUsed={coursesUsed} 
+                        setCourses={setCourses}
+                        setCoursesUsed={setCoursesUsed}
+                        setCoursesOnGrid={setCoursesOnGrid}
+                    />
+                </div>
             </div>
         </div>
     )
