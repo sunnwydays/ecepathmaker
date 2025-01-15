@@ -39,7 +39,7 @@ const MakerCard:FC<DraggableCardProps> = (props) => {
                     <>
                         { getStreamLabels() && <p>Stream: {getStreamLabels()}</p> }
                         { getOtherLabels() && <p>{getOtherLabels()}</p> }
-                        { props.preq && <p>Preq: {props.preq.join(', ')}</p> }
+                        { props.preq && props.preq.length > 0 && <p>Preq: {props.preq.join(', ')}</p> }
                         {(props.onlyF || props.onlyS) && (
                             <p>{props.onlyF ? 'Fall' : 'Winter'} only</p>
                         )}

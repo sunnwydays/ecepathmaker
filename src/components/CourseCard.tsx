@@ -74,7 +74,7 @@ const CourseCard:FC<DraggableCardProps> = (props) => {
             </h1>
             <p>Streams: {getStreamLabels()}</p>
             <p>Other labels (CS/HSS, ArtSci): {getOtherLabels()} </p>
-            { props.preq && <p>Prerequisites: {props.preq.join(', ')}</p> }
+            { props.preq && props.preq.length > 0 && <p>Prerequisites: {props.preq.join(', ')}</p> }
             {(props.onlyF || props.onlyS) && (
                 <p>{props.onlyF ? 'Fall (F)' : 'Winter (S)'} term only</p>
             )}
