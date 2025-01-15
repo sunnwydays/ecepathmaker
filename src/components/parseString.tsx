@@ -20,6 +20,7 @@ export const isValidString = (str: string): boolean => {
 
             // Check course format
             const parts = course.split('**');
+            if (parts.length === 1) return true;
             if (parts.length !== 2) return false;
 
             const [codeAndName, options] = parts;
@@ -80,6 +81,7 @@ export const parseString = (str: string): ParseString => {
             };
 
             // Parse options
+            if (options) 
             for (let i = 0; i < options.length; i++) {
                 switch(options[i]) {
                     case 'f': course.onlyF = true; break;
