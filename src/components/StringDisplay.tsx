@@ -9,9 +9,7 @@ const StringDisplay:FC<StringDisplayProps> = ({ courses, coursesOnGrid }) => {
         Object.entries(coursesOnGrid).forEach(([pos, courseCode]) => {
             if (pos !== '3F.1' && pos.includes('.1'))
                 newStr += '@@';
-                console.log(pos)
             if (!courseCode) return;
-            console.log(courses[courseCode].name);
             newStr += courseCode 
                     + courses[courseCode].name
                     + "**";
