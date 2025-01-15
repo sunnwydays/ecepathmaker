@@ -25,8 +25,10 @@ const StringDisplay:FC<StringDisplayProps> = ({ courses, coursesOnGrid }) => {
                 newStr += 'c';
             if (courses[courseCode].isArtSci)
                 newStr += 'a';
-            if (courses[courseCode].preq?.length)
-                newStr += 'p' + courses[courseCode].preq.join('');
+            if (courses[courseCode].preq?.length) {
+                for (let i = 0; i < courses[courseCode].preq.length; i++)
+                    newStr += 'p' + courses[courseCode].preq[i];
+            }
             if (courses[courseCode].color)
                 newStr += '#' + courses[courseCode].color;
             newStr += '$$';
