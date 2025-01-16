@@ -37,9 +37,9 @@ const Filter: FC<{ filters: FilterState, setFilters: React.Dispatch<React.SetSta
 
 
     return (
-        <div className="p-4 bg-white rounded shadow text-center">
-            <form className="flex flex-col gap-4 max-w-xl">
-                <h2 className="font-semibold text-xl">Filter Courses</h2>
+        <div className="p-6 mt-4 bg-green1 bg-opacity-50 rounded shadow text-center items-center flex flex-col">
+            <form className="flex gap-8 justify-center items-center flex-wrap">
+                <h2 className="font-semibold text-xl">Filter</h2>
                 <button 
                     type="button"
                     onClick={resetFilters}
@@ -53,31 +53,32 @@ const Filter: FC<{ filters: FilterState, setFilters: React.Dispatch<React.SetSta
                         type="text" 
                         value={filters.searchTerm}
                         placeholder="Search by code or name"
-                        className="w-full p-2 border rounded"
+                        className="w-full p-2 border rounded min-w-72"
                         onChange={handleInputChange}
                     />
                 </div>
 
-
-                <h3 className="font-medium">Streams</h3>
-                <div className="grid grid-cols-3 gap-2">
-                    {[1,2,3,4,5,6].map(num => (
-                        <label key={num} className="flex items-center gap-2">
-                            <input 
-                                name="streams"
-                                type="checkbox" 
-                                value={num}
-                                onChange={handleInputChange}
-                                checked={filters.streams?.includes(num)}
-                            />
-                            <span>{num}</span>
-                        </label>
-                    ))}
+                <div className="space-y-2">
+                    <h3 className="font-medium">Streams</h3>
+                    <div className="flex gap-4 justify-center">
+                        {[1,2,3,4,5,6].map(num => (
+                            <label key={num} className="flex items-center gap-2">
+                                <input 
+                                    name="streams"
+                                    type="checkbox" 
+                                    value={num}
+                                    onChange={handleInputChange}
+                                    checked={filters.streams?.includes(num)}
+                                />
+                                <span>{num}</span>
+                            </label>
+                        ))}
+                    </div>
                 </div>
 
                 <div className="space-y-2">
                     <h3 className="font-medium">Term Availability</h3>
-                    <div className="flex gap-4">
+                    <div className="flex gap-4 justify-center">
                         <label className="flex items-center gap-2">
                             <input 
                                 type="checkbox" 
@@ -103,7 +104,7 @@ const Filter: FC<{ filters: FilterState, setFilters: React.Dispatch<React.SetSta
 
                 <div className="space-y-2">
                     <h3 className="font-medium">Course Type</h3>
-                    <div className="flex gap-4">
+                    <div className="flex gap-4 justify-center">
                         <label className="flex items-center gap-2">
                             <input 
                                 name="isCS"
@@ -142,7 +143,7 @@ const Filter: FC<{ filters: FilterState, setFilters: React.Dispatch<React.SetSta
                                 value="Eng"
                                 checked={filters.isEng}
                             />
-                            <span>Engineering</span>
+                            <span>Engi</span>
                         </label>
                     </div>
                 </div>
