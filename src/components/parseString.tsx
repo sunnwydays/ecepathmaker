@@ -23,20 +23,28 @@ export const isValidString = (str: string): boolean => {
             if (parts.length === 1) return true;
             if (parts.length !== 2) return false;
 
-            const [codeAndName, options] = parts;
+            const [codeAndName, optionsWithPreq] = parts;
             if (codeAndName.length < 6) return false;
+
+            const [options, preq] = optionsWithPreq.split('p');
 
             // Validate options
             for (let i = 0; i < options.length; i++) {
                 const char = options[i];
                 if (!validOptionChars.has(char)) {
-                    if (char !== 'p' && char !== '#') return false;
-                    // Skip next 6 characters for preq codes and colors
+                    if (char !== '#') return false;
                     i += 6;
                 }
             }
-            return true;
 
+            // Validate preq
+            if (preq) {
+                const prereqs = preq.split(',').flatMap(p => p.split('|').map(p => p.trim()));
+                prereqs.forEach(prereq => {
+                    return prereq.length === 6;
+                });
+            }
+            return true;
         });
     });
 };
@@ -66,7 +74,8 @@ export const parseString = (str: string): ParseString => {
         coursesInTerm.forEach((courseStr, slotIndex) => {
             if (!courseStr) return;
 
-            const [codeAndName, options] = courseStr.split('**');
+            const [codeAndName, optionsWithPreq] = courseStr.split('**');
+            const [options, preq] = optionsWithPreq.split('p');
             const code = codeAndName.substring(0, 6);
             const name = codeAndName.substring(6);
 
@@ -95,17 +104,24 @@ export const parseString = (str: string): ParseString => {
                     case 'c': course.isCS = true; break;
                     case 'h': course.isHSS = true; course.isCS = true; break;
                     case 'a': course.isArtSci = true; break;
-                    case 'p': {
-                        course.preq?.push(options.substring(i + 1, i + 7));
-                        i += 6;
-                        break;
-                    }
                     case '#': {
                         course.color = options.substring(i + 1, i + 7);
                         i += 6;
                         break;
                     }
                 }
+            }
+
+            // Parse prerequisites
+            if (preq) {
+                const andPrereqs = preq.split(',').map(andGroup => {
+                    // For each AND group, check if it has OR conditions
+                    if (andGroup.includes('|')) {
+                        return andGroup.split('|').map(p => p.trim().toUpperCase());
+                    }
+                    return andGroup.trim();
+                });
+                course.preq = andPrereqs;
             }
 
             courses[code] = course;

@@ -21,27 +21,35 @@ const StringDisplay:FC<StringDisplayProps> = ({ courses, coursesOnGrid }) => {
             if (pos !== '3F.1' && pos.includes('.1'))
                 newStr += '@@';
             if (!courseCode) return;
-            newStr += courseCode 
-                    + courses[courseCode].name
-                    + "**";
-            if (courses[courseCode].streams) 
-                newStr += courses[courseCode].streams.join('');
-            if (courses[courseCode].onlyF)
+            const course = courses[courseCode];
+            newStr += courseCode + course.name + "**";
+            if (course.streams) 
+                newStr += course.streams.join('');
+            if (course.onlyF)
                 newStr += 'f';
-            else if (courses[courseCode].onlyS)
+            else if (course.onlyS)
                 newStr += 's';
-            if (courses[courseCode].isHSS)
+            if (course.isHSS)
                 newStr += 'h';
-            else if (courses[courseCode].isCS)
+            else if (course.isCS)
                 newStr += 'c';
-            if (courses[courseCode].isArtSci)
+            if (course.isArtSci)
                 newStr += 'a';
-            if (courses[courseCode].preq?.length) {
-                for (let i = 0; i < courses[courseCode].preq.length; i++)
-                    newStr += 'p' + courses[courseCode].preq[i];
+            if (course.color)
+                newStr += '#' + course.color;
+            if (course.preq?.length) {
+                newStr += 'p';
+                course.preq.forEach((preq, index) => {
+                    if (Array.isArray(preq)){
+                        newStr += preq.join('|');
+                    } else {
+                        newStr += preq;
+                    }
+                    if (course.preq && index < course.preq.length - 1) {
+                        newStr += ',';
+                    }
+                });
             }
-            if (courses[courseCode].color)
-                newStr += '#' + courses[courseCode].color;
             newStr += '$$';
         });
         setStr(newStr);

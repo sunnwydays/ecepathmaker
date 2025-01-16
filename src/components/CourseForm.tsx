@@ -28,7 +28,7 @@ const CourseForm:FC<CourseFormProps> = ({ setCourses, setCoursesUsed }) => {
     const errorMessages = {
         code: 'Must be 3 letters followed by 3 numbers',
         name: 'Course name cannot contain "**"',
-        preq: 'Must be comma-separated course codes',
+        preq: 'Must be comma (and)- or pipe (or)-separated course codes',
     };
 
     const validateCourseCode = (code: string) => {
@@ -41,8 +41,31 @@ const CourseForm:FC<CourseFormProps> = ({ setCourses, setCoursesUsed }) => {
 
     const validatePrerequisites = (preq: string) => {
         if (!preq) return true;
-        const prereqs = preq.split(',').map(p => p.trim());
-        return prereqs.every(p => validateCourseCode(p));
+        
+        const andGroups = preq.split(',');
+        return andGroups.every(group => {
+            const orCourses = group.split('|').map(p => p.trim());
+            return orCourses.every(code => validateCourseCode(code));
+        });
+    };
+    
+    const parsePrerequisites = (preqString: string): (string | string[])[] => {
+        if (!preqString) return [];
+        
+        // Split into AND groups
+        return preqString.split(',').map(group => {
+            // Check if group has OR conditions
+            if (group.includes('|')) {
+                return group.split('|')
+                    .map(code => code.trim().toUpperCase())
+                    .filter(code => code.length > 0);
+            }
+            // Single prerequisite
+            const code = group.trim();
+            return code.length > 0 ? code : [];
+        }).filter(group => 
+            Array.isArray(group) ? group.length > 0 : group.length > 0
+        );
     };
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -60,7 +83,7 @@ const CourseForm:FC<CourseFormProps> = ({ setCourses, setCoursesUsed }) => {
             case 'preq':
                 setErrors(prev => ({...prev, preq: false}));
                 setPreqString(value);
-                setCourseInfo(prev => ({...prev, preq: value.split(',').map(p => p.trim())}));
+                setCourseInfo(prev => ({...prev, preq: parsePrerequisites(value)}));
                 break;
             case 'streams': {
                 const streamNum = parseInt(value);
@@ -171,7 +194,7 @@ const CourseForm:FC<CourseFormProps> = ({ setCourses, setCoursesUsed }) => {
                         name="preq"
                         type="text" 
                         value={preqString}
-                        placeholder="Prerequisites (e.g. ECE444,ECE345)"
+                        placeholder="Prerequisites (e.g. ECE444,ECE345|ECE346)"
                         className="w-full p-2 border rounded"
                         onChange={handleInputChange}
                         data-testid="preq-input"

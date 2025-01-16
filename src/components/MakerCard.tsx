@@ -19,6 +19,17 @@ const MakerCard:FC<DraggableCardProps> = (props) => {
         return labels.length ? labels.join(', ') : null;
     };
 
+    const getPreqLabels = () => {
+        if (!props.preq || props.preq.length === 0) return null;
+        
+        return props.preq.map((prereq) => {
+            if (Array.isArray(prereq)) {
+                return prereq.join(' or ');
+            }
+            return prereq;
+        }).join(', ');
+    };
+
     return (
         <Draggable id={props.id}>{(isExpanded) =>
             <article
@@ -39,7 +50,7 @@ const MakerCard:FC<DraggableCardProps> = (props) => {
                     <>
                         { getStreamLabels() && <p>Stream: {getStreamLabels()}</p> }
                         { getOtherLabels() && <p>{getOtherLabels()}</p> }
-                        { props.preq && props.preq.length > 0 && <p>Preq: {props.preq.join(', ')}</p> }
+                        { props.preq && props.preq.length > 0 && <p>Preq: {getPreqLabels(props.preq)}</p> }
                         {(props.onlyF || props.onlyS) && (
                             <p>{props.onlyF ? 'Fall' : 'Winter'} only</p>
                         )}

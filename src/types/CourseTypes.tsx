@@ -1,7 +1,7 @@
 interface CourseIdentifier {
     code: string;
     name: string;
-    preq?: string[];
+    preq?: (string | string[])[];
     color?: string;
     streams?: number[];
 };
@@ -28,7 +28,7 @@ export interface DraggableCardProps extends CourseCardProps {
 
 interface CourseIdentifierWithoutCode {
     name: string;
-    preq?: string[];
+    preq?: (string | string[])[];
     color?: string;
     streams?: number[];
 };
