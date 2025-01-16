@@ -128,7 +128,7 @@ const CourseGrid:FC<CourseGridProps> = ({ courses, coursesOnGrid, coursesUsed, s
     return (
         <DndContext onDragEnd={handleDragEnd} onDragStart={handleDragStart} sensors={sensors}>
             <section className="flex lg:flex-row flex-col gap-8">
-                <div className="grid grid-cols-5 gap-2 size-max">
+                <div className="grid grid-cols-5 gap-2 size-max flex-shrink-0">
                     {Object.entries(coursesOnGrid).map(([slot, courseCode]) => (
                         <Droppable key={slot} id={slot}>
                             {courseCode ? (
@@ -145,9 +145,10 @@ const CourseGrid:FC<CourseGridProps> = ({ courses, coursesOnGrid, coursesUsed, s
                 </div>
                 <div>
                     {/* Courses to choose from */}
-                    <h2 className="mb-2 text-xl font-medium">👈 Drag courses into the grid</h2>
-                    <h2 className="mb-8 ">🔍 Click a course to view more details</h2>
-                    <div className="lg:grid xl:grid-cols-2 lg:grid-cols-1 flex gap-2 max-h-[90vh] overflow-y-auto">
+                    <h2 className="lg:block hidden mb-2 text-xl font-medium">👈 Drag courses into the grid</h2>
+                    <h2 className="lg:block hidden mb-8 ">🔍 Click a course to view more details</h2>
+                    <h2 className="lg:hidden block mb-2 text-xl">☝️ Drag courses into the grid, 🔍 Click a course to view more details</h2>
+                    <div className="flex flex-wrap gap-2 lg:max-h-[36rem] max-h-[24rem] overflow-y-auto">
                         {Object.entries(coursesUsed)
                             .filter(([, isUsed]) => !isUsed)
                             .map(([courseCode]) => (
