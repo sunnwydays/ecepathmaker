@@ -1,4 +1,4 @@
-import { useState, FC } from "react";
+/*import { useState, FC } from "react";
 import { CourseGridProps } from "../types/CourseTypes";
 
 const Filter: FC<CourseGridProps> = ({ courses, coursesOnGrid, coursesUsed, setCoursesOnGrid, setCoursesUsed }) => {
@@ -27,4 +27,4 @@ const Filter: FC<CourseGridProps> = ({ courses, coursesOnGrid, coursesUsed, setC
     )
 };
 
-export default Filter;
+export default Filter;*/
