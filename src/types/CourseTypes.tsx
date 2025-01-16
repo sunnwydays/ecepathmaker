@@ -88,3 +88,8 @@ export interface StringDisplayProps {
     courses: CourseList;
     coursesOnGrid: CoursesOnGrid;
 }
+
+export interface CourseFormProps {
+    setCourses: React.Dispatch<React.SetStateAction<CourseList>>;
+    setCoursesUsed: React.Dispatch<React.SetStateAction<CoursesUsed>>;
+}
