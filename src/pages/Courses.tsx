@@ -79,6 +79,7 @@ const Courses = () => {
                             .filter((courseId) => filterCourses(courseId))
                             .map((course) => (
                                 <CourseCard
+                                    key={course}
                                     id={course}
                                     code={course}
                                     {...mockCourses[course]}
