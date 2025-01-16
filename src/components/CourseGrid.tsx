@@ -1,8 +1,8 @@
 import Droppable from '../components/Droppable';
 
-import { FC, useMemo, useState } from 'react';
+import { FC, useState } from 'react';
 import MakerCard from './MakerCard';
-import { CourseGridProps, StreamRequirements } from '../types/CourseTypes';
+import { CourseGridProps,  } from '../types/CourseTypes';
 
 import {
     DndContext, 
@@ -21,43 +21,45 @@ const CourseGrid:FC<CourseGridProps> = ({ courses, coursesOnGrid, coursesUsed, s
     // depth
     // cs, hss
     // preq
+    // economics
+    // capstone
     // if you graduate (conditions above + below + au + technical experience)
-    // not checked (put it into magellan and see after you're done here, you'll have to do it anyways): ce/ee, free elective, technical elective, kernels, minor/cert, sci/math, exclusion
+    // not checked (put it into magellan and see after you're done here, you'll have to do it anyways): ce/ee, free elective, technical elective, kernels, minor/cert, sci/math, exclusion, 1.5 300/400 artsci credit limit
 
     const [activeCourse, setActiveCourse] = useState<UniqueIdentifier | null>(null);
 
-    const conditions = useMemo(() => {
-        const gridCourses = Object.values(coursesOnGrid).filter(code => code !== '');
+    // const conditions = useMemo(() => {
+    //     const gridCourses = Object.values(coursesOnGrid).filter(code => code !== '');
         
-        // Count courses per stream
-        const streamCounts = gridCourses.reduce((acc, code) => {
-            const courseStreams = courses[code]?.streams || [];
-            courseStreams.forEach(stream => {
-                acc[stream] = (acc[stream] || 0) + 1;
-            });
-            return acc;
-        }, {} as Record<number, number>);
+    //     // Count courses per stream
+    //     const streamCounts = gridCourses.reduce((acc, code) => {
+    //         const courseStreams = courses[code]?.streams || [];
+    //         courseStreams.forEach(stream => {
+    //             acc[stream] = (acc[stream] || 0) + 1;
+    //         });
+    //         return acc;
+    //     }, {} as Record<number, number>);
     
-        // Get streams meeting requirements
-        const depthStreams = Object.entries(streamCounts)
-            .filter(([, count]) => count >= 3)
-            .map(([stream]) => Number(stream));
+    //     // Get streams meeting requirements
+    //     const depthStreams = Object.entries(streamCounts)
+    //         .filter(([, count]) => count >= 3)
+    //         .map(([stream]) => Number(stream));
 
-        const breadthStreams = Object.entries(streamCounts)
-            .filter(([, count]) => count >= 1)
-            .map(([stream]) => Number(stream))
-            .filter(stream => !depthStreams.includes(stream));
+    //     const breadthStreams = Object.entries(streamCounts)
+    //         .filter(([, count]) => count >= 1)
+    //         .map(([stream]) => Number(stream))
+    //         .filter(stream => !depthStreams.includes(stream));
     
-        return {
-            hasCS: gridCourses.filter(code => courses[code]?.isCS).length >= 4,
-            hasHSS: gridCourses.filter(code => courses[code]?.isHSS).length >= 2,
-            streamCounts,
-            breadthStreams,
-            depthStreams,
-            hasBreadth: breadthStreams.length >= 2,
-            hasDepth: depthStreams.length >= 2
-        } as StreamRequirements;
-    }, [coursesOnGrid, courses]);
+    //     return {
+    //         hasCS: gridCourses.filter(code => courses[code]?.isCS).length >= 4,
+    //         hasHSS: gridCourses.filter(code => courses[code]?.isHSS).length >= 2,
+    //         streamCounts,
+    //         breadthStreams,
+    //         depthStreams,
+    //         hasBreadth: breadthStreams.length >= 2,
+    //         hasDepth: depthStreams.length >= 2
+    //     } as StreamRequirements;
+    // }, [coursesOnGrid, courses]);
 
     const sensors = useSensors(
         useSensor(PointerSensor, {

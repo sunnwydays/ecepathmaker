@@ -260,10 +260,9 @@ const courses: CourseList = {
     },
     'MIE369': {
         name: 'Introduction to Artificial Intelligence',
-        isCS: true,
         onlyS: true,
         preq: [['MIE236', 'ECE286', 'ECE302']],
-        color: '8faadc',
+        color: 'ffc2e0',
     },
 };
 
