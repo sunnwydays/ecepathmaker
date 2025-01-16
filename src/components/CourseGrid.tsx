@@ -2,7 +2,7 @@ import Droppable from '../components/Droppable';
 
 import { FC, useState } from 'react';
 import MakerCard from './MakerCard';
-import { CourseGridProps,  } from '../types/CourseTypes';
+import { CourseGridProps, FilterState,  } from '../types/CourseTypes';
 
 import {
     DndContext, 
@@ -15,8 +15,46 @@ import {
     useSensors,
 } from '@dnd-kit/core';
 import { createPortal } from 'react-dom';
+import Filter from './Filter';
 
 const CourseGrid:FC<CourseGridProps> = ({ courses, coursesOnGrid, coursesUsed, setCoursesOnGrid, setCoursesUsed }) => {
+    const [filters, setFilters] = useState<FilterState>({
+        searchTerm: '',
+        streams: [],
+        availableF: true,
+        availableS: true,
+        isCS: false,
+        isHSS: false,
+        isArtSci: false,
+        isEng: false
+    });
+
+    const filterCourses = (courseCode: string): boolean => {
+        const course = courses[courseCode];
+        if (!course) return false;
+
+        if (filters.searchTerm && 
+            !courseCode.toLowerCase().includes(filters.searchTerm.toLowerCase()) &&
+            !course.name.toLowerCase().includes(filters.searchTerm.toLowerCase())) {
+            return false;
+        }
+
+        if (filters.streams.length > 0 && 
+            !course.streams?.some(stream => filters.streams.includes(stream))) {
+            return false;
+        }
+
+        if (!filters.availableF && course.onlyF) return false;
+        if (!filters.availableS && course.onlyS) return false
+
+        if (filters.isCS && !course.isCS) return false;
+        if (filters.isHSS && !course.isHSS) return false;
+        if (filters.isArtSci && !course.isArtSci) return false;
+        if (filters.isEng && course.isArtSci) return false;
+
+        return true;
+    };
+
     // breadth
     // depth
     // cs, hss
@@ -148,9 +186,11 @@ const CourseGrid:FC<CourseGridProps> = ({ courses, coursesOnGrid, coursesUsed, s
                     <h2 className="lg:block hidden mb-2 text-xl font-medium">👈 Drag courses into the grid</h2>
                     <h2 className="lg:block hidden mb-8 ">🔍 Click a course to view more details</h2>
                     <h2 className="lg:hidden block mb-2 text-xl">☝️ Drag courses into the grid, 🔍 Click a course to view more details</h2>
+                    <Filter filters={filters} setFilters={setFilters} />
                     <div className="flex flex-wrap gap-2 lg:max-h-[36rem] max-h-[24rem] overflow-y-auto">
                         {Object.entries(coursesUsed)
                             .filter(([, isUsed]) => !isUsed)
+                            .filter(([courseCode]) => filterCourses(courseCode))
                             .map(([courseCode]) => (
                                 <MakerCard 
                                     key={courseCode}

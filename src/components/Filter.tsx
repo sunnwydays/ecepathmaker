@@ -1,27 +1,7 @@
-import { useState, FC } from "react";
-import { CourseList } from "../types/CourseTypes";
+import { FC } from "react";
+import { FilterState } from "../types/CourseTypes";
 
-interface FilterState {
-    searchTerm: string;
-    streams: number[];
-    term: string;
-    isCS: boolean;
-    isHSS: boolean;
-    isArtSci: boolean;
-    isEng: boolean;
-}
-
-const Filter: FC<{ courseCode: string, courses: CourseList }> = ({ courseCode, courses }) => {
-    const [filters, setFilters] = useState<FilterState>({
-        searchTerm: '',
-        streams: [],
-        term: 'B',
-        isCS: false,
-        isHSS: false,
-        isArtSci: false,
-        isEng: false
-    });
-
+const Filter: FC<{ filters: FilterState, setFilters: React.Dispatch<React.SetStateAction<FilterState>> }> = ({ filters, setFilters }) => {
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value, checked } = e.target;
         
@@ -36,15 +16,8 @@ const Filter: FC<{ courseCode: string, courses: CourseList }> = ({ courseCode, c
                         : [...prev.streams, streamNum];
                     return { ...prev, streams };
                 }
-                case 'term':
-                    return { ...prev, term: prev.term === value ? '' : value };
-                case 'isCS':
-                case 'isHSS':
-                case 'isArtSci':
-                case 'isEng':
-                    return {...prev, [name]: checked};
                 default:
-                    return prev;
+                    return {...prev, [name]: checked};
             }
         });
     };
@@ -53,7 +26,8 @@ const Filter: FC<{ courseCode: string, courses: CourseList }> = ({ courseCode, c
         setFilters({
             searchTerm: '',
             streams: [],
-            term: 'B',
+            availableF: true,
+            availableS: true,
             isCS: false,
             isHSS: false,
             isArtSci: false,
@@ -106,33 +80,23 @@ const Filter: FC<{ courseCode: string, courses: CourseList }> = ({ courseCode, c
                     <div className="flex gap-4">
                         <label className="flex items-center gap-2">
                             <input 
-                                type="radio" 
-                                name="term" 
+                                type="checkbox" 
+                                name="availableF" 
                                 value="F"
                                 onChange={handleInputChange}
-                                checked={filters.term === 'F'}
+                                checked={filters.availableF}
                             />
-                            <span>Fall Only</span>
+                            <span>F</span>
                         </label>
                         <label className="flex items-center gap-2">
                             <input 
-                                type="radio" 
-                                name="term" 
+                                type="checkbox" 
+                                name="availableS" 
                                 value="S"
                                 onChange={handleInputChange}
-                                checked={filters.term === 'S'}
+                                checked={filters.availableS}
                             />
-                            <span>Winter Only</span>
-                        </label>
-                        <label className="flex items-center gap-2">
-                            <input 
-                                type="radio" 
-                                name="term" 
-                                value="B"
-                                onChange={handleInputChange}
-                                checked={filters.term === 'B'}
-                            />
-                            <span>Both Terms</span>
+                            <span>S</span>
                         </label>
                     </div>
                 </div>

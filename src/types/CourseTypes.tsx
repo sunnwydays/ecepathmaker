@@ -93,3 +93,14 @@ export interface CourseFormProps {
     setCourses: React.Dispatch<React.SetStateAction<CourseList>>;
     setCoursesUsed: React.Dispatch<React.SetStateAction<CoursesUsed>>;
 }
+
+export interface FilterState {
+    searchTerm: string;
+    streams: number[];
+    availableF: boolean;
+    availableS: boolean;
+    isCS: boolean;
+    isHSS: boolean;
+    isArtSci: boolean;
+    isEng: boolean;
+};
