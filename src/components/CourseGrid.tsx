@@ -1,6 +1,6 @@
 import Droppable from '../components/Droppable';
 
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import MakerCard from './MakerCard';
 import { CourseGridProps, FilterState,  } from '../types/CourseTypes';
 
@@ -126,7 +126,8 @@ const CourseGrid:FC<CourseGridProps> = ({ courses, coursesOnGrid, coursesUsed, s
                 
                 if ((course.onlyF && targetTerm === 'S') || 
                     (course.onlyS && targetTerm === 'F')) {
-                    return;
+                        setInvalidDrop(true);
+                        return;
                 }
             }
 
@@ -162,6 +163,14 @@ const CourseGrid:FC<CourseGridProps> = ({ courses, coursesOnGrid, coursesUsed, s
         }
         console.log(`${active.id} : ${sourceContainer} -> ${over?.id}`);
     }
+
+    const [invalidDrop, setInvalidDrop] = useState(false);
+
+    useEffect(() => {
+        if (invalidDrop) {
+            setTimeout(() => setInvalidDrop(false), 2000);
+        }
+    }, [invalidDrop]);
 
     return (
         <DndContext onDragEnd={handleDragEnd} onDragStart={handleDragStart} sensors={sensors}>
@@ -213,6 +222,24 @@ const CourseGrid:FC<CourseGridProps> = ({ courses, coursesOnGrid, coursesUsed, s
                     }
                 </DragOverlay>,
             document.body)}
+            {invalidDrop && (
+                <div className="
+                    fixed top-6 left-1/2 transform -translate-x-1/2
+                    flex items-center justify-center
+                    z-50
+                ">
+                    <div className="
+                        w-64
+                        px-4 py-2 
+                        bg-comp2 text-white 
+                        rounded-md shadow-md
+                        text-center
+                        animate-bounce
+                    ">
+                        Invalid term for this course!
+                    </div>
+                </div>
+            )}
             <Filter filters={filters} setFilters={setFilters} />
         </DndContext>
     );
