@@ -44,6 +44,7 @@ const Filter: FC<{ filters: FilterState, setFilters: React.Dispatch<React.SetSta
                     type="button"
                     onClick={resetFilters}
                     className="text-sm text-gray-500 hover:text-gray-700"
+                    data-testid="reset-filters"
                 >
                     Reset Filters
                 </button>
@@ -69,6 +70,7 @@ const Filter: FC<{ filters: FilterState, setFilters: React.Dispatch<React.SetSta
                                     value={num}
                                     onChange={handleInputChange}
                                     checked={filters.streams?.includes(num)}
+                                    data-testid={`filter-stream-${num}`}
                                 />
                                 <span>{num}</span>
                             </label>
@@ -86,6 +88,7 @@ const Filter: FC<{ filters: FilterState, setFilters: React.Dispatch<React.SetSta
                                 value="F"
                                 onChange={handleInputChange}
                                 checked={filters.availableF}
+                                data-testid="filter-fall"
                             />
                             <span>F</span>
                         </label>
