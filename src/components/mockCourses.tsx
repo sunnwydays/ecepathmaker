@@ -258,6 +258,13 @@ const courses: CourseList = {
         isHSS: true,
         color: 'd4a5a5',
     },
+    'HPS120': {
+        name: 'How to Think about Science',
+        isCS: true,
+        isHSS: true,
+        isArtSci: true,
+        color: 'd4a5a5',
+    },
     'MIE369': {
         name: 'Introduction to Artificial Intelligence',
         onlyS: true,
