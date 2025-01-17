@@ -246,10 +246,10 @@ const courses: CourseList = {
         name: 'Engineering Economics',
     },
     'ECE496': {
-        name: 'Design Project h1',
+        name: 'Design Project h1 (capstone)',
     },
     'ECE497': {
-        name: 'Design Project h2 not a real course',
+        name: 'Design Project h2 not a real course (capstone)',
     },
     'APS490': {
         name: 'Multi-Disciplinary Capstone Design h1',
