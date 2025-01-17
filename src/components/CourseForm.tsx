@@ -170,7 +170,7 @@ const CourseForm:FC<CourseFormProps> = ({ setCourses, setCoursesUsed }) => {
 
     return (
         <section>
-            <h2 className="mt-12 mb-8 text-2xl font-semibold">Add more courses</h2>
+            <h2 className="mt-12 mb-8 text-2xl font-semibold">Add or update courses</h2>
             <form onSubmit={handleSubmit} className="flex flex-col gap-4 max-w-xl" data-testid="course-form">
                 {/* Course Identifier Section */}
                 <div className="space-y-2">
