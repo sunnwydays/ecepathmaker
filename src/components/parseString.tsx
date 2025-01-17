@@ -8,7 +8,7 @@ export const isValidString = (str: string): boolean => {
     const terms = str.split('@@');
     if (terms.length > 5) return false;
 
-    const validOptionChars = new Set(['f', 's', '1', '2', '3', '4', '5', '6', 'c', 'h', 'a']);
+    const validOptionChars = new Set(['f', 's', '1', '2', '3', '4', '5', '6', 'c', 'h', 'm', 'a']);
 
     return terms.every(term => {
         // Check each term
@@ -103,6 +103,7 @@ export const parseString = (str: string): ParseString => {
                     case '6': course.streams?.push(6); break;
                     case 'c': course.isCS = true; break;
                     case 'h': course.isHSS = true; course.isCS = true; break;
+                    case 'm': course.isSciMath = true; break;
                     case 'a': course.isArtSci = true; break;
                     case '#': {
                         course.color = options.substring(i + 1, i + 7);

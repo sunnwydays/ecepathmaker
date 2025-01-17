@@ -33,6 +33,8 @@ const StringDisplay:FC<StringDisplayProps> = ({ courses, coursesOnGrid }) => {
                 newStr += 'h';
             else if (course.isCS)
                 newStr += 'c';
+            if (course.isSciMath)
+                newStr += 'm';
             if (course.isArtSci)
                 newStr += 'a';
             if (course.color)
