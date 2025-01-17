@@ -33,7 +33,7 @@ const WillYouGraduate: FC<WillYouGraduateProps> = ({ conditions }) => {
                     <ul className='space-y-1'>
                         <li>Depth: {conditions.hasDepth ? '✅' : '❌'}</li>
                         {conditions.depthStreams?.length > 0 &&
-                            <li>Depth streams: {conditions.depthStreams?.join(', ')}</li>}
+                            <li>Depth streams<span className='text-xs'> (first 2)</span>: {conditions.depthStreams?.join(', ')}</li>}
                         <li>Breadth: {conditions.hasBreadth ? '✅' : '❌'}</li>
                         {conditions.breadthStreams?.length > 0 &&
                             <li>Breadth streams: {conditions.breadthStreams?.join(', ')}</li>}

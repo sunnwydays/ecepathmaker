@@ -90,14 +90,20 @@ const CourseGrid:FC<CourseGridProps> = ({ courses, coursesOnGrid, coursesUsed, s
         }, {} as Record<number, number>);
     
         // Get streams meeting requirements
-        const depthStreams = Object.entries(streamInfo)
+        const allDepthStreams = Object.entries(streamInfo)
             .filter(([, info]) => info.count >= 3 && info.hasKernel)
             .map(([stream]) => Number(stream));
 
-        const breadthStreams = Object.entries(streamInfo)
-            .filter(([, info]) => info.count >= 1 && info.hasKernel)
-            .map(([stream]) => Number(stream))
-            .filter(stream => !depthStreams.includes(stream));
+        const depthStreams = allDepthStreams.slice(0, 2);
+        const extraDepthStreams = allDepthStreams.slice(2);
+
+        const breadthStreams = [
+            ...Object.entries(streamInfo)
+                .filter(([, info]) => info.count >= 1 && info.hasKernel)
+                .map(([stream]) => Number(stream))
+                .filter(stream => !allDepthStreams.includes(stream)),
+            ...extraDepthStreams
+        ];
 
         const hasCapstone = gridCourses.includes('ECE496') && gridCourses.includes('ECE497') ||
                             gridCourses.includes('APS490') && gridCourses.includes('APS491') ||
@@ -116,10 +122,10 @@ const CourseGrid:FC<CourseGridProps> = ({ courses, coursesOnGrid, coursesUsed, s
             if (hasStream6Depth) {
                 if (hasStream5Depth || hasStream5Breadth) ceOrEE = 'CE';
                 else ceOrEE = 'EE';
-            } else if (hasStream5Depth) {
-                if (hasStream6Breadth) ceOrEE = 'CE';
-                else ceOrEE = 'EE';
+            } else if (hasStream5Depth && hasStream6Breadth) {
+                ceOrEE = 'CE';
             }
+            ceOrEE = 'EE';
         }
 
         return {
