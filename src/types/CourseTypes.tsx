@@ -4,6 +4,7 @@ interface CourseIdentifier {
     preq?: (string | string[])[];
     color?: string;
     streams?: number[];
+    kernel?: boolean;
 };
 
 interface ValidTermAvailability {
@@ -32,6 +33,7 @@ interface CourseIdentifierWithoutCode {
     preq?: (string | string[])[];
     color?: string;
     streams?: number[];
+    kernel?: boolean;
 };
 
 export type CourseCardPropsWithoutCode = 
