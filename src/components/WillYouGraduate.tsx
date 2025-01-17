@@ -21,7 +21,7 @@ const WillYouGraduate: FC<WillYouGraduateProps> = ({ conditions }) => {
                     <h3 className="text-lg font-semibold mb-1">Depth and Breadth</h3>
                     <p>Depth: {conditions.hasDepth ? '✅' : '❌'}</p>
                     <p>{conditions.depthStreams?.length ? 
-                        `Depth streasm: ${conditions.depthStreams?.join(', ')}` : null }</p>
+                        `Depth streams: ${conditions.depthStreams?.join(', ')}` : null }</p>
                     <p>Breadth: {conditions.hasBreadth ? '✅' : '❌'}</p>
                     <p>{conditions.breadthStreams?.length ? 
                         `Breadth streams: ${conditions.breadthStreams?.join(', ')}` : null }</p>
