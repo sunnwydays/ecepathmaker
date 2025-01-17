@@ -22,6 +22,7 @@ const Courses = () => {
         availableS: true,
         isCS: false,
         isHSS: false,
+        isSciMath: false,
         isArtSci: false,
         isEng: false
     });
