@@ -20,12 +20,14 @@ const courses: CourseList = {
         name: 'Fundamentals of Optics',
         streams: [1],
         color: 'ffcc99', // Peach for Stream 1
+        kernel: true,
     },
     'ECE335': {
         name: 'Introduction to Electronic Devices',
         streams: [1],
         onlyF: true,
         color: 'ffcc99',
+        kernel: true,
     },
     'ECE330': {
         name: 'Quantum and Semiconductor Physics',
@@ -59,18 +61,21 @@ const courses: CourseList = {
         streams: [2],
         onlyF: true,
         color: '99ccff', // Light Blue for Stream 2
+        kernel: true,
     },
     'ECE313': {
         name: 'Energy Systems and Distributed Generation',
         streams: [2],
         onlyS: true,
         color: '99ccff',
+        kernel: true,
     },
     'ECE320': {
         name: 'Fields and Waves',
         streams: [2],
         onlyF: true,
         color: '99ccff',
+        kernel: true,
     },
     'ECE424': {
         name: 'Microwave Circuits',
@@ -97,11 +102,13 @@ const courses: CourseList = {
         streams: [3],
         onlyF: true,
         color: 'b3e6b3', // Light Green for Stream 3
+        kernel: true,
     },
     'ECE334': {
         name: 'Digital Electronics',
         streams: [3],
         color: 'b3e6b3',
+        kernel: true,
     },
     'ECE430': {
         name: 'Analog Integrated Circuits',
@@ -161,12 +168,14 @@ const courses: CourseList = {
         name: 'Co-302 Computer Networks I',
         streams: [5],
         color: 'ffb3b3', // Light Red for Stream 5
+        kernel: true,
     },
     'ECE342': {
         name: 'Computer Hardware',
         streams: [5],
         onlyS: true,
         color: 'ffb3b3',
+        kernel: true,
     },
     'ECE461': {
         name: 'Internetworking',
@@ -199,11 +208,13 @@ const courses: CourseList = {
         name: 'Operating Systems',
         streams: [6],
         color: 'ffd699', // Light Orange for Stream 6
+        kernel: true,
     },
     'ECE345': {
         name: 'Algorithms & Data Structures',
         streams: [6],
         color: 'ffd699',
+        kernel: true,
     },
     'APS360': {
         name: 'Applied Fundamentals of Deep Learning',
