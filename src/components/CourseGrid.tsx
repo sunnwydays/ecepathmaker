@@ -124,8 +124,9 @@ const CourseGrid:FC<CourseGridProps> = ({ courses, coursesOnGrid, coursesUsed, s
                 else ceOrEE = 'EE';
             } else if (hasStream5Depth && hasStream6Breadth) {
                 ceOrEE = 'CE';
+            } else {
+                ceOrEE = 'EE';
             }
-            ceOrEE = 'EE';
         }
 
         return {
