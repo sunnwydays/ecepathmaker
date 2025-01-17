@@ -27,6 +27,7 @@ const WillYouGraduate: FC<WillYouGraduateProps> = ({ conditions }) => {
                         <li>Breadth: {conditions.hasBreadth ? '✅' : '❌'}</li>
                         {conditions.breadthStreams?.length > 0 &&
                             <li>Breadth streams: {conditions.breadthStreams?.join(', ')}</li>}
+                        {conditions.ceOrEE && <li>You are <b className='font-semibold'>{conditions.ceOrEE === 'CE' ? 'CE 🖥' : 'EE 🔌'}</b></li>}
                     </ul>
                 </div>
                 <div>
@@ -58,9 +59,7 @@ const WillYouGraduate: FC<WillYouGraduateProps> = ({ conditions }) => {
                     <h3 className="text-lg font-semibold mb-1">Check on your own</h3>
                     <ul className="space-y-1">
                         <li>Sci/Math (area 7): { conditions.hasSciMath ? '✅' : '❌' }</li>
-                        <li>Kernels</li>
                         <li>Free & Technical electives</li>
-                        <li>CE or EE</li>
                     </ul>
                 </div>
             </div>
