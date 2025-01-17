@@ -127,11 +127,13 @@ const courses: CourseList = {
         name: 'Introduction to Control Systems',
         streams: [4],
         color: 'e6b3ff', // Light Purple for Stream 4
+        kernel: true,
     },
     'ECE316': {
         name: 'Communication Systems',
         streams: [4],
         color: 'e6b3ff',
+        kernel: true,
     },
     'ECE302': {
         name: 'Probability and Applications',
