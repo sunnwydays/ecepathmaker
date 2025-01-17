@@ -15,6 +15,7 @@ const CourseForm:FC<CourseFormProps> = ({ setCourses, setCoursesUsed }) => {
         color: "E0E0E0",
         isCS: false,
         isHSS: false,
+        isSciMath: false,
         isArtSci: false,
         onlyF: false,
         onlyS: false,
@@ -115,6 +116,7 @@ const CourseForm:FC<CourseFormProps> = ({ setCourses, setCoursesUsed }) => {
                     setCourseInfo(prev => ({...prev, isCS: true, isHSS: true}));
                 }
                 break;
+            case 'isSciMath':
             case 'isArtSci':
                 setCourseInfo(prev => ({...prev, [name]: !courseInfo[name]}));
                 break;
@@ -159,6 +161,7 @@ const CourseForm:FC<CourseFormProps> = ({ setCourses, setCoursesUsed }) => {
             color: 'E0E0E0',
             isCS: false,
             isHSS: false,
+            isSciMath: false,
             isArtSci: false,
             onlyF: false,
             onlyS: false,
@@ -307,6 +310,17 @@ const CourseForm:FC<CourseFormProps> = ({ setCourses, setCoursesUsed }) => {
                                 checked={courseInfo.isArtSci}
                             />
                             <span>ArtSci</span>
+                        </label>
+                        <label className="flex items-center gap-2">
+                            <input 
+                                name="isSciMath"
+                                type="checkbox" 
+                                data-testid="scimath" 
+                                onChange={handleInputChange}
+                                value="SciMath"
+                                checked={courseInfo.isSciMath}
+                            />
+                            <span>Sci/Math</span>
                         </label>
                     </div>
                 </div>
