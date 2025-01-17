@@ -1,6 +1,6 @@
 import Droppable from '../components/Droppable';
 
-import { FC, useEffect, useMemo, useState } from 'react';
+import { FC, useEffect, useMemo, useRef, useState } from 'react';
 import MakerCard from './MakerCard';
 import { CourseGridProps, FilterState, StreamRequirements,  } from '../types/CourseTypes';
 
@@ -17,6 +17,12 @@ import {
 import { createPortal } from 'react-dom';
 import Filter from './Filter';
 import WillYouGraduate from './WillYouGraduate';
+
+enum DropError {
+    NONE = 'NONE',
+    PREREQ = 'PREREQ',
+    TERM = 'TERM'
+}
 
 const CourseGrid:FC<CourseGridProps> = ({ courses, coursesOnGrid, coursesUsed, setCoursesOnGrid, setCoursesUsed }) => {
     const [filters, setFilters] = useState<FilterState>({
@@ -131,8 +137,56 @@ const CourseGrid:FC<CourseGridProps> = ({ courses, coursesOnGrid, coursesUsed, s
                 
                 if ((course.onlyF && targetTerm === 'S') || 
                     (course.onlyS && targetTerm === 'F')) {
-                        setInvalidDrop(true);
+                        setDropError(DropError.TERM);
                         return;
+                }
+
+                // check prereqs, allow placing on XX no matter prereqs
+                if (course.preq) {
+                    // extract year and term from slot
+                    const year = (over.id as string)[0];
+                    const term = (over.id as string)[1];
+                    const gridCourses = Object.values(coursesOnGrid).filter(code => code !== '');
+                    const prereqs = course.preq;
+                    for (const prereq of prereqs) {
+                        if (Array.isArray(prereq)) {
+                            if (!prereq.some(p => gridCourses.includes(p))) {
+                                setDropError(DropError.PREREQ);
+                                return;
+                            }
+                            for (const course of gridCourses) {
+                                const prereqYear = coursesUsed[course][0];
+                                for (const p of prereq) {
+                                    if (p !== course) continue;
+                                    if (prereqYear > year && prereqYear !== 'X') {
+                                        setDropError(DropError.PREREQ);
+                                        return;
+                                    }
+                                    if (prereqYear === year && coursesUsed[course][1] >= term) {
+                                        setDropError(DropError.PREREQ);
+                                        return;
+                                    }
+                                }
+                            }
+                        } else {
+                            if (!gridCourses.includes(prereq)) {
+                                setDropError(DropError.PREREQ);
+                                return;
+                            }
+                            for (const course of gridCourses) {
+                                const prereqYear = coursesUsed[course][0];
+                                if (prereq !== course) continue;
+                                if (prereqYear > year && prereqYear !== 'X') {
+                                    setDropError(DropError.PREREQ);
+                                    return;
+                                }
+                                if (prereqYear === year && coursesUsed[course][1] >= term) {
+                                    setDropError(DropError.PREREQ);
+                                    return;
+                                }
+                            }
+                        }
+                    }
                 }
             }
 
@@ -168,13 +222,22 @@ const CourseGrid:FC<CourseGridProps> = ({ courses, coursesOnGrid, coursesUsed, s
         }
     }
 
-    const [invalidDrop, setInvalidDrop] = useState(false);
+    const [dropError, setDropError] = useState<DropError>(DropError.NONE);
+    const timeoutRef = useRef<NodeJS.Timeout>();
 
     useEffect(() => {
-        if (invalidDrop) {
-            setTimeout(() => setInvalidDrop(false), 2000);
+        if (dropError !== DropError.NONE) {
+            timeoutRef.current = setTimeout(() => {
+                setDropError(DropError.NONE);
+            }, 2000);
         }
-    }, [invalidDrop]);
+
+        return () => {
+            if (timeoutRef.current) {
+                clearTimeout(timeoutRef.current);
+            }
+        };
+    }, [dropError]);
 
     return (
         <DndContext onDragEnd={handleDragEnd} onDragStart={handleDragStart} sensors={sensors}>
@@ -226,7 +289,7 @@ const CourseGrid:FC<CourseGridProps> = ({ courses, coursesOnGrid, coursesUsed, s
                     }
                 </DragOverlay>,
             document.body)}
-            {invalidDrop && (
+            {dropError !== DropError.NONE && (
                 <div className="
                     fixed top-6 left-1/2 transform -translate-x-1/2
                     flex items-center justify-center
@@ -240,7 +303,10 @@ const CourseGrid:FC<CourseGridProps> = ({ courses, coursesOnGrid, coursesUsed, s
                         text-center
                         animate-bounce
                     ">
-                        Invalid term for this course!
+                        {dropError === DropError.PREREQ ? 
+                            'Missing prerequisites!' :
+                            'Invalid term for this course!'
+                        }
                     </div>
                 </div>
             )}
