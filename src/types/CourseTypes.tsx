@@ -56,6 +56,7 @@ export interface StreamRequirements {
     hasSciMath: boolean;
     hasEconomics: boolean;
     hasCapstone: boolean;
+    ceOrEE: string | null;
 };
 
 export type GridPosition = 

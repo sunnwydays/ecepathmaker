@@ -103,17 +103,37 @@ const CourseGrid:FC<CourseGridProps> = ({ courses, coursesOnGrid, coursesUsed, s
                             gridCourses.includes('APS490') && gridCourses.includes('APS491') ||
                             gridCourses.includes('BME498') && gridCourses.includes('BME499');
 
+        const hasBreadth = breadthStreams.length >= 2;
+        const hasDepth = depthStreams.length >= 2;
+
+        let ceOrEE = null;
+        if (hasBreadth && hasDepth) {
+            const hasStream6Depth = depthStreams.includes(6);
+            const hasStream5Depth = depthStreams.includes(5);
+            const hasStream5Breadth = breadthStreams.includes(5);
+            const hasStream6Breadth = breadthStreams.includes(6);
+
+            if (hasStream6Depth) {
+                if (hasStream5Depth || hasStream5Breadth) ceOrEE = 'CE';
+                else ceOrEE = 'EE';
+            } else if (hasStream5Depth) {
+                if (hasStream6Breadth) ceOrEE = 'CE';
+                else ceOrEE = 'EE';
+            }
+        }
+
         return {
             hasCS: gridCourses.filter(code => courses[code]?.isCS).length >= 4,
             hasHSS: gridCourses.filter(code => courses[code]?.isHSS).length >= 2,
             streamCounts,
             breadthStreams,
             depthStreams,
-            hasBreadth: breadthStreams.length >= 2,
-            hasDepth: depthStreams.length >= 2,
+            hasBreadth,
+            hasDepth,
             hasEconomics: gridCourses.includes('ECE472'),
             hasCapstone,
             hasSciMath: gridCourses.some(code => courses[code]?.isSciMath),
+            ceOrEE,
         } as StreamRequirements;
     }, [coursesOnGrid, courses]);
 
