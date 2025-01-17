@@ -302,17 +302,6 @@ const CourseForm:FC<CourseFormProps> = ({ setCourses, setCoursesUsed }) => {
                         </label>
                         <label className="flex items-center gap-2">
                             <input 
-                                name="isArtSci"
-                                type="checkbox" 
-                                data-testid="artsci" 
-                                onChange={handleInputChange}
-                                value="ArtSci"
-                                checked={courseInfo.isArtSci}
-                            />
-                            <span>ArtSci</span>
-                        </label>
-                        <label className="flex items-center gap-2">
-                            <input 
                                 name="isSciMath"
                                 type="checkbox" 
                                 data-testid="scimath" 
@@ -321,6 +310,17 @@ const CourseForm:FC<CourseFormProps> = ({ setCourses, setCoursesUsed }) => {
                                 checked={courseInfo.isSciMath}
                             />
                             <span>Sci/Math</span>
+                        </label>
+                        <label className="flex items-center gap-2">
+                            <input 
+                                name="isArtSci"
+                                type="checkbox" 
+                                data-testid="artsci" 
+                                onChange={handleInputChange}
+                                value="ArtSci"
+                                checked={courseInfo.isArtSci}
+                            />
+                            <span>ArtSci</span>
                         </label>
                     </div>
                 </div>
