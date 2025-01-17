@@ -11,6 +11,7 @@ const WillYouGraduate: FC<WillYouGraduateProps> = ({ conditions }) => {
         conditions.hasDepth &&
         conditions.hasCS &&
         conditions.hasHSS &&
+        conditions.hasSciMath &&
         conditions.hasEconomics &&
         conditions.hasCapstone;
 
@@ -56,9 +57,9 @@ const WillYouGraduate: FC<WillYouGraduateProps> = ({ conditions }) => {
                 <div>
                     <h3 className="text-lg font-semibold mb-1">Check on your own</h3>
                     <ul className="space-y-1">
+                        <li>Sci/Math (area 7): { conditions.hasSciMath ? '✅' : '❌' }</li>
                         <li>Kernels</li>
                         <li>Free & Technical electives</li>
-                        <li>Sci/Math (area 7)</li>
                         <li>CE or EE</li>
                     </ul>
                 </div>

@@ -15,6 +15,7 @@ interface ValidCourseTypeFlags {
     isCS?: boolean;
     isHSS?: boolean;
     isArtSci?: boolean;
+    isSciMath?: boolean;
 };
 
 type CourseCardProps = 
@@ -50,6 +51,7 @@ export interface StreamRequirements {
     hasDepth: boolean;
     hasCS: boolean;
     hasHSS: boolean;
+    hasSciMath: boolean;
     hasEconomics: boolean;
     hasCapstone: boolean;
 };

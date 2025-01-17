@@ -105,6 +105,7 @@ const CourseGrid:FC<CourseGridProps> = ({ courses, coursesOnGrid, coursesUsed, s
             hasDepth: depthStreams.length >= 2,
             hasEconomics: gridCourses.includes('ECE472'),
             hasCapstone,
+            hasSciMath: gridCourses.some(code => courses[code]?.isSciMath),
         } as StreamRequirements;
     }, [coursesOnGrid, courses]);
 
