@@ -61,7 +61,7 @@ const CourseForm:FC<CourseFormProps> = ({ setCourses, setCoursesUsed }) => {
                     .filter(code => code.length > 0);
             }
             // Single prerequisite
-            const code = group.trim();
+            const code = group.trim().toUpperCase();
             return code.length > 0 ? code : [];
         }).filter(group => 
             Array.isArray(group) ? group.length > 0 : group.length > 0
