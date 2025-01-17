@@ -70,26 +70,32 @@ const CourseGrid:FC<CourseGridProps> = ({ courses, coursesOnGrid, coursesUsed, s
         const gridCourses = Object.values(coursesOnGrid).filter(code => code !== '');
         
         // Count courses per stream
-        const countStreams = gridCourses.reduce((acc, code) => {
+        const streamInfo = gridCourses.reduce((acc, code) => {
             const courseStreams = courses[code]?.streams || [];
+            const isKernel = courses[code]?.kernel || false;
+            
             courseStreams.forEach(stream => {
-                acc[stream] = (acc[stream] || 0) + 1;
+                if (!acc[stream]) {
+                    acc[stream] = { count: 0, hasKernel: false };
+                }
+                acc[stream].count++;
+                if (isKernel) acc[stream].hasKernel = true;
             });
             return acc;
-        }, {} as Record<number, number>);
+        }, {} as Record<number, { count: number, hasKernel: boolean }>);
 
         const streamCounts = Array.from({ length: 6 }, (_, i) => i + 1).reduce((acc, stream) => {
-            acc[stream] = countStreams[stream] || 0;
+            acc[stream] = streamInfo[stream]?.count || 0;
             return acc;
         }, {} as Record<number, number>);
     
         // Get streams meeting requirements
-        const depthStreams = Object.entries(countStreams)
-            .filter(([, count]) => count >= 3)
+        const depthStreams = Object.entries(streamInfo)
+            .filter(([, info]) => info.count >= 3 && info.hasKernel)
             .map(([stream]) => Number(stream));
 
-        const breadthStreams = Object.entries(countStreams)
-            .filter(([, count]) => count >= 1)
+        const breadthStreams = Object.entries(streamInfo)
+            .filter(([, info]) => info.count >= 1 && info.hasKernel)
             .map(([stream]) => Number(stream))
             .filter(stream => !depthStreams.includes(stream));
 
