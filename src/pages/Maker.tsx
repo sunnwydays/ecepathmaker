@@ -36,6 +36,7 @@ const Maker = () => {
                 setCoursesUsed={setCoursesUsed}
                 setCoursesOnGrid={setCoursesOnGrid}
             />
+            <hr className="mt-8 stroke-2"/>
             <div className="grid md:grid-cols-2 grid-cols-1 gap-8">
                 <CourseForm 
                     setCourses={setCourses}
