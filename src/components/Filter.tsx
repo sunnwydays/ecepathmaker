@@ -30,6 +30,7 @@ const Filter: FC<{ filters: FilterState, setFilters: React.Dispatch<React.SetSta
             availableS: true,
             isCS: false,
             isHSS: false,
+            isSciMath: false,
             isArtSci: false,
             isEng: false
         });
@@ -127,6 +128,16 @@ const Filter: FC<{ filters: FilterState, setFilters: React.Dispatch<React.SetSta
                                 checked={filters.isHSS}
                             />
                             <span>HSS</span>
+                        </label>
+                        <label className="flex items-center gap-2">
+                            <input 
+                                name="isSciMath"
+                                type="checkbox" 
+                                onChange={handleInputChange}
+                                value="SciMath"
+                                checked={filters.isSciMath}
+                            />
+                            <span>Sci/Math</span>
                         </label>
                         <label className="flex items-center gap-2">
                             <input 

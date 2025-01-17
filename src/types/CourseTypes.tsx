@@ -105,6 +105,7 @@ export interface FilterState {
     availableS: boolean;
     isCS: boolean;
     isHSS: boolean;
+    isSciMath: boolean;
     isArtSci: boolean;
     isEng: boolean;
 };
