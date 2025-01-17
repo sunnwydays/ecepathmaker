@@ -46,10 +46,12 @@ const WillYouGraduate: FC<WillYouGraduateProps> = ({ conditions }) => {
                 <div>
                     <h3 className="text-lg font-semibold">Courses missing prereqs</h3>
                 </div>
-                { graduation ? <h2 className="mt-2 text-2xl font-semibold text-green3">🎓 You graduate</h2>
-                : <h2 className="mt-2 text-2xl font-semibold text-comp3">😅 You are not graduating with this one</h2> }
+            </div>
+            <div className='mt-8 p-8 flex flex-col items-center justify-center w-full bg-neutral1 rounded shadow'>
+                { graduation ? <h2 className="text-2xl font-semibold text-green3">🎓 You graduate</h2>
+                : <h2 className="text-2xl font-semibold text-comp3">😅 You are not graduating with this one</h2> }
                 <div>
-                    <p className='mt-2 text-neutral-500'>Other requirements: PEY / 600h technical xp, AUs, Courses overlapping streams, Kernels, Free & Technical electives, Sci/Math (area 7), Exclusions, Minors/Certs, 1.5 300/400 ArtSci credit limit (Magellan tells you most of these)</p>
+                    <p className='mt-4 text-neutral-500'>Also check other requirements: PEY / 600h technical xp, AUs, Courses overlapping streams, Kernels, Free & Technical electives, Sci/Math (area 7), Exclusions, Minors/Certs, 1.5 300/400 ArtSci credit limit (Magellan tells you most of these)</p>
                 </div>
             </div>
         </div>
