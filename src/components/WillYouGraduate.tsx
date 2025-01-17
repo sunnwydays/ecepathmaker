@@ -34,8 +34,8 @@ const WillYouGraduate: FC<WillYouGraduateProps> = ({ conditions }) => {
                 </div>
                 <div>
                     <h3 className="text-lg font-semibold">Courses per stream</h3>
-                    <p>{Object.keys(conditions.streamCounts).map(([stream, count]) => (
-                        parseInt(count) > 0 && (
+                    <p>{Object.entries(conditions.streamCounts).map(([stream, count]) => (
+                        count > 0 && (
                             <p key={stream}>
                                 Stream {stream}: {count}
                             </p>
