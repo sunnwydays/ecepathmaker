@@ -32,6 +32,7 @@ const courses: CourseList = {
         streams: [1],
         onlyS: true,
         color: 'ffcc99',
+        isSciMath: true,
     },
     'ECE427': {
         name: 'Photonic Devices',
@@ -129,6 +130,7 @@ const courses: CourseList = {
         name: 'Probability and Applications',
         streams: [4, 5],
         color: 'e6b3ff',
+        isSciMath: true,
     },
     'ECE410': {
         name: 'Linear Control Systems',
@@ -179,6 +181,7 @@ const courses: CourseList = {
         onlyF: true,
         preq: [['ECE302']],
         color: 'ffb3b3',
+        isSciMath: true,
     },
     'ECE552': {
         name: 'Computer Architecture',
@@ -270,6 +273,83 @@ const courses: CourseList = {
         onlyS: true,
         preq: [['MIE236', 'ECE286', 'ECE302']],
         color: 'ffc2e0',
+    },
+    'BME440': {
+        name: 'Biomedical Engineering Technology and Investigation',
+        onlyF: true,
+        color: 'bdad04',
+        isSciMath: true,
+    },
+    'BME455': {
+        name: 'Cellular and Molecular Bioengineering II',
+        onlyF: true,
+        color: 'bdad04',
+        isSciMath: true,
+    },
+    'CHE353': {
+        name: 'Engineering Biology',
+        onlyF: true,
+        color: 'bdad04',
+        isSciMath: true,
+    },
+    'CIV220': {
+        name: 'Urban Engineering Ecology',
+        onlyF: true,
+        color: 'bdad04',
+        isSciMath: true,
+    },
+    'CIV300': {
+        name: 'Terrestrial Energy Systems',
+        color: 'bdad04',
+        isSciMath: true,
+    },
+    'ECE367': {
+        name: 'Matrix Algebra and Optimization',
+        onlyF: true,
+        color: 'bdad04',
+        isSciMath: true,
+    },
+    'ESC384': {
+        name: 'Partial Differential Equations',
+        onlyF: true,
+        color: 'bdad04',
+        isSciMath: true,
+    },
+    'BME331': {
+        name: 'Physiological Control Systems',
+        onlyS: true,
+        color: 'bdad04',
+        isSciMath: true,
+    },
+    'CHE354': {
+        name: 'Cellular and Molecular Biology',
+        onlyS: true,
+        color: 'bdad04',
+        isSciMath: true,
+    },
+    'ECE368': {
+        name: 'Probabilistic Reasoning',
+        onlyS: true,
+        color: 'bdad04',
+        isSciMath: true,
+    },
+    'ECE448': {
+        name: 'Biocomputation',
+        onlyS: true,
+        color: 'bdad04',
+        isSciMath: true,
+    },
+    'PHY358': {
+        name: '"Atoms, Molecules and Solids"',
+        onlyS: true,
+        color: 'bdad04',
+        isSciMath: true,
+    },
+    'PHY365': {
+        name: 'Quantum Information',
+        onlyS: true,
+        color: 'bdad04',
+        isSciMath: true,
     },
 };
 
