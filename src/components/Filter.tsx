@@ -38,7 +38,7 @@ const Filter: FC<{ filters: FilterState, setFilters: React.Dispatch<React.SetSta
 
     return (
         <div className="p-6 mt-4 bg-green1 bg-opacity-50 rounded shadow text-center items-center flex flex-col">
-            <form className="flex gap-8 justify-center items-center flex-wrap">
+            <form className="flex gap-x-8 gap-y-4 justify-center items-center flex-wrap">
                 <h2 className="font-semibold text-xl">Filter</h2>
                 <button 
                     type="button"
