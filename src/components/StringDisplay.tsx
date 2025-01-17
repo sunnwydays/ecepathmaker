@@ -15,13 +15,6 @@ const StringDisplay:FC<StringDisplayProps> = ({ courses, coursesOnGrid }) => {
         }
     };
 
-    const getNextPos = (pos: GridPosition): GridPosition | null => {
-        const [term, slot] = pos.split('.');
-        const slotNum = parseInt(slot);
-        if (parseInt(slot) >= 5) return null;
-        return `${term}.${slotNum + 1}` as GridPosition;
-    };
-
     useEffect(() => {
         let newStr = '';
         Object.entries(coursesOnGrid).forEach(([pos, courseCode]) => {
@@ -52,11 +45,7 @@ const StringDisplay:FC<StringDisplayProps> = ({ courses, coursesOnGrid }) => {
                     }
                 });
             }
-            const nextPos = getNextPos(pos as GridPosition);
-
-            if (nextPos && coursesOnGrid[nextPos] !== '') {
-                newStr += '$$';
-            }
+            if (pos[2] !== '5') newStr += '$$';
         });
         setStr(newStr);
     }
