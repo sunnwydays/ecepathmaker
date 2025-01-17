@@ -30,22 +30,15 @@ const StringDisplay:FC<StringDisplayProps> = ({ courses, coursesOnGrid }) => {
             if (!courseCode) return;
             const course = courses[courseCode];
             newStr += courseCode + course.name + "**";
-            if (course.streams) 
-                newStr += course.streams.join('');
-            if (course.onlyF)
-                newStr += 'f';
-            else if (course.onlyS)
-                newStr += 's';
-            if (course.isHSS)
-                newStr += 'h';
-            else if (course.isCS)
-                newStr += 'c';
-            if (course.isSciMath)
-                newStr += 'm';
-            if (course.isArtSci)
-                newStr += 'a';
-            if (course.color)
-                newStr += '#' + course.color;
+            if (course.streams) newStr += course.streams.join('');
+            if (course.kernel) newStr += 'k';
+            if (course.onlyF) newStr += 'f';
+            else if (course.onlyS) newStr += 's';
+            if (course.isHSS) newStr += 'h';
+            else if (course.isCS) newStr += 'c';
+            if (course.isSciMath) newStr += 'm';
+            if (course.isArtSci) newStr += 'a';
+            if (course.color) newStr += '#' + course.color;
             if (course.preq?.length) {
                 newStr += 'p';
                 course.preq.forEach((preq, index) => {
@@ -62,7 +55,6 @@ const StringDisplay:FC<StringDisplayProps> = ({ courses, coursesOnGrid }) => {
             const nextPos = getNextPos(pos as GridPosition);
 
             if (nextPos && coursesOnGrid[nextPos] !== '') {
-                console.log(nextPos+": "+coursesOnGrid[nextPos])
                 newStr += '$$';
             }
         });

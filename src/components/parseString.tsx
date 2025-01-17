@@ -8,26 +8,26 @@ export const isValidString = (str: string): boolean => {
     const terms = str.split('@@');
     if (terms.length > 5) return false;
 
-    const validOptionChars = new Set(['f', 's', '1', '2', '3', '4', '5', '6', 'c', 'h', 'm', 'a']);
+    const validOptionChars = new Set(['f', 's', '1', '2', '3', '4', '5', '6', 'k', 'c', 'h', 'm', 'a']);
 
     return terms.every(term => {
         // Check each term
         const courses = term.split('$$');
         if (courses.length > 5) return false;
-
+        
         return courses.every(course => {
             if (!course) return true; // Empty slots are allowed
-
+            
             // Check course format
             const parts = course.split('**');
             if (parts.length === 1) return true;
             if (parts.length !== 2) return false;
-
+            
             const [codeAndName, optionsWithPreq] = parts;
             if (codeAndName.length < 6) return false;
-
+            
             const [options, preq] = optionsWithPreq.split('p');
-
+            
             // Validate options
             for (let i = 0; i < options.length; i++) {
                 const char = options[i];
@@ -36,7 +36,7 @@ export const isValidString = (str: string): boolean => {
                     i += 6;
                 }
             }
-
+            
             // Validate preq
             if (preq) {
                 const prereqs = preq.split(',').flatMap(p => p.split('|').map(p => p.trim()));
@@ -101,6 +101,7 @@ export const parseString = (str: string): ParseString => {
                     case '4': course.streams?.push(4); break;
                     case '5': course.streams?.push(5); break;
                     case '6': course.streams?.push(6); break;
+                    case 'k': course.kernel = true; break;
                     case 'c': course.isCS = true; break;
                     case 'h': course.isHSS = true; course.isCS = true; break;
                     case 'm': course.isSciMath = true; break;
