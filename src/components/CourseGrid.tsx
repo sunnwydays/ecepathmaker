@@ -91,8 +91,6 @@ const CourseGrid:FC<CourseGridProps> = ({ courses, coursesOnGrid, coursesUsed, s
             .map(([stream]) => Number(stream))
             .filter(stream => !depthStreams.includes(stream));
 
-        const hasEconomics = gridCourses.includes('ECE472');
-
         const hasCapstone = gridCourses.includes('ECE496') && gridCourses.includes('ECE497') ||
                             gridCourses.includes('APS490') && gridCourses.includes('APS491') ||
                             gridCourses.includes('BME498') && gridCourses.includes('BME499');
@@ -105,8 +103,8 @@ const CourseGrid:FC<CourseGridProps> = ({ courses, coursesOnGrid, coursesUsed, s
             depthStreams,
             hasBreadth: breadthStreams.length >= 2,
             hasDepth: depthStreams.length >= 2,
-            hasEconomics,
-            hasCapstone
+            hasEconomics: gridCourses.includes('ECE472'),
+            hasCapstone,
         } as StreamRequirements;
     }, [coursesOnGrid, courses]);
 
