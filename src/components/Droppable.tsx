@@ -16,7 +16,7 @@ const Droppable:FC<DroppableProps> = (props) => {
         flex items-center justify-center
         text-neutral3
         rounded-md
-        ${isOver ? 'bg-green1 size-36' : 'bg-neutral1 size-32'}
+        ${isOver ? 'bg-green1 bg-opacity-70 size-36' : 'bg-neutral1 size-32'}
     `;
   
   return (
