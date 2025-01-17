@@ -38,10 +38,6 @@ const Maker = () => {
             />
             <hr className="mt-8 stroke-2"/>
             <div className="grid md:grid-cols-2 grid-cols-1 gap-8">
-                <CourseForm 
-                    setCourses={setCourses}
-                    setCoursesUsed={setCoursesUsed}
-                />
                 <div>
                     <h2 className="mt-12 mb-8 text-2xl font-semibold">Save/load layout</h2>
                     <p className="max-w-xl">Copy this string and save it for later</p>
@@ -58,6 +54,10 @@ const Maker = () => {
                         setCoursesOnGrid={setCoursesOnGrid}
                     />
                 </div>
+                <CourseForm 
+                    setCourses={setCourses}
+                    setCoursesUsed={setCoursesUsed}
+                />
             </div>
         </div>
     )
