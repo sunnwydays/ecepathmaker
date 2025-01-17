@@ -15,6 +15,7 @@ const MakerCard:FC<DraggableCardProps> = (props) => {
         const labels = [];
         if (props.isCS) labels.push('CS');
         if (props.isHSS) labels.push('HSS');
+        if (props.isSciMath) labels.push('Sci/Math');
         if (props.isArtSci) labels.push('ArtSci');
         return labels.length ? labels.join(', ') : null;
     };
