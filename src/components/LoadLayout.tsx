@@ -43,6 +43,7 @@ const LoadLayout:FC<LoadLayoutProps> = ({ courses, coursesUsed, setCourses, setC
                         bg-green2 text-white px-4 py-2 rounded
                         hover:bg-green3 transition-all
                     "
+                    data-testid="load-layout"
                 >
                     Load layout
                 </button>
