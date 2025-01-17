@@ -25,6 +25,7 @@ export const isValidString = (str: string): boolean => {
             
             const [codeAndName, optionsWithPreq] = parts;
             if (codeAndName.length < 6) return false;
+            if (!optionsWithPreq) return true;
             
             const [options, preq] = optionsWithPreq.split('p');
             
@@ -75,7 +76,6 @@ export const parseString = (str: string): ParseString => {
             if (!courseStr) return;
 
             const [codeAndName, optionsWithPreq] = courseStr.split('**');
-            const [options, preq] = optionsWithPreq.split('p');
             const code = codeAndName.substring(0, 6);
             const name = codeAndName.substring(6);
 
@@ -88,42 +88,46 @@ export const parseString = (str: string): ParseString => {
                 isHSS: false,
                 isArtSci: false
             };
+            
+            if (optionsWithPreq) {
+                const [options, preq] = optionsWithPreq.split('p');
 
-            // Parse options
-            if (options) 
-            for (let i = 0; i < options.length; i++) {
-                switch(options[i]) {
-                    case 'f': course.onlyF = true; break;
-                    case 's': course.onlyS = true; break;
-                    case '1': course.streams?.push(1); break;
-                    case '2': course.streams?.push(2); break;
-                    case '3': course.streams?.push(3); break;
-                    case '4': course.streams?.push(4); break;
-                    case '5': course.streams?.push(5); break;
-                    case '6': course.streams?.push(6); break;
-                    case 'k': course.kernel = true; break;
-                    case 'c': course.isCS = true; break;
-                    case 'h': course.isHSS = true; course.isCS = true; break;
-                    case 'm': course.isSciMath = true; break;
-                    case 'a': course.isArtSci = true; break;
-                    case '#': {
-                        course.color = options.substring(i + 1, i + 7);
-                        i += 6;
-                        break;
+                // Parse options
+                if (options) 
+                for (let i = 0; i < options.length; i++) {
+                    switch(options[i]) {
+                        case 'f': course.onlyF = true; break;
+                        case 's': course.onlyS = true; break;
+                        case '1': course.streams?.push(1); break;
+                        case '2': course.streams?.push(2); break;
+                        case '3': course.streams?.push(3); break;
+                        case '4': course.streams?.push(4); break;
+                        case '5': course.streams?.push(5); break;
+                        case '6': course.streams?.push(6); break;
+                        case 'k': course.kernel = true; break;
+                        case 'c': course.isCS = true; break;
+                        case 'h': course.isHSS = true; course.isCS = true; break;
+                        case 'm': course.isSciMath = true; break;
+                        case 'a': course.isArtSci = true; break;
+                        case '#': {
+                            course.color = options.substring(i + 1, i + 7);
+                            i += 6;
+                            break;
+                        }
                     }
                 }
-            }
 
-            // Parse prerequisites
-            if (preq) {
-                const andPrereqs = preq.split(',').map(andGroup => {
-                    // For each AND group, check if it has OR conditions
-                    if (andGroup.includes('|')) {
-                        return andGroup.split('|').map(p => p.trim().toUpperCase());
-                    }
-                    return andGroup.trim();
-                });
-                course.preq = andPrereqs;
+                // Parse prerequisites
+                if (preq) {
+                    const andPrereqs = preq.split(',').map(andGroup => {
+                        // For each AND group, check if it has OR conditions
+                        if (andGroup.includes('|')) {
+                            return andGroup.split('|').map(p => p.trim().toUpperCase());
+                        }
+                        return andGroup.trim();
+                    });
+                    course.preq = andPrereqs;
+                }
             }
 
             courses[code] = course;
