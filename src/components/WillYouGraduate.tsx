@@ -34,8 +34,12 @@ const WillYouGraduate: FC<WillYouGraduateProps> = ({ conditions }) => {
                 </div>
                 <div>
                     <h3 className="text-lg font-semibold">Courses per stream</h3>
-                    <p>{Object.keys(conditions.streamCounts).map((stream, i) => (
-                        conditions.streamCounts[stream] > 0 && <p key={i}>Stream {stream}: {conditions.streamCounts[stream]}</p>
+                    <p>{Object.keys(conditions.streamCounts).map(([stream, count]) => (
+                        parseInt(count) > 0 && (
+                            <p key={stream}>
+                                Stream {stream}: {count}
+                            </p>
+                        )
                     ))}
                     </p>
                 </div>
@@ -45,7 +49,7 @@ const WillYouGraduate: FC<WillYouGraduateProps> = ({ conditions }) => {
                 { graduation ? <h2 className="mt-2 text-2xl font-semibold text-green3">🎓 You graduate</h2>
                 : <h2 className="mt-2 text-2xl font-semibold text-comp3">😅 You are not graduating with this one</h2> }
                 <div>
-                    <p className='mt-2 text-neutral-500'>Other requirements: PEY / 600h technical xp, AUs, ce/ee, Kernels, Free & Technical electives, Sci/Math (area 7), Exclusions, Minors/Certs, 1.5 300/400 ArtSci credit limit (Magellan tells you most of these)</p>
+                    <p className='mt-2 text-neutral-500'>Other requirements: PEY / 600h technical xp, AUs, Courses overlapping streams, Kernels, Free & Technical electives, Sci/Math (area 7), Exclusions, Minors/Certs, 1.5 300/400 ArtSci credit limit (Magellan tells you most of these)</p>
                 </div>
             </div>
         </div>
