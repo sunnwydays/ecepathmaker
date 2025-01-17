@@ -16,15 +16,15 @@ const WillYouGraduate: FC<WillYouGraduateProps> = ({ conditions }) => {
 
     return (
         <div className="mt-8">
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-3">
                 <div>
-                    <h3 className="text-lg font-semibold">Basic Requirements</h3>
+                    <h3 className="text-lg font-semibold mb-1">Basic Requirements</h3>
                     <p>CS (4+): {conditions.hasCS ? '✅' : '❌'} | HSS (2+): {conditions.hasHSS ? '✅' : '❌'}</p>
                     <p>Economics: {conditions.hasEconomics ? '✅' : '❌'}</p>
                     <p>Capstone: {conditions.hasCapstone ? '✅' : '❌'}</p>
                 </div>
                 <div>
-                    <h3 className="text-lg font-semibold">Depth and Breadth</h3>
+                    <h3 className="text-lg font-semibold mb-1">Depth and Breadth</h3>
                     <p>Depth: {conditions.hasDepth ? '✅' : '❌'}
                         {conditions.depthStreams?.length ? 
                         `  |  Stream ${conditions.depthStreams?.join(', ')}` : null }</p>
@@ -33,18 +33,23 @@ const WillYouGraduate: FC<WillYouGraduateProps> = ({ conditions }) => {
                         `  |  Stream ${conditions.breadthStreams?.join(', ')}` : null }</p>
                 </div>
                 <div>
-                    <h3 className="text-lg font-semibold">Courses per stream</h3>
-                    <p>{Object.entries(conditions.streamCounts).map(([stream, count]) => (
-                        count > 0 && (
-                            <p key={stream}>
-                                Stream {stream}: {count}
-                            </p>
-                        )
-                    ))}
-                    </p>
+                    <h3 className="text-lg font-semibold mb-1">Courses per stream</h3>
+                    {Object.values(conditions.streamCounts).some(count => count > 0) ? (
+                        <div className="space-y-1">
+                            {Object.entries(conditions.streamCounts).map(([stream, count]) => (
+                                count > 0 && (
+                                    <p key={stream}>
+                                        Stream {stream}: {count}
+                                    </p>
+                                )
+                            ))}
+                        </div>
+                    ) : (
+                        <p className="text-neutral3 italic">No courses in any stream yet</p>
+                    )}
                 </div>
                 <div>
-                    <h3 className="text-lg font-semibold">Courses missing prereqs</h3>
+                    <h3 className="text-lg font-semibold mb-1">Courses missing prereqs</h3>
                 </div>
             </div>
             <div className='mt-8 p-8 flex flex-col items-center justify-center w-full bg-neutral1 rounded shadow'>
