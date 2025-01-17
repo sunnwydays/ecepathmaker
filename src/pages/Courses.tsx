@@ -47,6 +47,7 @@ const Courses = () => {
 
         if (filters.isCS && !course.isCS) return false;
         if (filters.isHSS && !course.isHSS) return false;
+        if (filters.isSciMath && !course.isSciMath) return false;
         if (filters.isArtSci && !course.isArtSci) return false;
         if (filters.isEng && course.isArtSci) return false;
 
