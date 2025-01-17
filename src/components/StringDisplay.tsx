@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from "react";
-import { StringDisplayProps } from "../types/CourseTypes";
+import { GridPosition, StringDisplayProps } from "../types/CourseTypes";
 
 const StringDisplay:FC<StringDisplayProps> = ({ courses, coursesOnGrid }) => {
     const [str, setStr] = useState('');
@@ -13,6 +13,13 @@ const StringDisplay:FC<StringDisplayProps> = ({ courses, coursesOnGrid }) => {
         } catch (err) {
             console.error('Failed to copy:', err);
         }
+    };
+
+    const getNextPos = (pos: GridPosition): GridPosition | null => {
+        const [term, slot] = pos.split('.');
+        const slotNum = parseInt(slot);
+        if (parseInt(slot) >= 5) return null;
+        return `${term}.${slotNum + 1}` as GridPosition;
     };
 
     useEffect(() => {
@@ -52,7 +59,12 @@ const StringDisplay:FC<StringDisplayProps> = ({ courses, coursesOnGrid }) => {
                     }
                 });
             }
-            newStr += '$$';
+            const nextPos = getNextPos(pos as GridPosition);
+
+            if (nextPos && coursesOnGrid[nextPos] !== '') {
+                console.log(nextPos+": "+coursesOnGrid[nextPos])
+                newStr += '$$';
+            }
         });
         setStr(newStr);
     }
