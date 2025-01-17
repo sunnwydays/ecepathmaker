@@ -50,6 +50,8 @@ export interface StreamRequirements {
     hasDepth: boolean;
     hasCS: boolean;
     hasHSS: boolean;
+    hasEconomics: boolean;
+    hasCapstone: boolean;
 };
 
 export type GridPosition = 
