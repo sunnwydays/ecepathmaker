@@ -279,12 +279,14 @@ const courses: CourseList = {
         onlyF: true,
         color: 'bdad04',
         isSciMath: true,
+        preq: ['CHE353'],
     },
     'BME455': {
         name: 'Cellular and Molecular Bioengineering II',
         onlyF: true,
         color: 'bdad04',
         isSciMath: true,
+        preq: [['CHE353', 'CHE354']],
     },
     'CHE353': {
         name: 'Engineering Biology',
@@ -297,6 +299,7 @@ const courses: CourseList = {
         onlyF: true,
         color: 'bdad04',
         isSciMath: true,
+        preq: ['CHE112H1'],
     },
     'CIV300': {
         name: 'Terrestrial Energy Systems',
@@ -317,8 +320,9 @@ const courses: CourseList = {
     },
     'BME331': {
         name: 'Physiological Control Systems',
+        streams: [4],
         onlyS: true,
-        color: 'bdad04',
+        color: 'e6b3ff',
         isSciMath: true,
     },
     'CHE354': {
@@ -326,30 +330,36 @@ const courses: CourseList = {
         onlyS: true,
         color: 'bdad04',
         isSciMath: true,
+        preq: ['CHE353'],
     },
     'ECE368': {
         name: 'Probabilistic Reasoning',
+        streams: [4],
         onlyS: true,
-        color: 'bdad04',
+        color: 'e6b3ff',
         isSciMath: true,
+        preq: [['STA286', 'ECE302']],
     },
     'ECE448': {
         name: 'Biocomputation',
+        streams: [6],
         onlyS: true,
-        color: 'bdad04',
+        color: 'ffd699',
         isSciMath: true,
     },
     'PHY358': {
-        name: '"Atoms, Molecules and Solids"',
+        name: 'Atoms, Molecules and Solids',
         onlyS: true,
         color: 'bdad04',
         isSciMath: true,
+        preq: ['PHY356'],
     },
     'PHY365': {
         name: 'Quantum Information',
         onlyS: true,
         color: 'bdad04',
         isSciMath: true,
+        preq: [['PHY256', 'PHY294', 'CHM223', 'ECE330']],
     },
 };
 
