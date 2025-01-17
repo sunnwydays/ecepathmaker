@@ -32,8 +32,9 @@ const CourseCard:FC<DraggableCardProps> = (props) => {
         const labels = [];
         if (props.isCS) labels.push('CS');
         if (props.isHSS) labels.push('HSS');
+        if (props.isSciMath) labels.push('Sci/Math');
         if (props.isArtSci) labels.push('ArtSci');
-        return labels.length ? labels.join(', ') : 'None';
+        return labels.length ? labels.join(', ') : null;
     };
     
     if (isDragging) {
@@ -73,7 +74,7 @@ const CourseCard:FC<DraggableCardProps> = (props) => {
                 <span>: {props.name}</span>
             </h1>
             <p>Streams: {getStreamLabels()}</p>
-            <p>Other labels (CS/HSS, ArtSci): {getOtherLabels()} </p>
+            {getOtherLabels() && <p>Other labels: {getOtherLabels()}</p>} 
             { props.preq && props.preq.length > 0 && <p>Prerequisites: {props.preq.join(', ')}</p> }
             {(props.onlyF || props.onlyS) && (
                 <p>{props.onlyF ? 'Fall (F)' : 'Winter (S)'} term only</p>
