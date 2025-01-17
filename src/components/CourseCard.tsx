@@ -22,6 +22,7 @@ const CourseCard:FC<DraggableCardProps> = (props) => {
     
     const getStreamLabels = () => {
         if (!props.streams?.length) return 'None';
+        if (props.kernel) return props.streams[0]+' (k)'
         return props.streams
             .map(stream => stream.toString())
             .sort((a, b) => a.localeCompare(b))
