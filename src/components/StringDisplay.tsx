@@ -72,7 +72,9 @@ const StringDisplay:FC<StringDisplayProps> = ({ courses, coursesOnGrid }) => {
     
     return (
         <section className="mt-4 flex flex-col">
-            <p className="p-2 border-2 border-green3 border-opacity-70 rounded-md bg-green1 bg-opacity-50">{str}</p>
+            <p className="p-2 border-2 border-green3 border-opacity-70 rounded-md bg-green1 bg-opacity-50 break-all">
+                {str}
+            </p>
             <button
                 onClick={handleCopy}
                 className={`
