@@ -45,7 +45,7 @@ const StringDisplay:FC<StringDisplayProps> = ({ courses, coursesOnGrid }) => {
                     }
                 });
             }
-            if (pos[2] !== '5') newStr += '$$';
+            if (pos[3] != '5') newStr += '$$';
         });
         setStr(newStr);
     }
