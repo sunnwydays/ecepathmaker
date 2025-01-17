@@ -84,8 +84,6 @@ const CourseGrid:FC<CourseGridProps> = ({ courses, coursesOnGrid, coursesUsed, s
             .filter(([, count]) => count >= 1)
             .map(([stream]) => Number(stream))
             .filter(stream => !depthStreams.includes(stream));
-        
-            console.log(breadthStreams)
 
         const hasEconomics = gridCourses.includes('ECE472');
 
@@ -168,7 +166,6 @@ const CourseGrid:FC<CourseGridProps> = ({ courses, coursesOnGrid, coursesUsed, s
             }));
             setCoursesUsed({...coursesUsed, [active.id]: ''});
         }
-        console.log(`${active.id} : ${sourceContainer} -> ${over?.id}`);
     }
 
     const [invalidDrop, setInvalidDrop] = useState(false);
