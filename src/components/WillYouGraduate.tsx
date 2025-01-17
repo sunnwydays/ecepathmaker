@@ -22,11 +22,11 @@ const WillYouGraduate: FC<WillYouGraduateProps> = ({ conditions }) => {
                     <h3 className="text-lg font-semibold mb-1">Depth and Breadth</h3>
                     <ul className='space-y-1'>
                         <li>Depth: {conditions.hasDepth ? '✅' : '❌'}</li>
-                        <li>{conditions.depthStreams?.length ? 
-                            `Depth streams: ${conditions.depthStreams?.join(', ')}` : null }</li>
+                        {conditions.depthStreams?.length > 0 &&
+                            <li>Depth streams: {conditions.depthStreams?.join(', ')}</li>}
                         <li>Breadth: {conditions.hasBreadth ? '✅' : '❌'}</li>
-                        <li>{conditions.breadthStreams?.length ? 
-                            `Breadth streams: ${conditions.breadthStreams?.join(', ')}` : null }</li>
+                        {conditions.breadthStreams?.length > 0 &&
+                            <li>Breadth streams: {conditions.breadthStreams?.join(', ')}</li>}
                     </ul>
                 </div>
                 <div>
