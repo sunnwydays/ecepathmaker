@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import mockCourses from '../components/mockCourses';
+import mockCourses from '../data/mockCourses';
 
 import {
     DndContext, 

@@ -1,5 +1,5 @@
 import { FC, useState } from "react";
-import { isValidString, parseString } from "./parseString";
+import { isValidString, parseString } from "../utils/parseString";
 import { LoadLayoutProps } from "../types/CourseTypes";
 
 const LoadLayout:FC<LoadLayoutProps> = ({ courses, coursesUsed, setCourses, setCoursesOnGrid, setCoursesUsed }) => {

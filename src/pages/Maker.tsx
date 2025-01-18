@@ -3,7 +3,7 @@ import CourseForm from '../components/CourseForm';
 import LoadLayout from '../components/LoadLayout';
 import StringDisplay from '../components/StringDisplay';
 
-import mockCourses from '../components/mockCourses';
+import mockCourses from '../data/mockCourses';
 import { useMemo, useState } from 'react';
 import { CoursesOnGrid, CoursesUsed } from '../types/CourseTypes';
 
