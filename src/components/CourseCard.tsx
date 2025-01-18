@@ -3,6 +3,7 @@ import { DraggableCardProps } from '../types/CourseTypes';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { getBrightness } from '../utils/getBrightness';
+import { getOtherLabels, getPreqLabels, getStreamLabels } from '../utils/getLabels';
 
 const CourseCard:FC<DraggableCardProps> = (props) => {
     const brightness = getBrightness(props.color || 'E0E0E0');
@@ -22,24 +23,6 @@ const CourseCard:FC<DraggableCardProps> = (props) => {
         transition,
         transform: CSS.Transform.toString(transform),
         backgroundColor: props.color ? `#${props.color}` : undefined,
-    }
-    
-    const getStreamLabels = () => {
-        if (!props.streams?.length) return 'None';
-        if (props.kernel) return props.streams[0]+' (k)'
-        return props.streams
-            .map(stream => stream.toString())
-            .sort((a, b) => a.localeCompare(b))
-            .join(', ');
-    };
-    
-    const getOtherLabels = () => {
-        const labels = [];
-        if (props.isCS) labels.push('CS');
-        if (props.isHSS) labels.push('HSS');
-        if (props.isSciMath) labels.push('Sci/Math');
-        if (props.isArtSci) labels.push('ArtSci');
-        return labels.length ? labels.join(', ') : null;
     };
     
     if (isDragging) {
@@ -79,9 +62,9 @@ const CourseCard:FC<DraggableCardProps> = (props) => {
                 <span data-testid="course-code">{props.code}</span>
                 <span>: {props.name}</span>
             </h1>
-            <p>Streams: {getStreamLabels()}</p>
-            {getOtherLabels() && <p>Other labels: {getOtherLabels()}</p>} 
-            { props.preq && props.preq.length > 0 && <p>Prerequisites: {props.preq.join(', ')}</p> }
+            <p>Streams: {getStreamLabels(props)}</p>
+            {getOtherLabels(props) && <p>Other labels: {getOtherLabels(props)}</p>} 
+            { props.preq && props.preq.length > 0 && <p>Prerequisites: {getPreqLabels(props)}</p> }
             {(props.onlyF || props.onlyS) && (
                 <p>{props.onlyF ? 'Fall (F)' : 'Winter (S)'} term only</p>
             )}
