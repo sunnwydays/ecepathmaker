@@ -62,8 +62,8 @@ const CourseCard:FC<DraggableCardProps> = (props) => {
                 <span data-testid="course-code">{props.code}</span>
                 <span>: {props.name}</span>
             </h1>
-            <p>Streams: {getStreamLabels(props)}</p>
-            {getOtherLabels(props) && <p>Other labels: {getOtherLabels(props)}</p>} 
+            { getStreamLabels(props) && <p>Stream: {getStreamLabels(props)}</p> }
+            { getOtherLabels(props) && <p>Other labels: {getOtherLabels(props)}</p> } 
             { props.preq && props.preq.length > 0 && <p>Prerequisites: {getPreqLabels(props)}</p> }
             {(props.onlyF || props.onlyS) && (
                 <p>{props.onlyF ? 'Fall (F)' : 'Winter (S)'} term only</p>
