@@ -1,8 +1,12 @@
 import { FC } from 'react';
 import { DraggableCardProps } from '../types/CourseTypes';
 import Draggable from '../components/Draggable';
+import { getBrightness } from '../utils/getBrightness';
 
 const MakerCard:FC<DraggableCardProps> = (props) => {
+    const brightness = getBrightness(props.color || 'E0E0E0');
+    const textColor = brightness > 128 ? 'text-black' : 'text-white';
+
     const getStreamLabels = () => {
         if (!props.streams?.length) return null;
         if (props.kernel) return props.streams[0]+' (k)'
@@ -43,6 +47,7 @@ const MakerCard:FC<DraggableCardProps> = (props) => {
                     text-black
                     rounded-md
                     relative
+                    ${textColor}
                     ${!props.color && 'bg-neutral2'}
                 `}
                 style={{backgroundColor: props.color ? `#${props.color}` : undefined}}

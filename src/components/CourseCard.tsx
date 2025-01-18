@@ -2,8 +2,12 @@ import { FC } from 'react';
 import { DraggableCardProps } from '../types/CourseTypes';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import { getBrightness } from '../utils/getBrightness';
 
 const CourseCard:FC<DraggableCardProps> = (props) => {
+    const brightness = getBrightness(props.color || 'E0E0E0');
+    const textColor = brightness > 128 ? 'text-black' : 'text-white';
+        
     const {
         setNodeRef, 
         attributes,
@@ -64,6 +68,7 @@ const CourseCard:FC<DraggableCardProps> = (props) => {
                 h-[11rem]
                 rounded-md
                 ${!props.color && 'bg-neutral2'}
+                ${textColor}
             `}
             ref={setNodeRef}
             style={style}
