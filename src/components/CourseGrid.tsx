@@ -297,19 +297,28 @@ const CourseGrid:FC<CourseGridProps> = ({ courses, coursesOnGrid, coursesUsed, s
                     <h2 className="lg:block hidden mb-8 ">🔍 Click a course to view more details</h2>
                     <h2 className="lg:hidden block mb-2 text-xl">☝️ Drag courses into the grid, 🔍 Click a course to view more details</h2>
                     <div className="flex flex-wrap gap-2 lg:max-h-[36rem] max-h-[24rem] overflow-y-auto">
-                        {Object.entries(coursesUsed)
-                            .filter(([, isUsed]) => !isUsed)
-                            .filter(([courseCode]) => filterCourses(courseCode))
-                            .map(([courseCode]) => (
-                                <MakerCard 
-                                key={courseCode}
-                                id={courseCode}
-                                code={courseCode}
-                                {...courses[courseCode]}
-                                />
-                            ))
-                        }
+                        {(() => {
+                            const filteredCourses = Object.entries(coursesUsed)
+                                .filter(([, isUsed]) => !isUsed)
+                                .filter(([courseCode]) => filterCourses(courseCode));
+
+                            return filteredCourses.length ? (
+                                filteredCourses.map(([courseCode]) => (
+                                    <MakerCard
+                                        key={courseCode}
+                                        id={courseCode}
+                                        code={courseCode}
+                                        {...courses[courseCode]}
+                                    />
+                                ))
+                            ) : (
+                                <div className="w-full text-center text-neutral3 italic select-none">
+                                    No courses match the current filter
+                                </div>
+                            );
+                        })()}
                     </div>
+
                 </div>
             </section>
             {createPortal(

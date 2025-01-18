@@ -53,7 +53,7 @@ const WillYouGraduate: FC<WillYouGraduateProps> = ({ conditions }) => {
                             ))}
                         </ul>
                     ) : (
-                        <p className="text-neutral3 italic">No courses in any stream yet</p>
+                        <p className="text-neutral3 italic select-none">No courses in any stream yet</p>
                     )}
                 </div>
             </div>

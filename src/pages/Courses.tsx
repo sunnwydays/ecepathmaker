@@ -76,19 +76,26 @@ const Courses = () => {
             <Filter filters={filters} setFilters={setFilters} />
             <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
                 <SortableContext items={coursesId}>
-                    <div className="mt-6 grid xl:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4">
-                        {coursesId
-                            .filter((courseId) => filterCourses(courseId))
-                            .map((course) => (
+                {(() => {
+                    const filteredCourses = coursesId.filter(filterCourses);
+
+                    return filteredCourses.length ? (
+                        <div className="mt-6 grid xl:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4">
+                            {filteredCourses.map((course) => (
                                 <CourseCard
                                     key={course}
                                     id={course}
                                     code={course}
                                     {...mockCourses[course]}
                                 />
-                            )
-                        )}
-                    </div>
+                            ))}
+                        </div>
+                    ) : (
+                        <div className="mt-6 w-full text-center text-neutral3 italic select-none">
+                            No courses match the current filter
+                        </div>
+                    );
+                })()}
                 </SortableContext>
                 {activeCourse && (
                     createPortal(
