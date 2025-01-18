@@ -4,7 +4,7 @@ import { FC, useState } from "react";
 import { CourseCardPropsWithoutCode, CourseFormProps } from "../types/CourseTypes";
 
 const CourseForm:FC<CourseFormProps> = ({ setCourses, setCoursesUsed }) => {
-    const [colorWithHash, setColorWithHash] = useState("");
+    const [colorWithHash, setColorWithHash] = useState("#E0E0E0");
     const [courseCode, setCourseCode] = useState("");
     const [preqString, setPreqString] = useState("");
 
@@ -131,7 +131,7 @@ const CourseForm:FC<CourseFormProps> = ({ setCourses, setCoursesUsed }) => {
     }
 
     const resetColor = () => {
-        setColorWithHash('');
+        setColorWithHash('#E0E0E0');
         setCourseInfo(prev => {
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const { color, ...rest } = prev;
@@ -161,7 +161,6 @@ const CourseForm:FC<CourseFormProps> = ({ setCourses, setCoursesUsed }) => {
             name: "",
             preq: [],
             streams: [],
-            color: 'E0E0E0',
             isCS: false,
             isHSS: false,
             isSciMath: false,
