@@ -6,14 +6,14 @@ ECE Pathmaker is an unofficial alternative to UofT's electrical and computer eng
 
 The project is built using the following technologies:
 - **Frontend**: React, TypeScript, HTML, Tailwind CSS, dnd-kit (drag-and-drop)
-- **Backend**: Go, SQL
 - **Testing**: Jest, manual testing
 - **Build Tools**: Vite, PostCSS
-- **CI/CD**: Hosted with continuous integration and deployment
+- **Version Control**: Git, GitHub
+- **CI/CD**: Hosted with continuous integration and deployment on Vercel
 
 ## Feedback
 
-We value your feedback! Please provide your feedback [here](https://forms.gle/YjY4d6zPToQ9c2Ea6).
+I value your feedback! Please provide your feedback [here](https://forms.gle/YjY4d6zPToQ9c2Ea6).
 
 ## Getting Started
 
