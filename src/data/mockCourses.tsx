@@ -8,7 +8,7 @@ const courses: CourseList = {
     'CST000': {
         name: 'cs',
         isCS: true,
-        color: '8faadc', // Light Blue for CS
+        color: 'a89c64', // Muted Olive for CS
     },
     'HSS000': {
         name: 'hss',
@@ -244,29 +244,36 @@ const courses: CourseList = {
     },
     'ECE472': {
         name: 'Engineering Economics',
+        color: '091f7d'
     },
     'ECE496': {
         name: 'Design Project h1 (capstone)',
+        color: '091f7d'
     },
     'ECE497': {
         name: 'Design Project h2 not a real course (capstone)',
+        color: '091f7d'
     },
     'APS490': {
         name: 'Multi-Disciplinary Capstone Design h1',
+        color: '091f7d'
     },
     'APS491': {
         name: 'Multi-Disciplinary Capstone Design h2 not a real course',
+        color: '091f7d'
     },
     'BME498': {
         name: 'Biomedical Engineering Capstone Design h1',
+        color: '091f7d'
     },
     'BME499': {
         name: 'Biomedical Engineering Capstone Design h2 not a real course',
+        color: '091f7d'
     },
     'JRE410': {
         name: 'Markets and Competitive Strategy',
         isCS: true,
-        color: '8faadc',
+        color: 'a89c64',
     },
     'JRE420': {
         name: 'People Management and Organizational Behaviour',
@@ -300,45 +307,45 @@ const courses: CourseList = {
     'BME440': {
         name: 'Biomedical Engineering Technology and Investigation',
         onlyF: true,
-        color: 'bdad04',
+        color: 'e0c400',
         isSciMath: true,
         preq: ['CHE353'],
     },
     'BME455': {
         name: 'Cellular and Molecular Bioengineering II',
         onlyF: true,
-        color: 'bdad04',
+        color: 'e0c400',
         isSciMath: true,
         preq: [['CHE353', 'CHE354']],
     },
     'CHE353': {
         name: 'Engineering Biology',
         onlyF: true,
-        color: 'bdad04',
+        color: 'e0c400',
         isSciMath: true,
     },
     'CIV220': {
         name: 'Urban Engineering Ecology',
         onlyF: true,
-        color: 'bdad04',
+        color: 'e0c400',
         isSciMath: true,
         preq: ['CHE112H1'],
     },
     'CIV300': {
         name: 'Terrestrial Energy Systems',
-        color: 'bdad04',
+        color: 'e0c400',
         isSciMath: true,
     },
     'ECE367': {
         name: 'Matrix Algebra and Optimization',
         onlyF: true,
-        color: 'bdad04',
+        color: 'e0c400',
         isSciMath: true,
     },
     'ESC384': {
         name: 'Partial Differential Equations',
         onlyF: true,
-        color: 'bdad04',
+        color: 'e0c400',
         isSciMath: true,
     },
     'BME331': {
@@ -351,7 +358,7 @@ const courses: CourseList = {
     'CHE354': {
         name: 'Cellular and Molecular Biology',
         onlyS: true,
-        color: 'bdad04',
+        color: 'e0c400',
         isSciMath: true,
         preq: ['CHE353'],
     },
@@ -373,14 +380,14 @@ const courses: CourseList = {
     'PHY358': {
         name: 'Atoms, Molecules and Solids',
         onlyS: true,
-        color: 'bdad04',
+        color: 'e0c400',
         isSciMath: true,
         preq: ['PHY356'],
     },
     'PHY365': {
         name: 'Quantum Information',
         onlyS: true,
-        color: 'bdad04',
+        color: 'e0c400',
         isSciMath: true,
         preq: [['PHY256', 'PHY294', 'CHM223', 'ECE330']],
     },
