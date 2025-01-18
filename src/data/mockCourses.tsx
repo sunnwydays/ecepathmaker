@@ -1,21 +1,6 @@
 import { CourseList } from "../types/CourseTypes";
 
 const courses: CourseList = {
-    'AAA000': {
-        name: 'placeholder',
-        color: 'cccccc',
-    },
-    'CST000': {
-        name: 'cs',
-        isCS: true,
-        color: 'a89c64', // Muted Olive for CS
-    },
-    'HSS000': {
-        name: 'hss',
-        isCS: true,
-        isHSS: true,
-        color: 'd4a5a5', // Light Red for HSS
-    },
     'ECE318': {
         name: 'Fundamentals of Optics',
         streams: [1],
@@ -390,6 +375,21 @@ const courses: CourseList = {
         color: 'e0c400',
         isSciMath: true,
         preq: [['PHY256', 'PHY294', 'CHM223', 'ECE330']],
+    },
+    'AAA000': {
+        name: 'placeholder',
+        color: 'cccccc',
+    },
+    'CST000': {
+        name: 'cs',
+        isCS: true,
+        color: 'a89c64', // Muted Olive for CS
+    },
+    'HSS000': {
+        name: 'hss',
+        isCS: true,
+        isHSS: true,
+        color: 'd4a5a5', // Light Red for HSS
     },
 };
 
