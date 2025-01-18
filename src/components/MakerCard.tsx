@@ -42,6 +42,7 @@ const MakerCard:FC<DraggableCardProps> = (props) => {
                     flex flex-col items-center justify-center 
                     text-black
                     rounded-md
+                    relative
                     ${!props.color && 'bg-neutral2'}
                 `}
                 style={{backgroundColor: props.color ? `#${props.color}` : undefined}}
@@ -63,6 +64,8 @@ const MakerCard:FC<DraggableCardProps> = (props) => {
                         { getOtherLabels() && <p>{getOtherLabels()}</p> }
                     </>
                 )}
+                {props.onlyF && <span className="absolute top-0 right-0 text-xs bg-white bg-opacity-20 rounded-full p-1">🍂</span>}
+                {props.onlyS && <span className="absolute top-0 right-0 text-xs bg-white bg-opacity-20 rounded-full p-1">❄️</span>}
             </article>
         }</Draggable>
     );
