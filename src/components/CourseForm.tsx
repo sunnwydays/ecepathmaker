@@ -12,7 +12,6 @@ const CourseForm:FC<CourseFormProps> = ({ setCourses, setCoursesUsed }) => {
         name: "",
         preq: [],
         streams: [],
-        color: "E0E0E0",
         isCS: false,
         isHSS: false,
         isSciMath: false,
@@ -132,8 +131,12 @@ const CourseForm:FC<CourseFormProps> = ({ setCourses, setCoursesUsed }) => {
     }
 
     const resetColor = () => {
-        setColorWithHash('#E0E0E0');
-        setCourseInfo(prev => ({...prev, color: 'E0E0E0'}));
+        setColorWithHash('');
+        setCourseInfo(prev => {
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            const { color, ...rest } = prev;
+            return rest;
+        });
     }
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -207,6 +210,7 @@ const CourseForm:FC<CourseFormProps> = ({ setCourses, setCoursesUsed }) => {
                     <div className="flex gap-2">
                         <HexColorInput color={colorWithHash} onChange={handleColorChange} placeholder="Colour (e.g. E0E0E0)" className="w-full p-2 border rounded span" />
                         <button 
+                            type="button"
                             className="bg-neutral3 text-white px-4 py-2 rounded hover:bg-neutral2 transition-all"
                             onClick={resetColor}
                         >
