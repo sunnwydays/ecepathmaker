@@ -6,8 +6,7 @@ const LoadLayout:FC<LoadLayoutProps> = ({ courses, coursesUsed, setCourses, setC
     const [str, setStr] = useState('')
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const val = e.target.value;
-        setStr(val);
+        setStr(e.target.value);
     }
     
     const handleSubmit = (e: React.FormEvent) => {
@@ -21,7 +20,7 @@ const LoadLayout:FC<LoadLayoutProps> = ({ courses, coursesUsed, setCourses, setC
         Object.keys(coursesUsed).forEach(key => {
             coursesUsed[key] = '';
         });
-        setCoursesUsed({...coursesUsed, ...result.coursesUsed});
+        setCoursesUsed({...result.coursesUsed, ...coursesUsed});
     }
 
     return (
