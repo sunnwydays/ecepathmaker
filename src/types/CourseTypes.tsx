@@ -60,7 +60,7 @@ export interface StreamRequirements {
 };
 
 export type YearTerm = 
-    | '3F' | '3S' | '4F' | '4S' | 'XX' | '';
+    | '3F' | '3S' | '4F' | '4S' | 'XX';
 
 export type GridPositionBase = 
 | '3F.1' | '3F.2' | '3F.3' | '3F.4' | '3F.5'
