@@ -19,7 +19,7 @@ const Droppable:FC<DroppableProps> = (props) => {
         rounded-md
         ${props.valid ? 
           isOver ? 'bg-green1 bg-opacity-70 size-36' : 'bg-neutral1 size-32'
-          : 'bg-comp2 bg-opacity-50 size-32 text-opacity-0'
+          : 'bg-comp3 bg-opacity-55 size-32 text-opacity-0'
         }
     `;
   
