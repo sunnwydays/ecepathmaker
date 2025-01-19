@@ -4,7 +4,11 @@ import Draggable from '../components/Draggable';
 import { getBrightness } from '../utils/getBrightness';
 import { getOtherLabels, getPreqLabels, getStreamLabels } from '../utils/getLabels';
 
-const MakerCard:FC<DraggableCardProps> = (props) => {
+interface MakerCardProps extends DraggableCardProps {
+    valid: boolean;
+};
+
+const MakerCard:FC<MakerCardProps> = (props) => {
     const brightness = getBrightness(props.color || 'E0E0E0');
     const textColor = brightness > 128 ? 'text-black' : 'text-white';
 
@@ -19,10 +23,14 @@ const MakerCard:FC<DraggableCardProps> = (props) => {
                     text-black
                     rounded-md
                     relative
-                    ${textColor}
+                    ${props.valid ? textColor : 'text-black'}
                     ${!props.color && 'bg-neutral2'}
                 `}
-                style={{backgroundColor: props.color ? `#${props.color}` : undefined}}
+                style={{backgroundColor: 
+                    props.valid ? 
+                        props.color ? `#${props.color}` : undefined : 
+                        'rgba(255, 111, 97, 0.7)',
+                }}
             >
                 <h1 className="text-xl font-medium">{props.code}</h1> 
                 <p className={`${isExpanded ? "w-36 line-clamp-3" : "w-28 line-clamp-2"} text-center text-sm`}>{props.name}</p>

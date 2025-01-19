@@ -59,6 +59,9 @@ export interface StreamRequirements {
     ceOrEE: string | null;
 };
 
+export type YearTerm = 
+    | '3F' | '3S' | '4F' | '4S' | 'XX' | '';
+
 export type GridPosition = 
     | '3F.1' | '3F.2' | '3F.3' | '3F.4' | '3F.5'
     | '3S.1' | '3S.2' | '3S.3' | '3S.4' | '3S.5'
@@ -68,6 +71,13 @@ export type GridPosition =
 
 export type CoursesOnGrid = Record<GridPosition, string>;
 export type CoursesUsed = Record<string, string>;
+export type ValidYearTerms = Record<YearTerm, boolean>
+
+export interface ValidYearTermsProps {
+    coursesOnGrid: CoursesOnGrid;
+    coursesUsed: CoursesUsed;
+    course: CourseCardPropsWithoutCode;
+}
 
 export interface CourseGridProps {
     courses: CourseList;

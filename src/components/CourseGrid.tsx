@@ -2,7 +2,7 @@ import Droppable from '../components/Droppable';
 
 import { FC, useEffect, useMemo, useRef, useState } from 'react';
 import MakerCard from './MakerCard';
-import { CourseGridProps, FilterState, StreamRequirements,  } from '../types/CourseTypes';
+import { CourseGridProps, FilterState, ValidYearTerms, StreamRequirements, GridPosition,  } from '../types/CourseTypes';
 
 import {
     DndContext, 
@@ -17,6 +17,8 @@ import {
 import { createPortal } from 'react-dom';
 import Filter from './Filter';
 import WillYouGraduate from './WillYouGraduate';
+import { getValidYearTerms } from '../utils/getValidYearTerms';
+import { getYearTerm } from '../utils/getYearTerm';
 
 enum DropError {
     NONE = 'NONE',
@@ -64,6 +66,16 @@ const CourseGrid:FC<CourseGridProps> = ({ courses, coursesOnGrid, coursesUsed, s
         return true;
     };
 
+
+    const initialValidYearTerms = useMemo<ValidYearTerms>(() => ({
+        '3F': true,
+        '3S': true,
+        '4F': true,
+        '4S': true,
+        'XX': true,
+    }) as ValidYearTerms, []);
+    
+    const [validYearTerms, setValidYearTerms] = useState<ValidYearTerms>(initialValidYearTerms);
     const [activeCourse, setActiveCourse] = useState<UniqueIdentifier | null>(null);
 
     const conditions = useMemo(() => {
@@ -154,9 +166,18 @@ const CourseGrid:FC<CourseGridProps> = ({ courses, coursesOnGrid, coursesUsed, s
 
     const handleDragStart = (e:DragStartEvent) => {
         setActiveCourse(e.active.id);
+        const ValidYearTermsProps = {
+            coursesOnGrid,
+            coursesUsed,
+            course: courses[e.active.id]
+        };
+        const validYearTerms = getValidYearTerms(ValidYearTermsProps);
+        setValidYearTerms(validYearTerms);
     }
 
     const handleDragEnd = (e:DragEndEvent) => {
+        setActiveCourse(null);
+        setValidYearTerms(initialValidYearTerms);
         const {over, active} = e;
         
         // jest testing good for setting objectives
@@ -189,14 +210,12 @@ const CourseGrid:FC<CourseGridProps> = ({ courses, coursesOnGrid, coursesUsed, s
                                 return;
                             }
                             for (const course of gridCourses) {
-                                const prereqYear = coursesUsed[course][0];
                                 for (const p of prereq) {
                                     if (p !== course) continue;
-                                    if (prereqYear > year && prereqYear !== 'X') {
-                                        setDropError(DropError.PREREQ);
-                                        return;
-                                    }
-                                    if (prereqYear === year && coursesUsed[course][1] >= term) {
+                                    const prereqYear = coursesUsed[p][0];
+                                    if (prereqYear > year && prereqYear !== 'X' ||
+                                        prereqYear === year && coursesUsed[p][1] >= term
+                                    ) {
                                         setDropError(DropError.PREREQ);
                                         return;
                                     }
@@ -208,13 +227,11 @@ const CourseGrid:FC<CourseGridProps> = ({ courses, coursesOnGrid, coursesUsed, s
                                 return;
                             }
                             for (const course of gridCourses) {
-                                const prereqYear = coursesUsed[course][0];
                                 if (prereq !== course) continue;
-                                if (prereqYear > year && prereqYear !== 'X') {
-                                    setDropError(DropError.PREREQ);
-                                    return;
-                                }
-                                if (prereqYear === year && coursesUsed[course][1] >= term) {
+                                const prereqYear = coursesUsed[prereq][0];
+                                if (prereqYear > year && prereqYear !== 'X' ||
+                                    prereqYear === year && coursesUsed[prereq][1] >= term
+                                ) {
                                     setDropError(DropError.PREREQ);
                                     return;
                                 }
@@ -278,9 +295,10 @@ const CourseGrid:FC<CourseGridProps> = ({ courses, coursesOnGrid, coursesUsed, s
             <section className="flex lg:flex-row flex-col gap-8">
                 <div className="grid grid-cols-5 gap-2 size-max flex-shrink-0">
                     {Object.entries(coursesOnGrid).map(([slot, courseCode]) => (
-                        <Droppable key={slot} id={slot}>
+                        <Droppable key={slot} id={slot} valid={validYearTerms[getYearTerm(slot as GridPosition)]}>
                             {courseCode ? (
                                 <MakerCard 
+                                    valid={ validYearTerms[getYearTerm(slot as GridPosition)]}
                                     id={courseCode}
                                     code={courseCode}
                                     {...courses[courseCode]}
@@ -305,6 +323,7 @@ const CourseGrid:FC<CourseGridProps> = ({ courses, coursesOnGrid, coursesUsed, s
                             return filteredCourses.length ? (
                                 filteredCourses.map(([courseCode]) => (
                                     <MakerCard
+                                        valid={true}
                                         key={courseCode}
                                         id={courseCode}
                                         code={courseCode}
@@ -325,6 +344,7 @@ const CourseGrid:FC<CourseGridProps> = ({ courses, coursesOnGrid, coursesUsed, s
                 <DragOverlay>
                     {activeCourse && 
                         <MakerCard
+                        valid={true}
                         id={activeCourse as string}
                         code={activeCourse as string}
                         {...courses[activeCourse]}

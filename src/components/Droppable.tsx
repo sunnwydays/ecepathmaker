@@ -4,6 +4,7 @@ import { FC, ReactNode } from 'react';
 interface DroppableProps {
     children: ReactNode;
     id: string;
+    valid: boolean;
 };
 
 const Droppable:FC<DroppableProps> = (props) => {
@@ -16,7 +17,10 @@ const Droppable:FC<DroppableProps> = (props) => {
         flex items-center justify-center
         text-neutral3
         rounded-md
-        ${isOver ? 'bg-green1 bg-opacity-70 size-36' : 'bg-neutral1 size-32'}
+        ${props.valid ? 
+          isOver ? 'bg-green1 bg-opacity-70 size-36' : 'bg-neutral1 size-32'
+          : 'bg-comp2 bg-opacity-50 size-32 text-opacity-0'
+        }
     `;
   
   return (
