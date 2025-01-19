@@ -186,59 +186,29 @@ const CourseGrid:FC<CourseGridProps> = ({ courses, coursesOnGrid, coursesUsed, s
         const sourceContainer = coursesUsed[active.id];
         if (over) {
             // term offering restrictions
-            if (!(over.id as string).includes('X')) {
-                const targetTerm = (over.id as string).includes('F') ? 'F' : 'S';
-                const course = courses[active.id as string];
-                
-                if ((course.onlyF && targetTerm === 'S') || 
-                    (course.onlyS && targetTerm === 'F')) {
-                        setDropError(DropError.TERM);
-                        return;
-                }
+            const targetTerm = (over.id as string)[1];
+            const course = courses[active.id as string];
+            
+            if ((course.onlyF && targetTerm === 'S') || 
+                (course.onlyS && targetTerm === 'F')) {
+                    setDropError(DropError.TERM);
+                    return;
+            }
 
-                // check prereqs, allow placing on XX no matter prereqs
-                if (course.preq) {
-                    // extract year and term from slot
-                    const year = (over.id as string)[0];
-                    const term = (over.id as string)[1];
-                    const gridCourses = Object.values(coursesOnGrid).filter(code => code !== '');
-                    const prereqs = course.preq;
-                    for (const prereq of prereqs) {
-                        if (Array.isArray(prereq)) {
-                            if (!prereq.some(p => gridCourses.includes(p))) {
-                                setDropError(DropError.PREREQ);
-                                return;
-                            }
-                            for (const course of gridCourses) {
-                                for (const p of prereq) {
-                                    if (p !== course) continue;
-                                    const prereqYear = coursesUsed[p][0];
-                                    if (prereqYear > year && prereqYear !== 'X' ||
-                                        prereqYear === year && coursesUsed[p][1] >= term
-                                    ) {
-                                        setDropError(DropError.PREREQ);
-                                        return;
-                                    }
-                                }
-                            }
-                        } else {
-                            if (!gridCourses.includes(prereq)) {
-                                setDropError(DropError.PREREQ);
-                                return;
-                            }
-                            for (const course of gridCourses) {
-                                if (prereq !== course) continue;
-                                const prereqYear = coursesUsed[prereq][0];
-                                if (prereqYear > year && prereqYear !== 'X' ||
-                                    prereqYear === year && coursesUsed[prereq][1] >= term
-                                ) {
-                                    setDropError(DropError.PREREQ);
-                                    return;
-                                }
-                            }
-                        }
-                    }
+            const yearTerm = getYearTerm(over.id as GridPosition);
+
+            if (!validYearTerms[yearTerm]) {
+                // somewhat accounting for moving prereq after moving the course
+                if (sourceContainer === over.id) {
+                    // return course to the bucket
+                    setCoursesOnGrid(prev => ({
+                        ...prev, 
+                        ...(sourceContainer && { [sourceContainer]: '' })
+                    }));
+                    setCoursesUsed({...coursesUsed, [active.id]: ''});
                 }
+                setDropError(DropError.PREREQ);
+                return;
             }
 
             // same slot
