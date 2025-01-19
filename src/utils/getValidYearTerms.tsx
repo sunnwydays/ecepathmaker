@@ -23,7 +23,7 @@ export const getValidYearTerms = ({
         validYearTerms['3F'] = false;
         validYearTerms['4F'] = false;
     }
-    if (!course.preq) return validYearTerms;
+    if (!course.preq?.length) return validYearTerms;
 
     const gridCourses = Object.values(coursesOnGrid).filter(code => code !== '');
     // locate the latest preq course on the grid
