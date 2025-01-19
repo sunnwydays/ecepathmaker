@@ -1,4 +1,5 @@
 import { CourseList, CourseCardPropsWithoutCode, CoursesOnGrid, CoursesUsed, ParseString, GridPosition, GridPositionBase } from "../types/CourseTypes";
+import { validateCourseCode, validateCourseName } from "./validateCourse";
 
 export const isValidString = (str: string): boolean => {
     // Check empty string
@@ -20,11 +21,24 @@ export const isValidString = (str: string): boolean => {
             
             // Check course format
             const parts = course.split('**');
-            if (parts.length === 1) return true;
+
+            // No options or prerequisites
+            if (parts.length === 1) {
+                const [codeAndName] = parts;
+                if (codeAndName.length < 6 ||
+                    !validateCourseCode(codeAndName.substring(0, 6)) ||
+                    !validateCourseName(codeAndName.substring(6))) 
+                        return false;
+                return true;
+            }
             if (parts.length !== 2) return false;
-            
+                
             const [codeAndName, optionsWithPreq] = parts;
-            if (codeAndName.length < 6) return false;
+            if (codeAndName.length < 6 ||
+                !validateCourseCode(codeAndName.substring(0, 6)) ||
+                !validateCourseName(codeAndName.substring(6))) 
+                    return false;
+
             if (!optionsWithPreq) return true;
             
             const [options, preq] = optionsWithPreq.split('p');
