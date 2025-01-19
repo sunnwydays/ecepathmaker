@@ -13,9 +13,9 @@ export const getValidYearTerms = ({
         '4F': true,
         '4S': true,
         'XX': true,
-    } as ValidYearTerms;
+    };
 
-    const ALL_FALSE = {
+    const ALL_FALSE: ValidYearTerms = {
         '3F': false,
         '3S': false,
         '4F': false,
@@ -39,11 +39,11 @@ export const getValidYearTerms = ({
     for (const preq of course.preq) {
         if (Array.isArray(preq)) {
             if (!preq.some(p => gridCourses.includes(p))) {
-                return ALL_FALSE as ValidYearTerms;
+                return ALL_FALSE;
             }
         } else {
             if (!gridCourses.includes(preq)) {
-                return ALL_FALSE as ValidYearTerms;
+                return ALL_FALSE;
             }
         }
     }
@@ -75,11 +75,11 @@ export const getValidYearTerms = ({
         }
     }
 
-    if (latestYearTerm === '') return ALL_FALSE as ValidYearTerms;
+    if (latestYearTerm === '') return ALL_FALSE;
 
     // get next year term
     const nextYearTerm = latestYearTerm[1] === 'F' ? `${latestYearTerm[0]}S` : latestYearTerm[0] === '3' ? '4F' : null ;
-    if (!nextYearTerm) return ALL_FALSE as ValidYearTerms;
+    if (!nextYearTerm) return ALL_FALSE;
     
     for (const yearTerm of Object.keys(validYearTerms)) {
         if (yearTerm === nextYearTerm) break;
