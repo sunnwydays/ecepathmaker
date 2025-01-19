@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { DraggableCardProps } from '../types/CourseTypes';
 import Draggable from '../components/Draggable';
-import { getBrightness } from '../utils/getBrightness';
+import { getTextColor } from '../utils/getTextColor';
 import { getOtherLabels, getPreqLabels, getStreamLabels } from '../utils/getLabels';
 
 interface MakerCardProps extends DraggableCardProps {
@@ -9,9 +9,8 @@ interface MakerCardProps extends DraggableCardProps {
 };
 
 const MakerCard:FC<MakerCardProps> = (props) => {
-    const brightness = getBrightness(props.color || 'E0E0E0');
-    const textColor = brightness > 128 ? 'text-black' : 'text-white';
-
+    const textColor = getTextColor(props.color);
+    
     return (
         <Draggable id={props.id}>{(isExpanded) =>
             <article
