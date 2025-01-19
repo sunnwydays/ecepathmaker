@@ -152,7 +152,7 @@ const CourseForm:FC<CourseFormProps> = ({ setCourses, setCoursesUsed }) => {
         }
 
         setCourses(prev => ({...prev, [courseCode.toUpperCase()]: courseInfo}));
-        setCoursesUsed(prev => ({...prev, [courseCode.toUpperCase()]: ''}));
+        setCoursesUsed(prev => ({[courseCode.toUpperCase()]: '', ...prev}));
         
         setCourseCode('');
         setPreqString('');
