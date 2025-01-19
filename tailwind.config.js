@@ -20,7 +20,8 @@ export default {
       width: {
         'wp': '65%', // width percent
         'wpl': '80%', // wp large
-        'wps': '95%', // wp small
+        'wps': '43rem', // wp small originally 95% but 43rem is min width of grid
+        'navFoot': '44.5rem',
       }
     },
   },

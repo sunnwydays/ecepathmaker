@@ -14,7 +14,10 @@ const Draggable:FC<DraggableProps> = (props) => {
   });
   const style = transform ? {
     transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
-  } : undefined;
+    touchAction: "none",
+  } : {
+    touchAction: "none",
+  };
 
   const styleClasses = `
     ${isDragging ? 'size-32 z-20' : isExpanded ? 'size-[10rem] z-30' : 'size-32 z-20'}

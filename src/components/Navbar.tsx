@@ -19,13 +19,13 @@ const Navbar:FC = () => {
     }, [prevScrollPos]);
 
     return (
-        <nav className={`md:fixed top-0 left-0 right-0 bg-white bg-opacity-95 transition-transform duration-300 z-50 shadow border-b-1 border-neutral2 ${
+        <nav className={`md:fixed top-0 left-0 right-0 md:w-full w-navFoot bg-white bg-opacity-95 transition-transform duration-300 z-50 shadow border-b-1 border-neutral2 ${
             visible ? 'md:transform md:translate-y-0' : 'md:transform md:-translate-y-full'
         }`}>
             <div className="mx-auto xl:wp lg:w-wpl w-wps flex justify-between items-center py-2 h-24">
                 <a href="/" className="w-56 z-50"><img src={logo} alt="ECE Pathmaker logo" /></a>
                 <div className="z-30 flex items-center">
-                    <div className={`z-40 bg-white md:static absolute md:w-auto md:min-h-fit left-0 w-full flex items-center px-5 md:py-0 py-12 font-medium ${isMenuOpen ? "top-24" : "top-[-100%]"} transition-all duration-500 ease-in-out`}>
+                    <div className={`z-40 bg-white md:static absolute md:w-auto w-navFoot md:min-h-fit left-0 flex items-center px-5 md:py-0 py-12 font-medium ${isMenuOpen ? "top-24" : "top-[-100%]"} transition-all duration-500 ease-in-out`}>
                         <ul className="md:gap-[3vw] gap-8 items-center text-xl flex md:flex-row flex-col mx-auto justify-center">
                             <li>
                                 <a className="hover:text-green2 transition-all mx-auto" href="/">Maker</a>

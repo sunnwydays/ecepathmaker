@@ -10,6 +10,7 @@ import {
     DragOverlay,
     DragStartEvent,
     PointerSensor,
+    TouchSensor,
     UniqueIdentifier,
     useSensor,
     useSensors,
@@ -284,7 +285,7 @@ const CourseGrid:FC<CourseGridProps> = ({ courses, coursesOnGrid, coursesUsed, s
                     <h2 className="lg:block hidden mb-2 text-xl font-medium">👈 Drag courses into the grid</h2>
                     <h2 className="lg:block hidden mb-8 ">🔍 Click a course to view more details</h2>
                     <h2 className="lg:hidden block mb-2 text-xl">☝️ Drag courses into the grid, 🔍 Click a course to view more details</h2>
-                    <div className="flex flex-wrap gap-2 lg:max-h-[36rem] max-h-[24rem] overflow-y-auto">
+                    <div className="flex flex-wrap gap-2 lg:max-h-[36rem] max-h-[24rem] lg:w-full w-[43rem] overflow-y-auto">
                         {(() => {
                             const filteredCourses = Object.entries(coursesUsed)
                                 .filter(([, isUsed]) => !isUsed)
@@ -307,7 +308,6 @@ const CourseGrid:FC<CourseGridProps> = ({ courses, coursesOnGrid, coursesUsed, s
                             );
                         })()}
                     </div>
-
                 </div>
             </section>
             {createPortal(

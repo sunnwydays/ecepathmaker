@@ -14,7 +14,7 @@ const Layout: FC<LayoutProps> = ({ children }) => {
       <div className="h-24 md:block hidden" />
       <Navbar />
       <Mobile />
-      <main className="flex-grow mx-auto xl:wp lg:w-wpl w-wps my-12">
+      <main className="flex-grow md:mx-auto mx-3 xl:wp lg:w-wpl w-wps my-12">
         {children}
         <Analytics />
       </main>

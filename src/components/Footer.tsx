@@ -10,7 +10,7 @@ const Footer:FC = () => {
     };
 
     return (
-        <footer className="bg-green3">
+        <footer className="bg-green3 md:w-full w-navFoot">
             <div className="mx-auto xl:wp lg:w-wpl w-wps py-12 text-neutral2 px-4 grid sm:grid-cols-2 grid-cols-1 gap-4">
                 <div>
                     <h3 className="font-medium mb-4 text-neutral1">ECE Pathmaker</h3>
