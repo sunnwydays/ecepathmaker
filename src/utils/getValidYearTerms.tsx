@@ -1,4 +1,4 @@
-import { ValidYearTermsProps, ValidYearTerms, GridPositionBase } from "../types/CourseTypes";
+import { ValidYearTermsProps, ValidYearTerms } from "../types/CourseTypes";
 import { getYearTerm } from "./getYearTerm";
 
 export const getValidYearTerms = ({
@@ -15,12 +15,14 @@ export const getValidYearTerms = ({
         'XX': true,
     } as ValidYearTerms;
 
-    const setAllFalse = () => {
-        validYearTerms['3F'] = false;
-        validYearTerms['3S'] = false;
-        validYearTerms['4F'] = false;
-        validYearTerms['4S'] = false;
-    }
+    const ALL_FALSE = {
+        '3F': false,
+        '3S': false,
+        '4F': false,
+        '4S': false,
+        'XX': true,
+    } as const;
+    
 
     if (course.onlyF) {
         validYearTerms['3S'] = false;
@@ -33,16 +35,15 @@ export const getValidYearTerms = ({
 
     const gridCourses = Object.values(coursesOnGrid).filter(code => code !== '');
     
+    // check AND prereqs
     for (const preq of course.preq) {
         if (Array.isArray(preq)) {
             if (!preq.some(p => gridCourses.includes(p))) {
-                setAllFalse();
-                return validYearTerms;
+                return ALL_FALSE as ValidYearTerms;
             }
         } else {
             if (!gridCourses.includes(preq)) {
-                setAllFalse();
-                return validYearTerms;
+                return ALL_FALSE as ValidYearTerms;
             }
         }
     }
@@ -74,17 +75,11 @@ export const getValidYearTerms = ({
         }
     }
 
-    if (latestYearTerm === '') {
-        setAllFalse();
-        return validYearTerms;
-    }
+    if (latestYearTerm === '') return ALL_FALSE as ValidYearTerms;
 
     // get next year term
     const nextYearTerm = latestYearTerm[1] === 'F' ? `${latestYearTerm[0]}S` : latestYearTerm[0] === '3' ? '4F' : null ;
-    if (!nextYearTerm) {
-        setAllFalse();
-        return validYearTerms;
-    }
+    if (!nextYearTerm) return ALL_FALSE as ValidYearTerms;
     
     for (const yearTerm of Object.keys(validYearTerms)) {
         if (yearTerm === nextYearTerm) break;
