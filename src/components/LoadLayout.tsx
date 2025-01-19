@@ -1,6 +1,7 @@
 import { FC, useEffect, useRef, useState } from "react";
 import { isValidString, parseString } from "../utils/parseString";
 import { LoadLayoutProps } from "../types/CourseTypes";
+import Announcement from "./Announcement";
 
 enum Load {
     NONE,
@@ -75,42 +76,8 @@ const LoadLayout:FC<LoadLayoutProps> = ({ courses, coursesUsed, setCourses, setC
                     Load layout
                 </button>
             </form>
-            {load === Load.SUCCESS && (
-                <div className="
-                    fixed top-6 left-1/2 transform -translate-x-1/2
-                    flex items-center justify-center
-                    z-50
-                ">
-                    <div className="
-                        w-64
-                        px-4 py-2 
-                        bg-green2 text-white 
-                        rounded-md shadow-md
-                        text-center
-                        animate-spin
-                    ">
-                        Layout loaded!
-                    </div>
-                </div>
-            )}
-            {load === Load.ERROR && (
-                <div className="
-                    fixed top-6 left-1/2 transform -translate-x-1/2
-                    flex items-center justify-center
-                    z-50
-                ">
-                    <div className="
-                        w-64
-                        px-4 py-2 
-                        bg-comp2 text-white 
-                        rounded-md shadow-md
-                        text-center
-                        animate-bounce
-                    ">
-                        Invalid layout!
-                    </div>
-                </div>
-            )}
+            {load === Load.SUCCESS && <Announcement success>Layout loaded!</Announcement>}
+            {load === Load.ERROR && <Announcement>Invalid layout!</Announcement>}
         </section>
     );
 };

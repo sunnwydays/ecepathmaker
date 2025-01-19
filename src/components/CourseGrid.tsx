@@ -20,6 +20,7 @@ import Filter from './Filter';
 import WillYouGraduate from './WillYouGraduate';
 import { getValidYearTerms } from '../utils/getValidYearTerms';
 import { getYearTerm } from '../utils/getYearTerm';
+import Announcement from './Announcement';
 
 enum DropError {
     NONE = 'NONE',
@@ -337,27 +338,12 @@ const CourseGrid:FC<CourseGridProps> = ({ courses, coursesOnGrid, coursesUsed, s
                     }
                 </DragOverlay>,
             document.body)}
-            {dropError !== DropError.NONE && (
-                <div className="
-                    fixed top-6 left-1/2 transform -translate-x-1/2
-                    flex items-center justify-center
-                    z-50
-                ">
-                    <div className="
-                        w-64
-                        px-4 py-2 
-                        bg-comp2 text-white 
-                        rounded-md shadow-md
-                        text-center
-                        animate-bounce
-                    ">
-                        {dropError === DropError.PREREQ ? 
-                            'Missing prerequisites!' :
-                            'Invalid term for this course!'
-                        }
-                    </div>
-                </div>
-            )}
+            {dropError !== DropError.NONE && 
+                <Announcement>{dropError === DropError.TERM ? 
+                    'Invalid term for this course!' : 
+                    'Missing prerequisites!'}
+                </Announcement>
+            }
             <Filter filters={filters} setFilters={setFilters} />
             <WillYouGraduate conditions={conditions} />
         </DndContext>
