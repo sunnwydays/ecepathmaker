@@ -20,7 +20,6 @@ const MakerCard:FC<MakerCardProps> = (props) => {
                     ${isExpanded ? 'size-[10rem] border-2 border-black border-opacity-20' : 'size-32'}
                     hover:transition-[width,height]
                     flex flex-col items-center justify-center 
-                    text-black
                     rounded-md
                     relative
                     ${props.valid ? textColor : 'text-black'}

@@ -46,7 +46,6 @@ const CourseCard:FC<DraggableCardProps> = (props) => {
             data-testid="card-container"
             className={`
                 flex flex-col justify-center 
-                text-black
                 p-8
                 h-[11rem]
                 rounded-md
