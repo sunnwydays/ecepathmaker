@@ -262,7 +262,7 @@ const CourseGrid:FC<CourseGridProps> = ({ courses, coursesOnGrid, coursesUsed, s
 
     return (
         <DndContext onDragEnd={handleDragEnd} onDragStart={handleDragStart} sensors={sensors}>
-            <section className="flex lg:flex-row flex-col gap-8">
+            <section className="flex lg:flex-row flex-col gap-8 items-center">
                 <div className="grid grid-cols-5 gap-2 size-max flex-shrink-0">
                     {Object.entries(coursesOnGrid).map(([slot, courseCode]) => (
                         <Droppable key={slot} id={slot} valid={validYearTerms[getYearTerm(slot as GridPosition)]}>
