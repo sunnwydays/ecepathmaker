@@ -57,18 +57,22 @@ export const getValidYearTerms = ({
             for (const p of preq) {
                 if (gridCourses.includes(p)) {
                     const pYearTerm = getYearTerm(coursesUsed[p]);
+                    if (pYearTerm == 'XX') {
+                        earliestYearTerm = '';
+                        break;
+                    }
                     if (earliestYearTerm === '' || pYearTerm < earliestYearTerm) {
                         earliestYearTerm = pYearTerm;
                     }
                 }
             }
-            if (latestYearTerm < earliestYearTerm && earliestYearTerm !== 'XX') {
+            if (latestYearTerm < earliestYearTerm) {
                 latestYearTerm = earliestYearTerm;
             }
         } else {
             if (gridCourses.includes(preq)) {
                 const pYearTerm = getYearTerm(coursesUsed[preq]);
-                if (pYearTerm > latestYearTerm && pYearTerm !== 'XX') {
+                if (latestYearTerm < pYearTerm && pYearTerm !== 'XX') {
                     latestYearTerm = pYearTerm;
                 }
             }
