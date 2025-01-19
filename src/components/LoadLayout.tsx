@@ -20,7 +20,7 @@ const LoadLayout:FC<LoadLayoutProps> = ({ courses, coursesUsed, setCourses, setC
         Object.keys(coursesUsed).forEach(key => {
             coursesUsed[key] = '';
         });
-        setCoursesUsed({...result.coursesUsed, ...coursesUsed});
+        setCoursesUsed({...coursesUsed, ...result.coursesUsed});
     }
 
     return (
