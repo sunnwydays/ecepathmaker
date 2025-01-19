@@ -21,7 +21,7 @@ const MakerCard:FC<MakerCardProps> = (props) => {
                     flex flex-col items-center justify-center 
                     rounded-md
                     relative
-                    ${props.valid ? textColor : 'text-black'}
+                    ${props.valid ? textColor : 'text-black text-opacity-40'}
                     ${!props.color && 'bg-neutral2'}
                 `}
                 style={{backgroundColor: 
