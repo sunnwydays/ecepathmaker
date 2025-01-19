@@ -2,6 +2,7 @@
 import { HexColorPicker, HexColorInput } from "react-colorful";
 import { FC, useState } from "react";
 import { CourseCardPropsWithoutCode, CourseFormProps } from "../types/CourseTypes";
+import { validateCourseCode, validateCourseName, validatePrerequisites } from "../utils/validateCourse";
 
 const CourseForm:FC<CourseFormProps> = ({ setCourses, setCoursesUsed }) => {
     const [colorWithHash, setColorWithHash] = useState("#E0E0E0");
@@ -29,24 +30,6 @@ const CourseForm:FC<CourseFormProps> = ({ setCourses, setCoursesUsed }) => {
         code: 'Must be 3 letters followed by 3 numbers',
         name: 'Course name cannot contain "**"',
         preq: 'Must be comma (and)- or pipe (or)-separated course codes',
-    };
-
-    const validateCourseCode = (code: string) => {
-        return /^[A-Z]{3}\d{3}$/i.test(code);
-    };
-
-    const validateCourseName = (name: string) => {
-        return !name.includes('**');
-    };
-
-    const validatePrerequisites = (preq: string) => {
-        if (!preq) return true;
-        
-        const andGroups = preq.split(',');
-        return andGroups.every(group => {
-            const orCourses = group.split('|').map(p => p.trim());
-            return orCourses.every(code => validateCourseCode(code));
-        });
     };
     
     const parsePrerequisites = (preqString: string): (string | string[])[] => {
