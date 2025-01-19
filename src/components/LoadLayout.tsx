@@ -25,7 +25,7 @@ const LoadLayout:FC<LoadLayoutProps> = ({ courses, coursesUsed, setCourses, setC
 
     return (
         <section>
-            <form onSubmit={handleSubmit} className="flex flex-col gap-4 max-w-xl">
+            <form onSubmit={handleSubmit} className="flex flex-col gap-4">
                 <div className="space-y-2">
                     <input 
                         type="text" 
