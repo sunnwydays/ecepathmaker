@@ -44,7 +44,7 @@ const Filter: FC<{ filters: FilterState, setFilters: React.Dispatch<React.SetSta
                 <button 
                     type="button"
                     onClick={resetFilters}
-                    className="text-sm text-gray-500 hover:text-gray-700"
+                    className="text-sm text-gray-500 hover:text-gray-700 py-2"
                     data-testid="reset-filters"
                 >
                     Reset Filters
