@@ -6,7 +6,11 @@ import {
     DragEndEvent,
     DragOverlay,
     DragStartEvent,
+    MouseSensor,
+    TouchSensor,
     UniqueIdentifier,
+    useSensor,
+    useSensors,
 } from '@dnd-kit/core';
 import { arrayMove, SortableContext } from '@dnd-kit/sortable';
 import CourseCard from '../components/CourseCard';
@@ -15,6 +19,20 @@ import Filter from '../components/Filter';
 import { FilterState } from '../types/CourseTypes';
 
 const Courses = () => {
+    const sensors = useSensors(
+        useSensor(MouseSensor, {
+            activationConstraint: {
+                distance: 2,
+            }
+        }),
+        useSensor(TouchSensor, {
+            activationConstraint: {
+                delay: 100,
+                tolerance: 5,
+            }
+        }),
+    );
+    
     const [filters, setFilters] = useState<FilterState>({
         searchTerm: '',
         streams: [],
@@ -74,7 +92,7 @@ const Courses = () => {
         <div>
             <h2 className="mb-8 text-2xl font-medium">🗂️ Explore and rearrange courses in my database!</h2>
             <Filter filters={filters} setFilters={setFilters} />
-            <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
+            <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd} sensors={sensors}>
                 <SortableContext items={coursesId}>
                 {(() => {
                     const filteredCourses = coursesId.filter(filterCourses);

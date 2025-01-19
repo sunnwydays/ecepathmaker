@@ -9,7 +9,7 @@ import {
     DragEndEvent,
     DragOverlay,
     DragStartEvent,
-    PointerSensor,
+    MouseSensor,
     TouchSensor,
     UniqueIdentifier,
     useSensor,
@@ -158,11 +158,17 @@ const CourseGrid:FC<CourseGridProps> = ({ courses, coursesOnGrid, coursesUsed, s
     }, [coursesOnGrid, courses]);
 
     const sensors = useSensors(
-        useSensor(PointerSensor, {
+        useSensor(MouseSensor, {
             activationConstraint: {
-                distance: 5,
+                distance: 2,
             }
-        })
+        }),
+        useSensor(TouchSensor, {
+            activationConstraint: {
+                delay: 100,
+                tolerance: 5,
+            }
+        }),
     );
 
     const handleDragStart = (e:DragStartEvent) => {
@@ -282,10 +288,10 @@ const CourseGrid:FC<CourseGridProps> = ({ courses, coursesOnGrid, coursesUsed, s
                 </div>
                 <div>
                     {/* Courses to choose from */}
-                    <h2 className="lg:block hidden mb-2 text-xl font-medium">👈 Drag courses into the grid</h2>
-                    <h2 className="lg:block hidden mb-8 ">🔍 Click a course to view more details</h2>
-                    <h2 className="lg:hidden block mb-2 text-xl">☝️ Drag courses into the grid, 🔍 Click a course to view more details</h2>
-                    <div className="flex flex-wrap gap-2 lg:max-h-[36rem] max-h-[24rem] lg:w-full w-[43rem] overflow-y-auto">
+                    <h2 className="lg:block hidden mb-2 text-xl font-medium text-center">👈 Drag courses into the grid</h2>
+                    <h2 className="lg:block hidden mb-8 text-center">🔍 Click a course to view more details</h2>
+                    <h2 className="lg:hidden block mb-2 text-xl text-center">☝️ Hold and drag courses into the grid,<br/>🔍 Click a course to view more details</h2>
+                    <div className="flex flex-wrap gap-2 lg:max-h-[36rem] max-h-[24rem] lg:w-full w-[43rem] overflow-y-auto justify-center">
                         {(() => {
                             const filteredCourses = Object.entries(coursesUsed)
                                 .filter(([, isUsed]) => !isUsed)
