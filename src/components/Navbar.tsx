@@ -19,7 +19,7 @@ const Navbar:FC = () => {
     }, [prevScrollPos]);
 
     return (
-        <nav className={`md:fixed top-0 left-0 right-0 bg-white transition-transform duration-300 z-50 shadow-md ${
+        <nav className={`md:fixed top-0 left-0 right-0 bg-white bg-opacity-95 transition-transform duration-300 z-50 shadow border-b-2 border-neutral2 ${
             visible ? 'md:transform md:translate-y-0' : 'md:transform md:-translate-y-full'
         }`}>
             <div className="mx-auto xl:wp lg:w-wpl w-wps flex justify-between items-center py-2 h-24">
