@@ -21,6 +21,7 @@ const LoadLayout:FC<LoadLayoutProps> = ({ courses, coursesUsed, setCourses, setC
             coursesUsed[key] = '';
         });
         setCoursesUsed({...coursesUsed, ...result.coursesUsed});
+        setStr('');
     }
 
     return (
