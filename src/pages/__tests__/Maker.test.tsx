@@ -85,6 +85,15 @@ describe('Maker', () => {
         fireEvent.click(submitButton);
         expect(screen.getByText(/You graduate/)).toBeInTheDocument();
         expect(screen.getByText(/CE /)).toBeInTheDocument();
+        expect(stringInput).toHaveValue('');
     });
     
+    it('prevents invalid layouts from being loaded', () => {
+        const stringInput = screen.getByTestId('string-input');
+        fireEvent.change(stringInput, { target: { value: 'something@@' } });
+        const submitButton = screen.getByPlaceholderText('Layout string');
+        fireEvent.click(submitButton);
+        expect(screen.getByText(/No courses in any stream yet/)).toBeInTheDocument();
+        expect(stringInput).toHaveValue('something@@');
+    });
 });
