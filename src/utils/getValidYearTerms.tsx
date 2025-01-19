@@ -1,4 +1,4 @@
-import { ValidYearTermsProps, ValidYearTerms } from "../types/CourseTypes";
+import { ValidYearTermsProps, ValidYearTerms, GridPositionBase } from "../types/CourseTypes";
 import { getYearTerm } from "./getYearTerm";
 
 export const getValidYearTerms = ({
@@ -15,6 +15,12 @@ export const getValidYearTerms = ({
         'XX': true,
     } as ValidYearTerms;
 
+    const setAllFalse = () => {
+        validYearTerms['3F'] = false;
+        validYearTerms['3S'] = false;
+        validYearTerms['4F'] = false;
+        validYearTerms['4S'] = false;
+    }
 
     if (course.onlyF) {
         validYearTerms['3S'] = false;
@@ -26,6 +32,21 @@ export const getValidYearTerms = ({
     if (!course.preq?.length) return validYearTerms;
 
     const gridCourses = Object.values(coursesOnGrid).filter(code => code !== '');
+    
+    for (const preq of course.preq) {
+        if (Array.isArray(preq)) {
+            if (!preq.some(p => gridCourses.includes(p))) {
+                setAllFalse();
+                return validYearTerms;
+            }
+        } else {
+            if (!gridCourses.includes(preq)) {
+                setAllFalse();
+                return validYearTerms;
+            }
+        }
+    }
+
     // locate the latest preq course on the grid
     let latestYearTerm = '';
     for (const preq of course.preq) {
@@ -51,13 +72,6 @@ export const getValidYearTerms = ({
                 }
             }
         }
-    }
-
-    const setAllFalse = () => {
-        validYearTerms['3F'] = false;
-        validYearTerms['3S'] = false;
-        validYearTerms['4F'] = false;
-        validYearTerms['4S'] = false;
     }
 
     if (latestYearTerm === '') {
