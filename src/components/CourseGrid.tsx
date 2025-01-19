@@ -199,7 +199,7 @@ const CourseGrid:FC<CourseGridProps> = ({ courses, coursesOnGrid, coursesUsed, s
 
             if (!validYearTerms[yearTerm]) {
                 // somewhat accounting for moving prereq after moving the course
-                if (sourceContainer === over.id) {
+                if (getYearTerm(sourceContainer as GridPosition) === getYearTerm(over.id as GridPosition)) {
                     // return course to the bucket
                     setCoursesOnGrid(prev => ({
                         ...prev, 
