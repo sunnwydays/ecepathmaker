@@ -199,13 +199,13 @@ const CourseGrid:FC<CourseGridProps> = ({ courses, coursesOnGrid, coursesUsed, s
 
             if (!validYearTerms[yearTerm]) {
                 // somewhat accounting for moving prereq after moving the course
-                if (!validYearTerms[getYearTerm(sourceContainer as GridPosition)]) {
+                if (!validYearTerms[getYearTerm(sourceContainer)]) {
                     // return course to the bucket
                     setCoursesOnGrid(prev => ({
                         ...prev, 
                         ...(sourceContainer && { [sourceContainer]: '' })
                     }));
-                    setCoursesUsed({...coursesUsed, [active.id]: ''});
+                    setCoursesUsed({...coursesUsed, [active.id]: '' as GridPosition});
                 }
                 setDropError(DropError.PREREQ);
                 return;
@@ -224,13 +224,13 @@ const CourseGrid:FC<CourseGridProps> = ({ courses, coursesOnGrid, coursesUsed, s
 
             // destination is empty
             if (courseAtDestination === '') {
-                setCoursesUsed({...coursesUsed, [active.id]: over.id as string});
+                setCoursesUsed({...coursesUsed, [active.id]: over.id as GridPosition});
                 return;
             }
             // destination already has a course
             setCoursesUsed({
                 ...coursesUsed,
-                [active.id]: over.id as string, 
+                [active.id]: over.id as GridPosition, 
                 [courseAtDestination]: ''
             });
         } else {
@@ -239,7 +239,7 @@ const CourseGrid:FC<CourseGridProps> = ({ courses, coursesOnGrid, coursesUsed, s
                 ...prev, 
                 ...(sourceContainer && { [sourceContainer]: '' })
             }));
-            setCoursesUsed({...coursesUsed, [active.id]: ''});
+            setCoursesUsed({...coursesUsed, [active.id]: '' as GridPosition});
         }
     }
 

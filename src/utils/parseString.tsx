@@ -1,4 +1,4 @@
-import { CourseList, CourseCardPropsWithoutCode, CoursesOnGrid, CoursesUsed, ParseString, GridPosition } from "../types/CourseTypes";
+import { CourseList, CourseCardPropsWithoutCode, CoursesOnGrid, CoursesUsed, ParseString, GridPosition, GridPositionBase } from "../types/CourseTypes";
 
 export const isValidString = (str: string): boolean => {
     // Check empty string
@@ -52,8 +52,8 @@ export const isValidString = (str: string): boolean => {
 
 export const parseString = (str: string): ParseString => {
     const terms = str.split('@@');
-    const courses:CourseList = {};
-    const coursesOnGrid:CoursesOnGrid= {
+    const courses: CourseList = {};
+    const coursesOnGrid: CoursesOnGrid = {
         '3F.1': '', '3F.2': '', '3F.3': '', '3F.4': '', '3F.5': '',
         '3S.1': '', '3S.2': '', '3S.3': '', '3S.4': '', '3S.5': '',
         '4F.1': '', '4F.2': '', '4F.3': '', '4F.4': '', '4F.5': '',
@@ -131,8 +131,8 @@ export const parseString = (str: string): ParseString => {
             }
 
             courses[code] = course;
-            const position = `${termMap[termIndex]}.${slotIndex + 1}`;
-            coursesOnGrid[position as GridPosition] = code;
+            const position = `${termMap[termIndex]}.${slotIndex + 1}` as GridPosition;
+            coursesOnGrid[position as GridPositionBase] = code;
             coursesUsed[code] = position;
         });
     });

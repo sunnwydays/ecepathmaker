@@ -1,4 +1,4 @@
-import { ValidYearTermsProps, ValidYearTerms, GridPosition } from "../types/CourseTypes";
+import { ValidYearTermsProps, ValidYearTerms } from "../types/CourseTypes";
 import { getYearTerm } from "./getYearTerm";
 
 export const getValidYearTerms = ({
@@ -34,7 +34,7 @@ export const getValidYearTerms = ({
             let earliestYearTerm = '';
             for (const p of preq) {
                 if (gridCourses.includes(p)) {
-                    const pYearTerm = getYearTerm(coursesUsed[p] as GridPosition);
+                    const pYearTerm = getYearTerm(coursesUsed[p]);
                     if (earliestYearTerm === '' || pYearTerm < earliestYearTerm) {
                         earliestYearTerm = pYearTerm;
                     }
@@ -45,7 +45,7 @@ export const getValidYearTerms = ({
             }
         } else {
             if (gridCourses.includes(preq)) {
-                const pYearTerm = getYearTerm(coursesUsed[preq] as GridPosition);
+                const pYearTerm = getYearTerm(coursesUsed[preq]);
                 if (pYearTerm > latestYearTerm && pYearTerm !== 'XX') {
                     latestYearTerm = pYearTerm;
                 }
