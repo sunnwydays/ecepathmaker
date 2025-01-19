@@ -75,7 +75,7 @@ export const getValidYearTerms = ({
         }
     }
 
-    if (latestYearTerm === '') return ALL_FALSE;
+    if (latestYearTerm === '') return validYearTerms;
 
     // get next year term
     const nextYearTerm = latestYearTerm[1] === 'F' ? `${latestYearTerm[0]}S` : latestYearTerm[0] === '3' ? '4F' : null ;
