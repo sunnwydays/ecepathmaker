@@ -277,24 +277,6 @@ const courses: CourseList = {
         name: 'Biomedical Engineering Capstone Design h2 not a real course',
         color: '091f7d'
     },
-    'JRE410': {
-        name: 'Markets and Competitive Strategy',
-        isCS: true,
-        color: 'a89c64',
-    },
-    'JRE420': {
-        name: 'People Management and Organizational Behaviour',
-        isCS: true,
-        isHSS: true,
-        color: 'd4a5a5',
-    },
-    'HPS120': {
-        name: 'How to Think about Science',
-        isCS: true,
-        isHSS: true,
-        isArtSci: true,
-        color: 'd4a5a5',
-    },
     'MIE369': {
         name: 'Introduction to Artificial Intelligence',
         onlyS: true,
@@ -310,6 +292,36 @@ const courses: CourseList = {
         name: 'Neural Networks and Deep Learning',
         preq: [['CSC311', 'CSC411', 'STA314', 'ECE421', 'ROB313']],
         color: 'ffc2e0',
+    },
+    'JRE300': {
+        name: 'Fundamentals of Accounting and Finance',
+        isCS: true,
+        color: 'a89c64',
+    },
+    'JRE410': {
+        name: 'Markets and Competitive Strategy',
+        isCS: true,
+        color: 'a89c64',
+    },
+    'JRE420': {
+        name: 'People Management and Organizational Behaviour',
+        isCS: true,
+        isHSS: true,
+        color: 'd4a5a5',
+    },
+    'TEP444': {
+        name: 'Positive Psychology for Engineers',
+        isCS: true,
+        isHSS: true,
+        color: 'd4a5a5',
+        onlyF: true,
+    },
+    'HPS120': {
+        name: 'How to Think about Science',
+        isCS: true,
+        isHSS: true,
+        isArtSci: true,
+        color: 'd4a5a5',
     },
     'BME440': {
         name: 'Biomedical Engineering Technology and Investigation',
