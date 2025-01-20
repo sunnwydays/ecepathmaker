@@ -33,11 +33,11 @@ const WillYouGraduate: FC<WillYouGraduateProps> = ({ conditions }) => {
                     <ul className='space-y-1'>
                         <li>Depth: {conditions.hasDepth ? '✅' : '❌'}</li>
                         {conditions.depthStreams?.length > 0 &&
-                            <li>Depth streams<span className='text-xs'> (first 2)</span>: {conditions.depthStreams?.join(', ')}</li>}
+                            <li>Depth streams: {conditions.depthStreams?.join(', ')}</li>}
                         <li>Breadth: {conditions.hasBreadth ? '✅' : '❌'}</li>
                         {conditions.breadthStreams?.length > 0 &&
                             <li>Breadth streams: {conditions.breadthStreams?.join(', ')}</li>}
-                        {conditions.ceOrEE && <li>You are <b className='font-semibold'>{conditions.ceOrEE === 'CE' ? 'CE 🖥' : 'EE 🔌'}</b></li>}
+                        <li>CE/EE: {conditions.ceOrEE ? <b className='font-semibold'>{conditions.ceOrEE === 'CE' ? 'CE 🖥' : 'EE 🔌'}</b> : "none"}</li>
                     </ul>
                 </div>
                 <div>
