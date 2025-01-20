@@ -39,9 +39,9 @@ const WillYouGraduate: FC<WillYouGraduateProps> = ({ conditions }) => {
     };
 
     return (
-        <div className="mt-8">
+        <div className="mt-6">
             <div className="grid grid-cols-3 gap-3">
-                <div>
+                <div className='mb-4'>
                     <h3 className="text-lg font-semibold mb-1">Basics</h3>
                     <ul className="space-y-1">
                         <li>CS (4+): {conditions.hasCS ? '✅' : '❌'}</li>
@@ -87,7 +87,7 @@ const WillYouGraduate: FC<WillYouGraduateProps> = ({ conditions }) => {
                     )}
                 </div>
             </div>
-            <div className='mt-8 p-8 flex flex-col items-center justify-center w-full bg-neutral1 rounded shadow'>
+            <div className='mt-4 p-8 flex flex-col items-center justify-center w-full bg-neutral1 rounded shadow'>
                 { graduation ? <h2 className="text-2xl font-semibold text-green3">🎓 You graduate</h2>
                 : <h2 className="text-2xl font-semibold text-comp3">😅 You are not graduating with this one</h2> }
                 <div className='text-neutral-500 mt-4 text-sm'>
