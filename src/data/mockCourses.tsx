@@ -41,6 +41,13 @@ const courses: CourseList = {
         onlyS: true,
         color: 'ffcc99',
     },
+    'ECE437': {
+        name: 'VLSI Technology',
+        streams: [1, 3],
+        preq: [['ECE331', 'ECE334', 'ECE354'], ['ECE335', 'ECE350']],
+        onlyS: true,
+        color: 'ffcc99',
+    },
     'ECE314': {
         name: 'Fundamentals of Electrical Energy Systems',
         streams: [2],
@@ -107,6 +114,13 @@ const courses: CourseList = {
         streams: [3, 4],
         onlyF: true,
         color: 'b3e6b3',
+    },
+    'ECE532': {
+        name: 'Digital Systems Design',
+        streams: [3, 5],
+        color: 'b3e6b3',
+        onlyS: true,
+        preq: [['ECE342', 'ECE352']],
     },
     'ECE311': {
         name: 'Introduction to Control Systems',
@@ -249,6 +263,13 @@ const courses: CourseList = {
         color: 'ffd699',
         isSciMath: true,
     },
+    'ECE444': {
+        name: 'Software Engineering',
+        streams: [6],
+        onlyF: true,
+        preq: [['ECE297', 'ECE344', 'ECE353']],
+        color: 'ffd699',
+    },
     'ECE472': {
         name: 'Engineering Economics',
         color: '091f7d'
@@ -315,6 +336,12 @@ const courses: CourseList = {
         isHSS: true,
         color: 'd4a5a5',
         onlyF: true,
+    },
+    'APS511': {
+        name: 'Inventions and Patents for Engineers',
+        isCS: true,
+        color: 'a89c64',
+        onlyS: true,
     },
     'HPS120': {
         name: 'How to Think about Science',
