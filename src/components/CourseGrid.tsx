@@ -104,44 +104,51 @@ const CourseGrid:FC<CourseGridProps> = ({ courses, coursesOnGrid, coursesUsed, s
         }, {} as Record<number, number>);
     
         // Get streams meeting requirements
-        const allDepthStreams = Object.entries(streamInfo)
+        const depthStreams = Object.entries(streamInfo)
             .filter(([, info]) => info.count >= 3 && info.hasKernel)
             .map(([stream]) => Number(stream));
 
-        const depthStreams = allDepthStreams.slice(0, 2);
-        const extraDepthStreams = allDepthStreams.slice(2);
-
         const breadthStreams = [
             ...Object.entries(streamInfo)
-                .filter(([, info]) => info.count >= 1 && info.hasKernel)
+                .filter(([stream, info]) => info.count >= 1 && info.hasKernel && !depthStreams.includes(Number(stream)))
                 .map(([stream]) => Number(stream))
-                .filter(stream => !allDepthStreams.includes(stream)),
-            ...extraDepthStreams
         ];
-
-        const hasCapstone = gridCourses.includes('ECE496') && gridCourses.includes('ECE497') ||
-                            gridCourses.includes('APS490') && gridCourses.includes('APS491') ||
-                            gridCourses.includes('BME498') && gridCourses.includes('BME499');
-
-        const hasBreadth = breadthStreams.length >= 2;
+        
         const hasDepth = depthStreams.length >= 2;
+        const hasBreadth = breadthStreams.length >= 2 || (breadthStreams.length === 1 && hasDepth);
+        
+        let ceOrEE = null; // null, 'CE', 'EE', or 'ECE'
+        if (hasDepth && hasBreadth) {
+            const numCEDepth = depthStreams.filter(stream => stream === 5 || stream === 6).length;
+            const numEEDepth = depthStreams.length - numCEDepth;
+            const numCEBreadth = breadthStreams.filter(stream => stream === 5 || stream === 6).length;
+            const numEEBreadth = breadthStreams.length - numCEBreadth;
+            // can't just go by count due to possibility of many EE depth and need to differentiate depth and breadth
 
-        let ceOrEE = null;
-        if (hasBreadth && hasDepth) {
-            const hasStream6Depth = depthStreams.includes(6);
-            const hasStream5Depth = depthStreams.includes(5);
-            const hasStream5Breadth = breadthStreams.includes(5);
-            const hasStream6Breadth = breadthStreams.includes(6);
+            const countCE = numCEDepth*3 + numCEBreadth;
 
-            if (hasStream6Depth) {
-                if (hasStream5Depth || hasStream5Breadth) ceOrEE = 'CE';
-                else ceOrEE = 'EE';
-            } else if (hasStream5Depth && hasStream6Breadth) {
-                ceOrEE = 'CE';
+            if (countCE >= 4) {
+                switch (numEEDepth) {
+                    case 0:
+                        ceOrEE = 'CE';
+                        break;
+                    case 1:
+                        // 0 EE breadth not possible
+                        if (numEEBreadth === 1) ceOrEE = 'CE';
+                        else ceOrEE = 'ECE';
+                        break;
+                    default:
+                        ceOrEE = 'ECE';
+                        break;
+                }
             } else {
                 ceOrEE = 'EE';
             }
         }
+        
+        const hasCapstone = gridCourses.includes('ECE496') && gridCourses.includes('ECE497') ||
+                            gridCourses.includes('APS490') && gridCourses.includes('APS491') ||
+                            gridCourses.includes('BME498') && gridCourses.includes('BME499');
 
         return {
             hasCS: gridCourses.filter(code => courses[code]?.isCS).length >= 4,
