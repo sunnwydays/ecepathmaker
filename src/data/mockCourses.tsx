@@ -304,11 +304,6 @@ const courses: CourseList = {
         preq: [['MIE236', 'ECE286', 'ECE302']],
         color: 'ffc2e0',
     },
-    'CSC412': {
-        name: 'Probabilistic Learning and Reasoning',
-        preq: [['CSC311', 'CSC411', 'STA314', 'ECE421', 'ROB313']],
-        color: 'ffc2e0',
-    },
     'CSC413': {
         name: 'Neural Networks and Deep Learning',
         preq: [['CSC311', 'CSC411', 'STA314', 'ECE421', 'ROB313']],
