@@ -70,6 +70,7 @@ String: copy to save or paste to load
 Take the string, use pointers, save the courses in an array of objects for each term
 
 ** between name and additional options
+IMPORTANT: changed ** to %% because ** causes formatting in Discord
 $$ between courses 
 @@ between terms
 

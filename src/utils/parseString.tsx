@@ -20,7 +20,7 @@ export const isValidString = (str: string): boolean => {
             if (!course) return true; // Empty slots are allowed
             
             // Check course format
-            const parts = course.split('**');
+            const parts = course.split('%%');
 
             // No options or prerequisites
             if (parts.length === 1) {
@@ -89,7 +89,7 @@ export const parseString = (str: string): ParseString => {
         coursesInTerm.forEach((courseStr, slotIndex) => {
             if (!courseStr) return;
 
-            const [codeAndName, optionsWithPreq] = courseStr.split('**');
+            const [codeAndName, optionsWithPreq] = courseStr.split('%%');
             const code = codeAndName.substring(0, 6);
             const name = codeAndName.substring(6);
 

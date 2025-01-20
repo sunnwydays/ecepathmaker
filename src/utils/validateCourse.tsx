@@ -3,7 +3,7 @@ export const validateCourseCode = (code: string) => {
 };
 
 export const validateCourseName = (name: string) => {
-    return !name.includes('**');
+    return !name.includes('%%');
 };
 
 export const validatePrerequisites = (preq: string) => {

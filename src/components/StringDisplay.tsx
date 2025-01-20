@@ -22,7 +22,7 @@ const StringDisplay:FC<StringDisplayProps> = ({ courses, coursesOnGrid }) => {
                 newStr += '@@';
             if (!courseCode) return;
             const course = courses[courseCode];
-            newStr += courseCode + course.name + "**";
+            newStr += courseCode + course.name + "%%";
             if (course.streams) newStr += course.streams.join('');
             if (course.kernel) newStr += 'k';
             if (course.onlyF) newStr += 'f';
