@@ -296,15 +296,15 @@ const CourseGrid:FC<CourseGridProps> = ({ courses, coursesOnGrid, coursesUsed, s
                 </div>
                 <div>
                     {/* Courses to choose from */}
-                    <h2 className="lg:block hidden mb-2 text-xl font-medium text-center">👈 Drag courses into the grid</h2>
-                    <h2 className="lg:block hidden mb-8 text-center">🔍 Click a course to view more details</h2>
-                    <h2 className="lg:hidden block mb-4 text-xl text-center">
+                    <h2 className="lg:block hidden mb-1 text-xl font-medium text-center">👈 Drag courses into the grid</h2>
+                    <h2 className="lg:block hidden mb-4 text-center">🔍 Click a course to view more details</h2>
+                    <h2 className="lg:hidden block mb-2 text-lg text-center">
                         ☝️ Hold and drag courses into the grid,<br/>
                         🔍 Click a course to view more details
                     </h2>
                     <div className="
                         flex flex-wrap gap-2 
-                        lg:max-h-[36rem] max-h-[24rem] 
+                        lg:max-h-[37.5rem] max-h-[22rem]
                         lg:w-full w-wps 
                         overflow-y-auto 
                         justify-center
