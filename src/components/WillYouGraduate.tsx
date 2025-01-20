@@ -92,7 +92,7 @@ const WillYouGraduate: FC<WillYouGraduateProps> = ({ conditions }) => {
                 : <h2 className="text-2xl font-semibold text-comp3">😅 You are not graduating with this one</h2> }
                 <div className='text-neutral-500 mt-4 text-sm'>
                     <p>Check on your own: Free & technical elective, PEY / 600h technical XP, CEAB, No exclusion violation, Within 1.5 credit ArtSci -300/-400 limit</p>
-                    <p>Known concerns: Course counting as multiple streams, dragging a course with prereq then removing prereq, no minor/cert check.</p>
+                    <p>Known concerns: <b className="font-medium">A course in multiple streams will in all of those streams which may affect your depth and breadth calculation</b>, dragging a course with prereq then removing prereq, no minor/cert check.</p>
                 </div>
             </div>
         </div>
