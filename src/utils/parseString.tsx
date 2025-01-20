@@ -2,6 +2,7 @@ import { CourseList, CourseCardPropsWithoutCode, CoursesOnGrid, CoursesUsed, Par
 import { validateCourseCode, validateCourseName } from "./validateCourse";
 
 export const isValidString = (str: string): boolean => {
+    str = str.trim();
     // Check empty string
     if (!str) return true;
 
@@ -65,6 +66,7 @@ export const isValidString = (str: string): boolean => {
 };
 
 export const parseString = (str: string): ParseString => {
+    str = str.trim();
     const terms = str.split('@@');
     const courses: CourseList = {};
     const coursesOnGrid: CoursesOnGrid = {

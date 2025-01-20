@@ -20,7 +20,7 @@ const LoadLayout:FC<LoadLayoutProps> = ({ courses, coursesUsed, setCourses, setC
     
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        if (!str.length) return 
+        if (!str.trim().length) return 
         if (!isValidString(str)) {
             setLoad(Load.ERROR);
             return;
