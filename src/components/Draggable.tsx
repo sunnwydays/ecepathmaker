@@ -20,7 +20,7 @@ const Draggable:FC<DraggableProps> = (props) => {
   };
 
   const styleClasses = `
-    ${isDragging ? 'size-32 z-20 rounded-md shadow-md' : isExpanded ? 'size-[10rem] z-30 rounded-md shadow-lg' : 'size-32 z-20'}
+    ${isDragging ? 'size-32 z-20 rounded-md shadow-md' : isExpanded ? 'size-[10rem] z-30' : 'size-32 z-20'}
     flex items-center justify-center 
     text-black
   `;
