@@ -114,8 +114,9 @@ const CourseGrid:FC<CourseGridProps> = ({ courses, coursesOnGrid, coursesUsed, s
                 .map(([stream]) => Number(stream))
         ];
         
+        const numDepth = depthStreams.length;
+        const hasBreadth = breadthStreams.length >= 2 || (breadthStreams.length === 1 && numDepth >= 3) || (breadthStreams.length === 0 && numDepth >= 4);
         const hasDepth = depthStreams.length >= 2;
-        const hasBreadth = breadthStreams.length >= 2 || (breadthStreams.length === 1 && hasDepth);
         
         let ceOrEE = null; // null, 'CE', 'EE', or 'ECE'
         if (hasDepth && hasBreadth) {
