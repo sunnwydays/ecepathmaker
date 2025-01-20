@@ -206,6 +206,14 @@ const CourseGrid:FC<CourseGridProps> = ({ courses, coursesOnGrid, coursesUsed, s
             
             if ((course.onlyF && targetTerm === 'S') || 
                 (course.onlyS && targetTerm === 'F')) {
+                    if (!validYearTerms[getYearTerm(sourceContainer)]) {
+                        // return course to the bucket
+                        setCoursesOnGrid(prev => ({
+                            ...prev, 
+                            ...(sourceContainer && { [sourceContainer]: '' })
+                        }));
+                        setCoursesUsed({...coursesUsed, [active.id]: '' as GridPosition});
+                    }
                     setDropError(DropError.TERM);
                     return;
             }
