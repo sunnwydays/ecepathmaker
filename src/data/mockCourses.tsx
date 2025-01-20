@@ -246,7 +246,7 @@ const courses: CourseList = {
     'CSC384': {
         name: 'Introduction to Artificial Intelligence',
         streams: [6],
-        preq: [['ECE345', 'ECE302']],
+        preq: ['ECE345', 'ECE302'],
         color: 'ffd699',
     },
     'ECE419': {
