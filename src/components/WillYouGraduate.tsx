@@ -1,5 +1,6 @@
 import { FC } from 'react';
 import { StreamRequirements } from "../types/CourseTypes";
+import { BarChart } from '@mui/x-charts/BarChart';
 
 interface WillYouGraduateProps {
     conditions: StreamRequirements;
@@ -14,6 +15,28 @@ const WillYouGraduate: FC<WillYouGraduateProps> = ({ conditions }) => {
         conditions.hasSciMath &&
         conditions.hasEconomics &&
         conditions.hasCapstone;
+
+    const graphColors = [
+        '#ffcc99', 
+        '#99ccff',
+        '#b3e6b3',
+        '#e6b3ff',
+        '#ffb3b3',
+        '#ffd699'
+    ];
+
+    const streamData = Object.entries(conditions.streamCounts)
+        .filter(([, count]) => count > 0);
+
+    const streams = streamData.map(([stream]) => Number(stream));
+    const counts = streamData.map(([, count]) => count);
+    const colors = streams.map(stream => graphColors[stream - 1]);
+    const otherChartSettings = {
+        width: 220,
+        height: 170,
+        margin: { top: 10, bottom: 40, left: 28, right: 0 },
+        borderRadius: 5,
+    };
 
     return (
         <div className="mt-8">
@@ -42,16 +65,23 @@ const WillYouGraduate: FC<WillYouGraduateProps> = ({ conditions }) => {
                 </div>
                 <div>
                     <h3 className="text-lg font-semibold mb-1">Courses per stream</h3>
-                    {Object.values(conditions.streamCounts).some(count => count > 0) ? (
-                        <ul className="space-y-1">
-                            {Object.entries(conditions.streamCounts).map(([stream, count]) => (
-                                count > 0 && (
-                                    <li key={stream}>
-                                        Stream {stream}: {count}
-                                    </li>
-                                )
-                            ))}
-                        </ul>
+                    {streams.length > 0 ? (
+                        <BarChart
+                            xAxis={[{
+                                id: 'streamCategories',
+                                data: streams,
+                                scaleType: 'band',
+                                colorMap: {
+                                    type: 'ordinal',
+                                    colors: colors,
+                                },
+                                label: 'Stream',
+                            }]}
+                            series={[{
+                                data: counts
+                            },]}
+                            {...otherChartSettings}
+                        />
                     ) : (
                         <p className="text-neutral3 italic select-none">No courses in any stream yet</p>
                     )}
