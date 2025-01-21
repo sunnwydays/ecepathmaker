@@ -31,7 +31,7 @@ Contributions are welcome! Please fork the repository and submit a pull request.
 ## Future Work
 
 - [x] Proper mobile experience
-- [ ] Add more courses and course information in database
+- [x] Add more courses and course information in database (all courses in Magellan)
 - [ ] Google OAuth login
 - [ ] Store data in the URL
 - [ ] Use `localStorage` to store data in the browser
