@@ -29,7 +29,7 @@ const faqData: FAQ = [
     {
         question: "How do I update a course (e.g. change the colour)?",
         answer: "To change a course's details, use the custom course form with the same course code. The course will be updated with the new details."
-    }
+    },
     {
         question: "Why is the grid red when I try to drag a course onto it?",
         answer: "Invalid slots will be red, and you will know why (invalid term (i.e. only offered in the fall but you are dragging it onto a winter term slot) or missing prerequisites) when you try to drop onto the slot. An icon in the top right corner will appear if it is fall-only (leaf) or winter-only (snowflake). You can click on the course card to see prerequisites."
