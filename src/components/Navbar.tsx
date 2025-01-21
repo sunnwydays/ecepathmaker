@@ -1,45 +1,69 @@
 import { IoIosMenu, IoIosClose } from "react-icons/io";
-import { FC, useState, useEffect } from 'react';
+import { FC, useState, useEffect, useRef } from 'react';
 import logo from '../assets/logo.png';
 
 const Navbar:FC = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const [prevScrollPos, setPrevScrollPos] = useState(0);
-    const [visible, setVisible] = useState(true);
+    const [isScrolled, setIsScrolled] = useState(false);
+    const menuRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+                setIsMenuOpen(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
 
     useEffect(() => {
         const handleScroll = () => {
-            const currentScrollPos = window.scrollY;
-            setVisible(prevScrollPos > currentScrollPos || currentScrollPos < 10);
-            setPrevScrollPos(currentScrollPos);
+            setIsScrolled(window.scrollY > 0);
         };
 
         window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
-    }, [prevScrollPos]);
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+        };
+    }, []);
 
     return (
-        <nav className={`md:fixed top-0 left-0 right-0 md:w-full w-navFoot bg-white bg-opacity-95 transition-transform duration-300 z-50 shadow border-b-1 border-neutral2 ${
-            visible ? 'md:transform md:translate-y-0' : 'md:transform md:-translate-y-full'
-        }`}>
-            <div className="mx-auto xl:wp lg:w-wpl w-wps flex justify-between items-center py-2 h-24">
-                <a href="/" className="w-56 z-50"><img src={logo} alt="ECE Pathmaker logo" /></a>
-                <div className="z-30 flex items-center">
-                    <div className={`z-40 bg-white md:static absolute md:w-auto w-navFoot md:min-h-fit left-0 flex items-center px-5 md:py-0 py-12 font-medium ${isMenuOpen ? "top-24" : "top-[-100%]"} transition-all duration-500 ease-in-out`}>
-                        <ul className="md:gap-[3vw] gap-8 items-center text-xl flex md:flex-row flex-col mx-auto justify-center">
+        <nav className={`fixed top-0 w-full transition-all ${isScrolled ? 'h-12' : 'h-24'} bg-white bg-opacity-95 shadow border-b-1 z-40`}>
+            <div className="mx-auto xl:wp lg:w-wpl w-wps flex justify-between items-center py-2">
+                <a href="/" className={`${isScrolled ? 'w-24' : 'w-56' } transition-all`}><img src={logo} alt="ECE Pathmaker logo" /></a>
+                <div className="z-30 flex items-center" ref={menuRef}>
+                        <ul className={`
+                            md:static fixed 
+                            top-0 ${isMenuOpen ? 'right-0' : '-right-full'}
+                            md:h-auto h-screen
+                            md:bg-transparent bg-white 
+                            md:w-auto w-64
+                            md:shadow-none shadow-md
+                            flex flex-col md:flex-row
+                            items-center justify-center
+                            md:transition-none transition-all duration-500
+                            md:gap-[3vw] gap-8
+                            md:text-base font-medium text-xl
+                            ${isScrolled ? 'text-l md:font-normal' : 'md:font-medium md:text-xl'}
+                            md:py-0 py-12
+                            md:px-0 px-5
+                        `}>
                             <li>
-                                <a className="hover:text-green2 transition-all mx-auto" href="/">Maker</a>
+                                <a onClick={() => setIsMenuOpen(false)} className="hover:text-green2 transition-all mx-auto" href="/">Maker</a>
                             </li>
                             <li>
-                                <a className="hover:text-green2 transition-all mx-auto" href="/courses">Courses</a>
+                                <a onClick={() => setIsMenuOpen(false)} className="hover:text-green2 transition-all mx-auto" href="/courses">Courses</a>
                             </li>
                         </ul>
+                        <button 
+                            onClick={() => setIsMenuOpen(!isMenuOpen)}
+                            className="z-50 md:hidden text-3xl cursor-pointer flex items-center"
+                        >
+                            {!isMenuOpen ? <IoIosMenu /> : <IoIosClose />}
+                        </button>
                     </div>
-                    {!isMenuOpen ? 
-                        <IoIosMenu onClick={()=>setIsMenuOpen(true)} className="z-50 md:hidden text-3xl cursor-pointer flex items-center" /> :
-                        <IoIosClose onClick={()=>setIsMenuOpen(false)} className="z-50 md:hidden text-3xl cursor-pointer flex items-center" />
-                    }
-                </div>
             </div>
         </nav>
     )
