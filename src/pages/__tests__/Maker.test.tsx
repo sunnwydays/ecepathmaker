@@ -65,6 +65,15 @@ describe('Maker', () => {
         expect(screen.getByText(/EE 🔌/)).toBeInTheDocument();
     });
 
+    it('evaluates computer or electrical engineering based on streams', () => {
+        const stringInput = screen.getByTestId('string-input');
+        fireEvent.change(stringInput, { target: { value: 'ECE334Digital Electronics%%3k#b3e6b3$$ECE344Operating Systems%%6k#ffd699$$ECE345Algorithms & Data Structures%%6k#ffd699$$ECE552Computer Architecture%%5f#ffb3b3$$ECE302Probability and Applications%%45m#e6b3ff@@ECE472Engineering Economics%%#091f7d$$ECE342Computer Hardware%%5ks#ffb3b3$$ECE568Computer Security%%56#ffb3b3pECE344|ECE353$$APS511Inventions and Patents for Engineers%%sc#a89c64$$CSC384Introduction to Artificial Intelligence%%6#ffd699pECE345,ECE302@@ECE496Design Project h1 (capstone)%%#091f7d$$CSC343Introduction to Databases%%6#ffd699pESC190|ECE345$$ECE444Software Engineering%%6f#ffd699pECE297|ECE344|ECE353$$ECE335Introduction to Electronic Devices%%1kf#ffcc99$$JRE410Markets and Competitive Strategy%%c#a89c64@@ECE497Design Project h2 not a real course (capstone)%%#091f7d$$ECE330Quantum and Semiconductor Physics%%1sm#ffcc99$$ECE532Digital Systems Design%%35s#b3e6b3pECE342|ECE352$$ECE437VLSI Technology%%13s#ffcc99pECE331|ECE334|ECE354,ECE335|ECE350$$JRE420People Management and Organizational Behaviour%%h#d4a5a5@@TEP444Positive Psychology for Engineers%%fh#d4a5a5' } });
+        const submitButton = screen.getByTestId('load-layout');
+        fireEvent.click(submitButton);
+        
+        expect(screen.getByText(/CE or EE/)).toBeInTheDocument();
+    });
+
     it('evaluates basic requirements', () => {
         const stringInput = screen.getByTestId('string-input');
         fireEvent.change(stringInput, { target: { value: 'AAA000placeholder%%#cccccc$$CST000cs%%c#8faadc$$HSS000hss%%h#d4a5a5$$ECE335Introduction to Electronic Devices%%1kf#ffcc99$$ECE318Fundamentals of Optics%%1k#ffcc99@@ECE342Computer Hardware%%5ks#ffb3b3$$ECE313Energy Systems and Distributed Generation%%2ks#99ccff$$ECE472Engineering Economics%%$$@@ECE427Photonic Devices%%1f#ffcc99pECE318|ECE320|ECE357$$ECE424Microwave Circuits%%23f#99ccff$$ECE526Power System Protection and Automation%%2f#99ccffpECE313|ECE314|ECE349$$BME498Biomedical Engineering Capstone Design h1%%$$@@ECE345Algorithms & Data Structures%%6k#ffd699$$ECE469Optical Communications and Networks%%145s#ffcc99$$BME499Biomedical Engineering Capstone Design h2 not a real course%%$$@@ECE419Distributed Systems%%6s#ffd699pECE344|ECE353$$' } });
