@@ -56,6 +56,9 @@ const Navbar:FC = () => {
                             <li>
                                 <a onClick={() => setIsMenuOpen(false)} className="hover:text-green2 transition-all mx-auto" href="/courses">Courses</a>
                             </li>
+                            <li>
+                                <a onClick={() => setIsMenuOpen(false)} className="hover:text-green2 transition-all mx-auto" href="/faq">FAQs</a>
+                            </li>
                         </ul>
                         <button 
                             onClick={() => setIsMenuOpen(!isMenuOpen)}
