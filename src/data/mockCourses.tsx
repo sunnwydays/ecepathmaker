@@ -1,6 +1,7 @@
 import { CourseList } from "../types/CourseTypes";
 
 const courses: CourseList = {
+    // area 1
     'ECE318': {
         name: 'Fundamentals of Optics',
         streams: [1],
@@ -14,19 +15,19 @@ const courses: CourseList = {
         color: 'ffcc99',
         kernel: true,
     },
-    'ECE330': {
-        name: 'Quantum and Semiconductor Physics',
-        streams: [1],
-        onlyS: true,
-        color: 'ffcc99',
-        isSciMath: true,
-    },
     'ECE427': {
         name: 'Photonic Devices',
         streams: [1],
         onlyF: true,
-        preq: [['ECE318', 'ECE320', 'ECE357']],
+        preq: [['ECE318', 'ECE320']],
         color: 'ffcc99',
+    },
+    'ECE435': {
+        name: 'Quantum Computing Hardware',
+        streams: [1, 3],
+        onlyF: true,
+        color: 'ffcc99',
+        preq: [['ECE286', 'MIE286', 'ECE302'], ['ECE335', 'ECE350'], ['ECE231', 'ECE360'], ['ECE320', 'ECE357']],
     },
     'ECE442': {
         name: 'Introduction to Micro- and Nano-Fabrication Technologies',
@@ -35,11 +36,12 @@ const courses: CourseList = {
         preq: [['ECE320', 'ECE357']],
         color: 'ffcc99',
     },
-    'ECE469': {
-        name: 'Optical Communications and Networks',
-        streams: [1, 4, 5],
+    'ECE330': {
+        name: 'Quantum and Semiconductor Physics',
+        streams: [1],
         onlyS: true,
         color: 'ffcc99',
+        isSciMath: true,
     },
     'ECE437': {
         name: 'VLSI Technology',
@@ -48,11 +50,25 @@ const courses: CourseList = {
         onlyS: true,
         color: 'ffcc99',
     },
+    'ECE469': {
+        name: 'Optical Communications and Networks',
+        streams: [1, 4, 5],
+        onlyS: true,
+        color: 'ffcc99',
+    },
+    // area 2
     'ECE314': {
         name: 'Fundamentals of Electrical Energy Systems',
         streams: [2],
         onlyF: true,
         color: '99ccff', // Light Blue for Stream 2
+        kernel: true,
+    },
+    'ECE320': {
+        name: 'Fields and Waves',
+        streams: [2],
+        onlyF: true,
+        color: '99ccff',
         kernel: true,
     },
     'ECE313': {
@@ -62,12 +78,11 @@ const courses: CourseList = {
         color: '99ccff',
         kernel: true,
     },
-    'ECE320': {
-        name: 'Fields and Waves',
-        streams: [2],
+    'BME595': {
+        name: 'Medical Imaging',
+        streams: [2, 4],
         onlyF: true,
         color: '99ccff',
-        kernel: true,
     },
     'ECE424': {
         name: 'Microwave Circuits',
@@ -79,16 +94,31 @@ const courses: CourseList = {
         name: 'Power Electronics',
         streams: [2],
         onlyF: true,
-        preq: [['ECE314', 'ECE349', 'ECE359']],
+        preq: [['ECE314', 'ECE315', 'ECE349', 'ECE359']],
         color: '99ccff',
     },
     'ECE526': {
         name: 'Power System Protection and Automation',
         streams: [2],
         onlyF: true,
-        preq: [['ECE313', 'ECE314', 'ECE349']],
+        preq: [['ECE313', 'ECE314', 'ECE349', 'ECE359']],
         color: '99ccff',
     },
+    'ECE422': {
+        name: 'Radio and Microwave Wireless Systems',
+        streams: [2, 4],
+        onlyS: true,
+        color: '99ccff',
+        preq: [['ECE320', 'ECE357']],
+    },
+    'ECE463': {
+        name: 'Electric Drives',
+        streams: [2],
+        onlyS: true,
+        color: '99ccff',
+        preq: [['ECE314', 'ECE315', 'ECE349', 'ECE359']],
+    },
+    // area 3
     'ECE331': {
         name: 'Analog Electronics',
         streams: [3],
@@ -106,7 +136,7 @@ const courses: CourseList = {
         name: 'Analog Integrated Circuits',
         streams: [3],
         onlyF: true,
-        preq: [['ECE331', 'ECE354']],
+        preq: ['ECE331'],
         color: 'b3e6b3',
     },
     'ECE446': {
@@ -122,6 +152,7 @@ const courses: CourseList = {
         onlyS: true,
         preq: [['ECE342', 'ECE352']],
     },
+    // area 4
     'ECE311': {
         name: 'Introduction to Control Systems',
         streams: [4],
@@ -134,6 +165,12 @@ const courses: CourseList = {
         color: 'e6b3ff',
         kernel: true,
     },
+    'BME445': {
+        name: 'Neural Bioelectricity',
+        streams: [4],
+        onlyF: true,
+        color: 'e6b3ff',
+    },
     'ECE302': {
         name: 'Probability and Applications',
         streams: [4, 5],
@@ -144,8 +181,15 @@ const courses: CourseList = {
         name: 'Linear Control Systems',
         streams: [4],
         onlyF: true,
-        preq: [['ECE311']],
+        preq: ['ECE311'],
         color: 'e6b3ff',
+    },
+    'ECE417': {
+        name: 'Digital Communication',
+        streams: [4],
+        onlyF: true,
+        color: 'e6b3ff',
+        preq: ['ECE302', 'ECE316'],
     },
     'ECE421': {
         name: 'Introduction to Machine Learning',
@@ -159,11 +203,26 @@ const courses: CourseList = {
         onlyF: true,
         color: 'e6b3ff',
     },
+    'ECE441': {
+        name: 'Interfacing & Modulating the Nervous System',
+        streams: [4],
+        onlyF: true,
+        color: 'e6b3ff',
+        preq: ['BME331'],
+    },
     'ECE470': {
         name: 'Robot Modeling and Control',
         streams: [4],
         preq: [['ECE311', 'ECE356']],
         color: 'e6b3ff',
+    },
+    'ECE537': {
+        name: 'Random Processes',
+        streams: [4, 5],
+        onlyF: true,
+        preq: ['ECE302'],
+        color: 'ffb3b3',
+        isSciMath: true,
     },
     'BME331': {
         name: 'Physiological Control Systems',
@@ -180,6 +239,33 @@ const courses: CourseList = {
         isSciMath: true,
         preq: [['STA286', 'ECE302']],
     },
+    'ECE411': {
+        name: 'Adaptive Control and Reinforcement Learning',
+        streams: [4],
+        onlyS: true,
+        color: 'e6b3ff',
+        preq: [['ECE311', 'ECE356']],
+    },
+    'ECE462': {
+        name: 'Multimedia Systems',
+        streams: [4,5],
+        onlyS: true,
+        color: 'e6b3ff',
+    },
+    'ECE464': {
+        name: 'Wireless Communication',
+        streams: [4,5],
+        onlyS: true,
+        color: 'e6b3ff',
+        preq: ['ECE302', 'ECE316', 'ECE417'],
+    },
+    'ECE516': {
+        name: 'Intelligent Image Processing',
+        streams: [4],
+        onlyS: true,
+        color: 'e6b3ff',
+    },
+    // area 5
     'ECE361': {
         name: 'Co-302 Computer Networks I',
         streams: [5],
@@ -195,18 +281,10 @@ const courses: CourseList = {
     },
     'ECE461': {
         name: 'Internetworking',
-        streams: [5],
-        preq: [['ECE361']],
+        streams: [5, 6],
+        preq: ['ECE361'],
         onlyS: true,
         color: 'ffb3b3',
-    },
-    'ECE537': {
-        name: 'Random Processes',
-        streams: [5],
-        onlyF: true,
-        preq: [['ECE302']],
-        color: 'ffb3b3',
-        isSciMath: true,
     },
     'ECE552': {
         name: 'Computer Architecture',
@@ -220,6 +298,14 @@ const courses: CourseList = {
         preq: [['ECE344', 'ECE353']],
         color: 'ffb3b3',
     },
+    'ECE466': {
+        name: 'Computer Networks II',
+        streams: [5,6],
+        onlyS: true,
+        color: 'ffb3b3',
+        preq: ['ECE361'],
+    },
+    // area 6
     'ECE344': {
         name: 'Operating Systems',
         streams: [6],
@@ -237,6 +323,12 @@ const courses: CourseList = {
         streams: [6],
         color: 'ffd699',
     },
+    'CSC317': {
+        name: 'Computer Graphics',
+        streams: [6],
+        onlyF: true,
+        color: 'ffd699',
+    },
     'CSC343': {
         name: 'Introduction to Databases',
         streams: [6],
@@ -247,6 +339,31 @@ const courses: CourseList = {
         name: 'Introduction to Artificial Intelligence',
         streams: [6],
         preq: ['ECE345', 'ECE302'],
+        color: 'ffd699',
+    },
+    'ECE326': {
+        name: 'Programming Languages',
+        streams: [6],
+        onlyF: true,
+        color: 'ffd699',
+    },
+    'ECE444': {
+        name: 'Software Engineering',
+        streams: [6],
+        onlyF: true,
+        preq: [['ECE297', 'ECE344', 'ECE353']],
+        color: 'ffd699',
+    },
+    'ECE454': {
+        name: 'Computer Systems Programming',
+        streams: [6],
+        onlyF: true,
+        color: 'ffd699',
+    },
+    'ECE467': {
+        name: 'Compilers and Interpreters',
+        streams: [6],
+        onlyF: true,
         color: 'ffd699',
     },
     'ECE419': {
@@ -263,11 +380,11 @@ const courses: CourseList = {
         color: 'ffd699',
         isSciMath: true,
     },
-    'ECE444': {
-        name: 'Software Engineering',
+    'ECE484': {
+        name: 'Quantum Information Processing: Algorithms & Software',
         streams: [6],
-        onlyF: true,
-        preq: [['ECE297', 'ECE344', 'ECE353']],
+        onlyS: true,
+        preq: [['MIE286', 'ECE302']],
         color: 'ffd699',
     },
     'ECE472': {
