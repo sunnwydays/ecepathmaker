@@ -4,7 +4,7 @@ import FAQCard from "../components/FAQCard";
 
 const FAQ: FC = () => {
     return (
-        <div className="mx-auto xl:wp lg:w-wpl w-wps">
+        <div>
             <h2 className="mb-8 text-2xl font-medium">FAQs + How to use Pathmaker</h2>
             <div className="flex flex-col gap-4">
                 {faqData.map((faq, index) => (
