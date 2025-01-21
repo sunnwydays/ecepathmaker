@@ -1,7 +1,7 @@
 sample layouts
 
 CE:
-ECE345Algorithms & Data Structures%%6k#ffd699$$ECE344Operating Systems%%6k#ffd699$$ECE302Probability and Applications%%45m#e6b3ff$$ECE361Co-302 Computer Networks I%%5k#ffb3b3$$ECE335Introduction to Electronic Devices%%1kf#ffcc99@@ECE342Computer Hardware%%5ks#ffb3b3$$APS360Applied Fundamentals of Deep Learning%%6#ffd699@@ECE314Fundamentals of Electrical Energy Systems%%2kf#99ccff@@@@
+ECE345Algorithms & Data Structures%%6k#ffd699$$ECE344Operating Systems%%6k#ffd699$$ECE302Probability and Applications%%45m#e6b3ff$$ECE361Co-302 Computer Networks I%%5k#ffb3b3$$ECE335Introduction to Electronic Devices%%1kf#ffcc99@@ECE342Computer Hardware%%5ks#ffb3b3$$APS360Applied Fundamentals of Deep Learning%%6#ffd699$$@@ECE314Fundamentals of Electrical Energy Systems%%2kf#99ccff$$@@@@
 
 EE:
 AAA000placeholder%%#cccccc$$CST000cs%%c#8faadc$$HSS000hss%%h#d4a5a5$$ECE335Introduction to Electronic Devices%%1kf#ffcc99$$ECE318Fundamentals of Optics%%1k#ffcc99@@ECE342Computer Hardware%%5ks#ffb3b3$$ECE313Energy Systems and Distributed Generation%%2ks#99ccff$$ECE472Engineering Economics%%$$@@ECE427Photonic Devices%%1f#ffcc99pECE318|ECE320|ECE357$$ECE424Microwave Circuits%%23f#99ccff$$ECE526Power System Protection and Automation%%2f#99ccffpECE313|ECE314|ECE349$$BME498Biomedical Engineering Capstone Design h1%%@@ECE345Algorithms & Data Structures%%6k#ffd699$$ECE469Optical Communications and Networks%%145s#ffcc99$$BME499Biomedical Engineering Capstone Design h2 not a real course%%@@ECE419Distributed Systems%%6s#ffd699pECE344|ECE353$$
