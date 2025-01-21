@@ -34,14 +34,7 @@ const MakerCard:FC<MakerCardProps> = (props) => {
                 <p className={`${isExpanded ? "w-36 line-clamp-3" : "w-28 line-clamp-2"} text-center text-sm`}>{props.name}</p>
                 { getStreamLabels(props) && <p>Stream: {getStreamLabels(props)}</p> }
                 { getOtherLabels(props) && <p>{getOtherLabels(props)}</p> }
-                {isExpanded && (
-                    <>
-                        { props.preq && props.preq.length > 0 && <p>Preq: {getPreqLabels(props)}</p> }
-                        {(props.onlyF || props.onlyS) && (
-                            <p>{props.onlyF ? 'Fall' : 'Winter'} only</p>
-                        )}
-                    </>
-                )}
+                {isExpanded && props.preq && props.preq.length > 0 && <p>Preq: {getPreqLabels(props)}</p>}
                 {props.onlyF && <span className="absolute top-0 right-0 text-xs bg-white bg-opacity-20 rounded-full p-1">🍂</span>}
                 {props.onlyS && <span className="absolute top-0 right-0 text-xs bg-white bg-opacity-20 rounded-full p-1">❄️</span>}
             </article>
