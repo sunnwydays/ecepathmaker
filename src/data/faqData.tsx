@@ -27,9 +27,9 @@ const faqData: FAQ = [
         answer: "The fifth row is for any extra course that you took in your first two years or from overloading. A course there will be considered as a prerequisite, and any course with prerequisites on XX slots have their prerequisites waived."
     },
     {
-        question: "Anything else that I should know when course planning?",
-        answer: "While ECE Pathmaker checks most of the major requirements, some things are not checked. You will have to ensure that you have your free elective & technical elective (easy), PEY / 600h technical XP (not part of course planning but required for graduation), CEAB credits (most likely fulfilled if you fulfilled the other requirements), no exclusion violation (if you take certain courses, you may not take another similar one), within 1.5 credit ArtSci -300/-400 limit. You should be able to view any issue once you enter your courses into Magellan. Lastly, remember that this tool is unofficial and although I have done plenty of testing, it may contain errors."
-    },
+        question: "How do I update a course (e.g. change the colour)?",
+        answer: "To change a course's details, use the custom course form with the same course code. The course will be updated with the new details."
+    }
     {
         question: "Why is the grid red when I try to drag a course onto it?",
         answer: "Invalid slots will be red, and you will know why (invalid term (i.e. only offered in the fall but you are dragging it onto a winter term slot) or missing prerequisites) when you try to drop onto the slot. An icon in the top right corner will appear if it is fall-only (leaf) or winter-only (snowflake). You can click on the course card to see prerequisites."
@@ -37,6 +37,10 @@ const faqData: FAQ = [
     {
         question: "Does this check for minors or certificates?",
         answer: "Minor/certificate check is not yet implemented, although I am considering adding it in the future."
+    },
+    {
+        question: "Anything else that I should know when course planning?",
+        answer: "While ECE Pathmaker checks most of the major requirements, some things are not checked. You will have to ensure that you have your free elective & technical elective (easy), PEY / 600h technical XP (not part of course planning but required for graduation), CEAB credits (most likely fulfilled if you fulfilled the other requirements), no exclusion violation (if you take certain courses, you may not take another similar one), within 1.5 credit ArtSci -300/-400 limit. You should be able to view any issue once you enter your courses into Magellan. Lastly, remember that this tool is unofficial and although I have done plenty of testing, it may contain errors."
     },
     {
         question: "Does this tool work on mobile?",
