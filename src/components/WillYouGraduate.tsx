@@ -60,7 +60,14 @@ const WillYouGraduate: FC<WillYouGraduateProps> = ({ conditions }) => {
                         <li>Breadth: {conditions.hasBreadth ? '✅' : '❌'}</li>
                         {conditions.breadthStreams?.length > 0 &&
                             <li>Breadth streams: {conditions.breadthStreams?.join(', ')}</li>}
-                        <li>CE/EE: {conditions.ceOrEE ? <b className='font-semibold'>{conditions.ceOrEE === 'CE' ? 'CE 🖥' : conditions.ceOrEE === 'CE 🖥' ? 'CE or EE ⚡' : 'EE 🔌'}</b> : "none"}</li>
+                        <li>CE/EE: {conditions.ceOrEE ? <b className='font-semibold'>
+                            {conditions.ceOrEE === 'CE' ? 
+                                'CE 🖥' : 
+                                conditions.ceOrEE === 'ECE' ? 
+                                    'CE or EE ⚡' : 
+                                    'EE 🔌'
+                            }
+                        </b> : "none"}</li>
                     </ul>
                 </div>
                 <div>
