@@ -2,6 +2,8 @@
 
 ECE Pathmaker is an unofficial alternative to UofT's electrical and computer engineering Magellan. It provides a UI-based drag-and-drop course planner for UofT ECE students.
 
+![Project Screenshot](./public/project_screenshot.png)
+
 ## Tech Stack
 
 The project is built using the following technologies:
@@ -36,3 +38,11 @@ Contributions are welcome! Please fork the repository and submit a pull request.
 - [ ] Store data in the URL
 - [ ] Use `localStorage` to store data in the browser
 - [ ] Extend to other engineering disciplines
+
+## Example
+
+Try this layout! ECE graduation, AI minor, business certificate (screenshot above):
+
+```plaintext
+APS360Applied Fundamentals of Deep Learning%%6#ffd699$$ECE345Algorithms & Data Structures%%6k#ffd699$$ECE344Operating Systems%%6k#ffd699$$ECE302Probability and Applications%%45m#e6b3ff$$ECE361Co-302 Computer Networks I%%5k#ffb3b3@@CSC343Introduction to Databases%%6#ffd699pESC190|ECE345$$ECE419Distributed Systems%%6s#ffd699pECE344|ECE353$$ECE311Introduction to Control Systems%%4k#e6b3ff$$ECE334Digital Electronics%%3k#b3e6b3$$ECE421Introduction to Machine Learning%%4#e6b3ffpSTA286|ECE302@@ECE496Design Project h1 (capstone)%%#091f7d$$ECE552Computer Architecture%%5f#ffb3b3$$CSC413Neural Networks and Deep Learning%%#ffc2e0pCSC311|CSC411|STA314|ECE421|ROB313$$JRE420People Management and Organizational Behaviour%%h#d4a5a5$$@@ECE497Design Project h2 not a real course (capstone)%%#091f7d$$ECE472Engineering Economics%%#091f7d$$MIE369Introduction to Artificial Intelligence%%s#ffc2e0pMIE236|ECE286|ECE302$$JRE410Markets and Competitive Strategy%%c#a89c64$$CST000cs%%c#a89c64@@HPS120How to Think about Science%%ha#d4a5a5$$
+```
