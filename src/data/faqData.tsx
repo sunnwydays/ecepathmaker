@@ -12,27 +12,31 @@ const faqData: FAQ = [
     },
     {
         question: "How do I use this?",
-        answer: "On the Maker page, drag courses from the right panel into the grid, which contains slots for your third and fourth years. All the courses from Magellan are available in this site, and you can also add custom courses using the custom courses form. To come back to it later, save your progress by copying the layout string generated and pasting in the loading area at another time."
+        answer: "On the Maker page, drag courses onto the grid, which contains slots for your third and fourth years. All the courses from Magellan are available, and you can also add custom courses using the custom courses form. Save your progress by copying the layout string generated and pasting in the loading area at a later time."
     },
     {
         question: "Why did you make this?",
-        answer: "The current course planning tool for UofT ECE students is Magellan, which is useful but remains outdated with room for improvement. Magellan makes it difficult to visualize and organize your courses, slow to evaluate your graduation conditions, and lacks a modern UI. ECE Pathmaker improves upon all of these. That being said, you will still have to use Magellan to 'lock in' your courses for pre-registration."
+        answer: "The current course planning tool for UofT ECE students is Magellan, which is useful but makes it difficult to visualize and organize your courses, is slow to evaluate graduation conditions, and lacks a modern UI. ECE Pathmaker improves upon these. That being said, you will still have to use Magellan to 'lock in' your courses for pre-registration."
     },
     {
         question: "Who is this for?",
-        answer: "ECE Pathmaker is tailored for UofT Electrical and Computer Engineering students. Courses' prerequisites assume that you have taken the typical first and second-year courses (still works if you transferred from TrackOne)."
+        answer: "ECE Pathmaker is tailored for UofT Electrical and Computer Engineering students. Courses' prerequisites assume that you have taken the typical first- and second-year courses (still works if you transferred from TrackOne)."
     },
     {
         question: "What are the XX slots for?",
-        answer: "The fifth row is for any extra course that you took in your first two years or from overloading. A course there will be considered as a prerequisite, and any course with prerequisites on XX slots have their prerequisites waived."
+        answer: "The fifth row is for extra courses taken in the first two years or from overloading. A course there will be considered as an early prerequisite, and any course on XX slots have their prerequisites waived."
     },
     {
         question: "How do I update a course (e.g. change the colour)?",
-        answer: "To change a course's details, use the custom course form with the same course code. The course will be updated with the new details."
+        answer: "Use the custom course form with the same course code."
     },
     {
         question: "Why is the grid red when I try to drag a course onto it?",
-        answer: "Invalid slots will be red, and you will know why (invalid term (i.e. only offered in the fall but you are dragging it onto a winter term slot) or missing prerequisites) when you try to drop onto the slot. An icon in the top right corner will appear if it is fall-only (leaf) or winter-only (snowflake). You can click on the course card to see prerequisites."
+        answer: "Invalid slots are red, and you will know why (invalid term (i.e. only offered in the fall but you are dragging it onto a winter term slot or vice versa) or missing prerequisites) when you try to drop onto the slot. An icon in the top right corner of each card appears if it is fall-only (leaf) or winter-only (snowflake). You can click on the course card to see prerequisites."
+    },
+    {
+        question: "What does it mean by 'not a real course'?",
+        answer: "Capstone courses are full year courses, but the grid implements half term slots. To account for this, the capstone courses are split into two half-term courses. The 'not a real course' text is a reminder that the course is the second half of the capstone course."
     },
     {
         question: "Does this check for minors or certificates?",
@@ -40,11 +44,11 @@ const faqData: FAQ = [
     },
     {
         question: "Anything else that I should know when course planning?",
-        answer: "While ECE Pathmaker checks most of the major requirements, some things are not checked. You will have to ensure that you have your free elective & technical elective (easy), PEY / 600h technical XP (not part of course planning but required for graduation), CEAB credits (most likely fulfilled if you fulfilled the other requirements), no exclusion violation (if you take certain courses, you may not take another similar one), within 1.5 credit ArtSci -300/-400 limit. You should be able to view any issue once you enter your courses into Magellan. Lastly, remember that this tool is unofficial and although I have done plenty of testing, it may contain errors."
+        answer: "While ECE Pathmaker checks most major requirements, some things are not checked. Ensure that you have your free elective & technical elective (easy), PEY / 600h technical XP (not part of course planning but required for graduation), CEAB credits (likely fulfilled if you fulfilled the other requirements), no exclusion violation (if you take certain courses, you may not take another similar one), within 1.5 credit ArtSci -300/-400 limit. You will see possible issues after entering your courses into Magellan. Lastly, remember that this tool is unofficial and although I have done plenty of testing, it may contain errors."
     },
     {
         question: "Does this tool work on mobile?",
-        answer: "Yes! The site is responsive and works on mobile devices. To maintain the grid width, the site must be scrolled horizontally, but the functionality remains. For a better mobile experience, you must hold a tile momentarily before dragging it, which prevents unwanted movement."
+        answer: "Yes! The site is responsive and works on mobile devices. To maintain the grid width, the site must be scrolled horizontally, but the functionality remains. To prevent unwanted movement, I designed it so that you must hold a tile momentarily before dragging."
     },
     {
         question: "How do I report a bug or suggest a feature?",
