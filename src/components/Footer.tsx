@@ -20,7 +20,7 @@ const Footer:FC = () => {
                 </div>
                 <div>
                     <h3 className="font-medium mb-4 text-neutral1">Extra</h3>
-                    <p className="leading-7"><a href="https://github.com/sunnwydays/ecepathmaker">View more details</a></p>
+                    <p className="leading-7"><a href="https://github.com/sunnwydays/ecepathmaker">View the GitHub</a></p>
                     <p className="leading-7"><a href="https://forms.gle/yBPDvHKAPVmhyz1M8">Provide feedback</a></p>
                 </div>
             </div>
