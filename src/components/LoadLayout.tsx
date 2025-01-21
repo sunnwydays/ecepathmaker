@@ -20,7 +20,7 @@ const LoadLayout:FC<LoadLayoutProps> = ({ courses, coursesUsed, setCourses, setC
     
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        if (!str.trim().length) return 
+        if (!str.trim().length) return; 
         if (!isValidString(str)) {
             setLoad(Load.ERROR);
             return;
@@ -70,8 +70,12 @@ const LoadLayout:FC<LoadLayoutProps> = ({ courses, coursesUsed, setCourses, setC
                     className="
                         bg-green2 text-white px-4 py-2 rounded
                         hover:bg-green3 transition-all
+                        disabled:bg-opacity-70 
+                        disabled:hover:bg-green2 disabled:hover:bg-opacity-70
+                        disabled:cursor-not-allowed
                     "
                     data-testid="load-layout"
+                    disabled={!str.trim().length}
                 >
                     Load layout
                 </button>
