@@ -90,7 +90,7 @@ const Courses = () => {
 
     return (
         <div>
-            <h2 className="mb-8 text-2xl font-medium">🗂️ Explore and rearrange courses (all the courses on Magellan)!</h2>
+            <h2 className="mb-8 text-2xl font-medium">🗂️ Explore and rearrange courses (all the courses on Magellan and more)!</h2>
             <Filter filters={filters} setFilters={setFilters} />
             <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd} sensors={sensors}>
                 <SortableContext items={coursesId}>
