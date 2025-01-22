@@ -16,7 +16,7 @@ const faqData: FAQ = [
     },
     {
         question: "Why did you make this?",
-        answer: "The current course planning tool for UofT ECE students is Magellan, which is useful but makes it difficult to visualize and organize your courses, is slow to evaluate graduation conditions, and lacks a modern UI. ECE Pathmaker improves upon these. That being said, you will still have to use Magellan to 'lock in' your courses for pre-registration."
+        answer: "The current course planning tool for UofT ECE students is Magellan, which is useful but makes it difficult to visualize and organize your courses, is slow to evaluate graduation conditions, and has errors. ECE Pathmaker improves upon these with a modern UI. That being said, you will still have to use Magellan to 'lock in' your courses for pre-registration."
     },
     {
         question: "Who is this for?",
