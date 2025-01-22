@@ -147,9 +147,17 @@ const CourseGrid:FC<CourseGridProps> = ({ courses, coursesOnGrid, coursesUsed, s
             }
         }
         
-        const hasCapstone = gridCourses.includes('ECE496') && gridCourses.includes('ECE497') ||
-                            gridCourses.includes('APS490') && gridCourses.includes('APS491') ||
-                            gridCourses.includes('BME498') && gridCourses.includes('BME499');
+        const isCapstone = (course1: string, course2: string): boolean => {
+            return gridCourses.includes(course1) && 
+                   gridCourses.includes(course2) && 
+                   coursesUsed[course1][0] === coursesUsed[course2][0];
+        };
+        
+        const hasCapstone = [
+            ['ECE496', 'ECE497'],
+            ['APS490', 'APS491'],
+            ['BME498', 'BME499']
+        ].some(([course1, course2]) => isCapstone(course1, course2));
 
         return {
             hasCS: gridCourses.filter(code => courses[code]?.isCS).length >= 4,
@@ -164,7 +172,7 @@ const CourseGrid:FC<CourseGridProps> = ({ courses, coursesOnGrid, coursesUsed, s
             hasSciMath: gridCourses.some(code => courses[code]?.isSciMath),
             ceOrEE,
         } as StreamRequirements;
-    }, [coursesOnGrid, courses]);
+    }, [coursesOnGrid, courses, coursesUsed]);
 
     const sensors = useSensors(
         useSensor(MouseSensor, {
