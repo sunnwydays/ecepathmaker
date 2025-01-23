@@ -15,7 +15,7 @@ const Footer:FC = () => {
                 <div>
                     <h3 className="font-medium mb-4 text-neutral1">ECE Pathmaker</h3>
                     <p className="leading-7"><button onClick={scrollToTop} className="text-left" >Alternative to UofT ECE's Magellan</button></p>
-                    <p className="leading-7">Complete your courses in Magellan by January 31</p>
+                    <p className="leading-7">Complete your courses in Magellan by January 30</p>
                     <p className="leading-7"><a href="https://github.com/sunnwydays">Site created by Sunny</a></p>
                 </div>
                 <div>
