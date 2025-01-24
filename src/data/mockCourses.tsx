@@ -221,7 +221,7 @@ const courses: CourseList = {
         streams: [4, 5],
         onlyF: true,
         preq: ['ECE302'],
-        color: 'ffb3b3',
+        color: 'e6b3ff',
         isSciMath: true,
     },
     'BME331': {
