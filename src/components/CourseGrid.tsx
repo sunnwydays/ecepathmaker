@@ -150,7 +150,8 @@ const CourseGrid:FC<CourseGridProps> = ({ courses, coursesOnGrid, coursesUsed, s
         const isCapstone = (course1: string, course2: string): boolean => {
             return gridCourses.includes(course1) && 
                    gridCourses.includes(course2) && 
-                   coursesUsed[course1][0] === coursesUsed[course2][0] &&
+                   coursesUsed[course1][0] === '4' &&
+                   coursesUsed[course2][0] === '4' &&
                    coursesUsed[course1][1] !== coursesUsed[course2][1];
         };
         
