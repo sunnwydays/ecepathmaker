@@ -41,7 +41,6 @@ const courses: CourseList = {
         streams: [1],
         onlyS: true,
         color: 'ffcc99',
-        isSciMath: true,
     },
     'ECE437': {
         name: 'VLSI Technology',
