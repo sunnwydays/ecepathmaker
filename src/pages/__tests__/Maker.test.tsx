@@ -81,7 +81,7 @@ describe('Maker', () => {
         fireEvent.click(submitButton);
         
         expect(screen.getByText(/You are not graduating with this one/)).toBeInTheDocument();
-        expect(screen.getByText(/CS \(4\+\): ❌/)).toBeInTheDocument();
+        expect(screen.getByText(/CS: ❌/)).toBeInTheDocument();
         expect(screen.getByText(/Sci\/Math: ❌/)).toBeInTheDocument();
         expect(screen.getByText(/Capstone: ✅/)).toBeInTheDocument();
         expect(screen.getByText(/Economics: ✅/)).toBeInTheDocument();
