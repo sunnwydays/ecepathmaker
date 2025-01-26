@@ -3,13 +3,13 @@ import {
     TooltipContent,
     TooltipProvider,
     TooltipTrigger,
-} from "@/components/ui/tooltip";
+} from "./ui/tooltip";
 import {
     Popover,
     PopoverContent,
     PopoverTrigger,
-} from "@/components/ui/popover"
-import { Button } from "@/components/ui/button"
+} from "./ui/popover"
+import { Button } from "./ui/button"
 import { Info } from "lucide-react"
 
 type ToolbarTooltipProps = {
