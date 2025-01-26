@@ -25,3 +25,9 @@ background: #555;
 ::-webkit-scrollbar-button {
     display: none;
 }
+
+@layer base {
+  :root {
+        --radius: 0.5rem;
+    }
+}
