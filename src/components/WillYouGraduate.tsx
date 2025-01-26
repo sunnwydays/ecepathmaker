@@ -2,7 +2,6 @@ import { FC } from 'react';
 import { StreamRequirements } from "../types/CourseTypes";
 import { BarChart } from '@mui/x-charts/BarChart';
 import { ClickableTooltip } from './ClickableTooltip';
-import { TooltipProvider } from './ui/tooltip';
 
 interface WillYouGraduateProps {
     conditions: StreamRequirements;
