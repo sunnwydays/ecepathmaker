@@ -45,9 +45,7 @@ const WillYouGraduate: FC<WillYouGraduateProps> = ({ conditions }) => {
             <div className="grid grid-cols-3 gap-3">
                 <div className='mb-4'>
                     <h3 className="text-lg font-semibold mb-1">Basics</h3>
-                    <TooltipProvider>
                     <ul className="space-y-1">
-                        
                         <li className='flex items-center'>
                             CS<ClickableTooltip>At least 4 complementary study electives (including HSS)</ClickableTooltip>
                             : {conditions.hasCS ? '✅' : '❌'}
@@ -69,7 +67,6 @@ const WillYouGraduate: FC<WillYouGraduateProps> = ({ conditions }) => {
                             : { conditions.hasSciMath ? '✅' : '❌' }
                         </li>
                     </ul>
-                    </TooltipProvider>
                 </div>
                 <div>
                     <h3 className="text-lg font-semibold mb-1">Depth and Breadth</h3>
