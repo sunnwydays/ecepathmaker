@@ -1,6 +1,8 @@
 import { FC } from 'react';
 import { StreamRequirements } from "../types/CourseTypes";
 import { BarChart } from '@mui/x-charts/BarChart';
+import { ClickableTooltip } from './ClickableTooltip';
+import { TooltipProvider } from './ui/tooltip';
 
 interface WillYouGraduateProps {
     conditions: StreamRequirements;
@@ -43,21 +45,45 @@ const WillYouGraduate: FC<WillYouGraduateProps> = ({ conditions }) => {
             <div className="grid grid-cols-3 gap-3">
                 <div className='mb-4'>
                     <h3 className="text-lg font-semibold mb-1">Basics</h3>
+                    <TooltipProvider>
                     <ul className="space-y-1">
-                        <li>CS (4+): {conditions.hasCS ? '✅' : '❌'}</li>
-                        <li>HSS (2+): {conditions.hasHSS ? '✅' : '❌'}</li>
-                        <li>Economics: {conditions.hasEconomics ? '✅' : '❌'}</li>
-                        <li>Capstone: {conditions.hasCapstone ? '✅' : '❌'}</li>
-                        <li>Sci/Math: { conditions.hasSciMath ? '✅' : '❌' }</li>
+                        
+                        <li className='flex items-center'>
+                            CS<ClickableTooltip>At least 4 complementary study electives (including HSS)</ClickableTooltip>
+                            : {conditions.hasCS ? '✅' : '❌'}
+                        </li>
+                        <li className='flex items-center'>
+                            HSS<ClickableTooltip>At least 2 humanities/social science electives</ClickableTooltip>
+                            : {conditions.hasHSS ? '✅' : '❌'}
+                        </li>
+                        <li className='flex items-center'>
+                            Economics<ClickableTooltip>ECE472 required</ClickableTooltip>
+                            : {conditions.hasEconomics ? '✅' : '❌'}
+                        </li>
+                        <li className='flex items-center'>
+                            Capstone<ClickableTooltip>Both halves of the fourth-year capstone required</ClickableTooltip>
+                            : {conditions.hasCapstone ? '✅' : '❌'}
+                        </li>
+                        <li className='flex items-center'>
+                            Sci/Math<ClickableTooltip>At least 1 math/science (Area 7) course</ClickableTooltip>
+                            : { conditions.hasSciMath ? '✅' : '❌' }
+                        </li>
                     </ul>
+                    </TooltipProvider>
                 </div>
                 <div>
                     <h3 className="text-lg font-semibold mb-1">Depth and Breadth</h3>
                     <ul className='space-y-1'>
-                        <li>Depth: {conditions.hasDepth ? '✅' : '❌'}</li>
+                        <li className='flex items-center'>
+                            Depth<ClickableTooltip>Has stream kernel + 2 other stream courses</ClickableTooltip>
+                            : {conditions.hasDepth ? '✅' : '❌'}
+                        </li>
                         {conditions.depthStreams?.length > 0 &&
                             <li>Depth streams: {conditions.depthStreams?.join(', ')}</li>}
-                        <li>Breadth: {conditions.hasBreadth ? '✅' : '❌'}</li>
+                        <li className='flex items-center'>
+                            Breadth<ClickableTooltip>Has stream kernel</ClickableTooltip>
+                            : {conditions.hasBreadth ? '✅' : '❌'}
+                        </li>
                         {conditions.breadthStreams?.length > 0 &&
                             <li>Breadth streams: {conditions.breadthStreams?.join(', ')}</li>}
                         <li>CE/EE: {conditions.ceOrEE ? <b className='font-semibold'>
