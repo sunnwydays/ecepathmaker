@@ -7,7 +7,7 @@ ECE Pathmaker is a visual drag-and-drop course planner for UofT electrical and c
 ## Tech Stack
 
 The project is built using the following technologies:
-- **Frontend**: React, TypeScript, HTML, Tailwind CSS, dnd-kit (drag-and-drop)
+- **Frontend**: React, TypeScript, HTML, Tailwind CSS, dnd-kit (drag-and-drop), shadcn/ui (tooltip buttons)
 - **Testing**: Jest, manual testing
 - **Build Tools**: Vite, PostCSS
 - **Version Control**: Git, GitHub
