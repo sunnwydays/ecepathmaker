@@ -62,7 +62,7 @@ const WillYouGraduate: FC<WillYouGraduateProps> = ({ conditions }) => {
                             : {conditions.hasCapstone ? '✅' : '❌'}
                         </li>
                         <li className='flex items-center'>
-                            Sci/Math<ClickableTooltip>At least 1 math/science (Area 7) course</ClickableTooltip>
+                            Sci/Math<ClickableTooltip>At least 1 course labelled as science/math (Area 7)</ClickableTooltip>
                             : { conditions.hasSciMath ? '✅' : '❌' }
                         </li>
                     </ul>
