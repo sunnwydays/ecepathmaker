@@ -53,7 +53,10 @@ const StringDisplay:FC<StringDisplayProps> = ({ courses, coursesOnGrid }) => {
     
     return (
         <section className="flex flex-col">
-            <p className="p-2 border-2 border-green3 border-opacity-70 rounded-md bg-green1 bg-opacity-50 break-all select-all">
+            <p className="
+                p-2 border-2 border-green3 border-opacity-70 rounded-md 
+                bg-green1 bg-opacity-50 break-all select-all"
+            >
                 {str}
             </p>
             <button
