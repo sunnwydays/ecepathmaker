@@ -44,7 +44,7 @@ const faqData: FAQ = [
     },
     {
         question: "Anything else that I should know when course planning?",
-        answer: "While ECE Pathmaker checks most major requirements, some things are not checked. Ensure that you have your free elective & technical elective (easy), PEY / 600h technical XP (not part of course planning but required for graduation), CEAB credits (likely fulfilled if you fulfilled the other requirements), no exclusion violation (if you take certain courses, you may not take another similar one), within 1.5 credit ArtSci -300/-400 limit. You will see possible issues after entering your courses into Magellan. Lastly, remember that this tool is unofficial and although I have done plenty of testing, it may contain errors."
+        answer: "While ECE Pathmaker checks most major requirements, some things are not checked. Ensure that you have your natural sciences, free elective & technical elective (easy), PEY / 600h technical XP (not part of course planning but required for graduation), CEAB credits (likely fulfilled if you fulfilled the other requirements), no exclusion violation (if you take certain courses, you may not take another similar one), within 1.5 credit ArtSci -300/-400 limit. You will see possible issues after entering your courses into Magellan. Lastly, remember that this tool is unofficial and although I have done plenty of testing, it may contain errors."
     },
     {
         question: "Does this tool work on mobile?",
