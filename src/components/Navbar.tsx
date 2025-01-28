@@ -30,9 +30,21 @@ const Navbar:FC = () => {
     }, []);
 
     return (
-        <nav className={`fixed top-0 w-full transition-all ${isScrolled ? 'h-12' : 'h-24'} bg-white bg-opacity-95 shadow border-b-1 z-40`}>
-            <div className="mx-auto xl:wp lg:w-wpl w-wps flex justify-between items-center py-2">
-                <a href="/" className={`${isScrolled ? 'w-24' : 'w-56' } transition-all`}><img src={logo} alt="ECE Pathmaker logo" /></a>
+        <nav className={`
+            fixed z-40 top-0 w-full 
+            transition-all ${isScrolled ? 'h-12' : 'h-24'} 
+            bg-white bg-opacity-95 shadow border-b-1 
+        `}>
+            <div className="
+                mx-auto xl:wp lg:w-wpl w-wps 
+                flex justify-between items-center py-2
+            ">
+                <a 
+                    href="/" 
+                    className={`${isScrolled ? 'w-24' : 'w-56' } transition-all`}
+                >
+                    <img src={logo} alt="ECE Pathmaker logo" />
+                </a>
                 <div className="z-30 flex items-center" ref={menuRef}>
                         <ul className={`
                             md:static fixed 
@@ -46,23 +58,59 @@ const Navbar:FC = () => {
                             md:transition-none transition-all duration-500
                             md:gap-[3vw] gap-8
                             md:text-base font-medium text-xl
-                            ${isScrolled ? 'text-l md:font-normal' : 'md:font-medium md:text-xl'}
+                            ${isScrolled 
+                                ? 'text-l md:font-normal' 
+                                : 'md:font-medium md:text-xl'
+                            }
                             md:py-0 py-12
                             md:px-0 px-5
                         `}>
                             <li>
-                                <a onClick={() => setIsMenuOpen(false)} className="hover:text-green2 transition-all mx-auto" href="/">Maker</a>
+                                <a 
+                                    onClick={() => setIsMenuOpen(false)} 
+                                    className="
+                                        hover:text-green2 
+                                        transition-all 
+                                        mx-auto
+                                    " 
+                                    href="/"
+                                >
+                                    Maker
+                                </a>
                             </li>
                             <li>
-                                <a onClick={() => setIsMenuOpen(false)} className="hover:text-green2 transition-all mx-auto" href="/courses">Courses</a>
+                                <a 
+                                    onClick={() => setIsMenuOpen(false)} 
+                                    className="
+                                            hover:text-green2 
+                                            transition-all 
+                                            mx-auto
+                                        " 
+                                    href="/courses"
+                                >
+                                    Courses
+                                </a>
                             </li>
                             <li>
-                                <a onClick={() => setIsMenuOpen(false)} className="hover:text-green2 transition-all mx-auto" href="/faq">FAQs</a>
+                                <a 
+                                    onClick={() => setIsMenuOpen(false)} 
+                                    className="
+                                        hover:text-green2 
+                                        transition-all 
+                                        mx-auto
+                                    " 
+                                    href="/faq"
+                                >
+                                    FAQs
+                                </a>
                             </li>
                         </ul>
                         <button 
                             onClick={() => setIsMenuOpen(!isMenuOpen)}
-                            className="z-50 md:hidden text-3xl cursor-pointer flex items-center"
+                            className="
+                                z-50 md:hidden text-3xl cursor-pointer 
+                                flex items-center
+                            "
                         >
                             {!isMenuOpen ? <IoIosMenu /> : <IoIosClose />}
                         </button>
