@@ -28,7 +28,13 @@ enum DropError {
     TERM = 'TERM'
 }
 
-const CourseGrid:FC<CourseGridProps> = ({ courses, coursesOnGrid, coursesUsed, setCoursesOnGrid, setCoursesUsed }) => {
+const CourseGrid: FC<CourseGridProps> = ({
+    courses,
+    coursesOnGrid,
+    coursesUsed,
+    setCoursesOnGrid,
+    setCoursesUsed,
+}) => {
     const [filters, setFilters] = useState<FilterState>({
         searchTerm: '',
         streams: [],
@@ -98,7 +104,10 @@ const CourseGrid:FC<CourseGridProps> = ({ courses, coursesOnGrid, coursesUsed, s
             return acc;
         }, {} as Record<number, { count: number, hasKernel: boolean }>);
 
-        const streamCounts = Array.from({ length: 6 }, (_, i) => i + 1).reduce((acc, stream) => {
+        const streamCounts = Array
+            .from({ length: 6 }, (_, i) => i + 1)
+            .reduce((acc, stream) => 
+        {
             acc[stream] = streamInfo[stream]?.count || 0;
             return acc;
         }, {} as Record<number, number>);
@@ -110,22 +119,32 @@ const CourseGrid:FC<CourseGridProps> = ({ courses, coursesOnGrid, coursesUsed, s
 
         const breadthStreams = [
             ...Object.entries(streamInfo)
-                .filter(([stream, info]) => info.count >= 1 && info.hasKernel && !depthStreams.includes(Number(stream)))
+                .filter(([stream, info]) => 
+                    info.count >= 1 && 
+                    info.hasKernel && 
+                    !depthStreams.includes(Number(stream)))
                 .map(([stream]) => Number(stream))
         ];
         
         const numDepth = depthStreams.length;
-        const hasBreadth = breadthStreams.length >= 2 || (breadthStreams.length === 1 && numDepth >= 3) || (numDepth >= 4);
+        const hasBreadth = breadthStreams.length >= 2 || 
+                           (breadthStreams.length === 1 && numDepth >= 3) || 
+                           numDepth >= 4;
         const hasDepth = depthStreams.length >= 2;
         
         let ceOrEE = null; // null, 'CE', 'EE', or 'ECE'
         if (hasDepth && hasBreadth) {
-            const numCEDepth = depthStreams.filter(stream => stream === 5 || stream === 6).length;
+            const numCEDepth = depthStreams
+                .filter(stream => stream === 5 || stream === 6)
+                .length;
             const numEEDepth = depthStreams.length - numCEDepth;
-            const numCEBreadth = breadthStreams.filter(stream => stream === 5 || stream === 6).length;
+            const numCEBreadth = breadthStreams
+                .filter(stream => stream === 5 || stream === 6)
+                .length;
             const numEEBreadth = breadthStreams.length - numCEBreadth;
-            // can't just go by count due to possibility of many EE depth and need to differentiate depth and breadth
 
+            // Logic can't be based only on count due to possibility of many EE 
+            // depths and need to differentiate depth and breadth
             const countCE = numCEDepth*3 + numCEBreadth;
 
             if (countCE >= 4) {
@@ -261,6 +280,7 @@ const CourseGrid:FC<CourseGridProps> = ({ courses, coursesOnGrid, coursesUsed, s
                 setCoursesUsed({...coursesUsed, [active.id]: over.id as GridPosition});
                 return;
             }
+            
             // destination already has a course
             setCoursesUsed({
                 ...coursesUsed,
@@ -299,10 +319,14 @@ const CourseGrid:FC<CourseGridProps> = ({ courses, coursesOnGrid, coursesUsed, s
             <section className="flex lg:flex-row flex-col gap-x-6 gap-y-4">
                 <div className="grid grid-cols-5 gap-2 size-max flex-shrink-0">
                     {Object.entries(coursesOnGrid).map(([slot, courseCode]) => (
-                        <Droppable key={slot} id={slot} valid={validYearTerms[getYearTerm(slot as GridPosition)]}>
+                        <Droppable 
+                            key={slot} 
+                            id={slot} 
+                            valid={validYearTerms[getYearTerm(slot as GridPosition)]}
+                        >
                             {courseCode ? (
                                 <MakerCard 
-                                    valid={ validYearTerms[getYearTerm(slot as GridPosition)]}
+                                    valid={validYearTerms[getYearTerm(slot as GridPosition)]}
                                     id={courseCode}
                                     code={courseCode}
                                     {...courses[courseCode]}
@@ -315,8 +339,12 @@ const CourseGrid:FC<CourseGridProps> = ({ courses, coursesOnGrid, coursesUsed, s
                 </div>
                 <div>
                     {/* Courses to choose from */}
-                    <h2 className="lg:block hidden mb-1 text-xl font-medium text-center">👈 Drag courses into the grid</h2>
-                    <h2 className="lg:block hidden mb-4 text-center">🔍 Click a course to view more details</h2>
+                    <h2 className="lg:block hidden mb-1 text-xl font-medium text-center">
+                        👈 Drag courses into the grid
+                    </h2>
+                    <h2 className="lg:block hidden mb-4 text-center">
+                        🔍 Click a course to view more details
+                    </h2>
                     <h2 className="lg:hidden block mb-2 text-lg text-center">
                         ☝️ Hold and drag courses into the grid,<br/>
                         🔍 Click a course to view more details
@@ -344,7 +372,10 @@ const CourseGrid:FC<CourseGridProps> = ({ courses, coursesOnGrid, coursesUsed, s
                                     />
                                 ))
                             ) : (
-                                <div className="w-full text-center text-neutral3 italic select-none">
+                                <div className="
+                                    w-full text-center 
+                                    text-neutral3 italic select-none"
+                                >
                                     No courses match the current filter
                                 </div>
                             );
