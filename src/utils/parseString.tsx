@@ -1,4 +1,12 @@
-import { CourseList, CourseCardPropsWithoutCode, CoursesOnGrid, CoursesUsed, ParseString, GridPosition, GridPositionBase } from "../types/CourseTypes";
+import { 
+    CourseList, 
+    CourseCardPropsWithoutCode, 
+    CoursesOnGrid, 
+    CoursesUsed, 
+    ParseString, 
+    GridPosition, 
+    GridPositionBase 
+} from "../types/CourseTypes";
 import { validateCourseCode, validateCourseName } from "./validateCourse";
 
 export const isValidString = (str: string): boolean => {
@@ -10,7 +18,9 @@ export const isValidString = (str: string): boolean => {
     const terms = str.split('@@');
     if (terms.length > 5) return false;
 
-    const validOptionChars = new Set(['f', 's', '1', '2', '3', '4', '5', '6', 'k', 'c', 'h', 'm', 'a']);
+    const validOptionChars = new Set([
+        'f', 's', '1', '2', '3', '4', '5', '6', 'k', 'c', 'h', 'm', 'a'
+    ]);
 
     return terms.every(term => {
         // Check each term
@@ -55,7 +65,10 @@ export const isValidString = (str: string): boolean => {
             
             // Validate preq
             if (preq) {
-                const prereqs = preq.split(',').flatMap(p => p.split('|').map(p => p.trim()));
+                const prereqs = preq
+                    .split(',')
+                    .flatMap(p => p.split('|')
+                    .map(p => p.trim()));
                 prereqs.forEach(prereq => {
                     return prereq.length === 6;
                 });
@@ -138,7 +151,10 @@ export const parseString = (str: string): ParseString => {
                     const andPrereqs = preq.split(',').map(andGroup => {
                         // For each AND group, check if it has OR conditions
                         if (andGroup.includes('|')) {
-                            return andGroup.split('|').map(p => p.trim().toUpperCase());
+                            return andGroup
+                                .split('|')
+                                .map(p => p.trim()
+                                .toUpperCase());
                         }
                         return andGroup.trim();
                     });
