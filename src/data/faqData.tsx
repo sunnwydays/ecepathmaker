@@ -6,6 +6,26 @@ type FAQItem = {
 type FAQ = FAQItem[];
 
 export const courseFaqData: FAQ = [
+    {
+        question: "If I take a gap year after my second year to do an internship, should I put my courses on Magellan as next year or the year after?",
+        answer: "Put your courses in Magellan as if you were going to take a usual PEY after third year. This is in case your internship falls through - you will still be able to shift your courses for preregistration before January 30 of your work year."
+    },
+    {
+        question: "Can I change my courses on Magellan after January 30?",
+        answer: "Only your courses for the following year (both fall and winter) are preregistered, the rest is for planning purposes. You can change your other courses later."
+    },
+    {
+        question: "What does it mean when a course can only count towards 2 things?",
+        answer: "For a course, it can only count towards 1 minor and your stream requirement, or 2 minors. For example, if you want ECE345 to count to both AI and Robotics, it will not be considered as your stream 6 kernel."
+    },
+    {
+        question: "Do courses marked as EXT count towards minor requirements?",
+        answer: "Yes, that is the only thing they count towards (they still show up on your transcript, but don't count for GPA)."
+    },
+    {
+        question: "For MIE509, what does 'or an Introductory Machine Learning, or equivalent' in the prerequisites mean?",
+        answer: "It means any introductory ML or AI course is an appropriate prereq, such as APS360 or ECE421."
+    },
 ]
 
 export const siteFaqData: FAQ = [
