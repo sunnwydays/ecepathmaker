@@ -447,11 +447,12 @@ const courses: CourseList = {
         isHSS: true,
         color: 'd4a5a5',
         onlyF: true,
-    },
-    'APS511': {
-        name: 'Inventions and Patents for Engineers',
+    }, 
+    'TEP442': {
+        name: 'Cognitive and Psychological Foundations of Effective Leadership',
         isCS: true,
-        color: 'a89c64',
+        isHSS: true,
+        color: 'd4a5a5',
         onlyS: true,
     },
     'HPS120': {
