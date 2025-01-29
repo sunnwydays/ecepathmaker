@@ -1,13 +1,61 @@
-import { FC } from 'react';
-import faqData from "../data/faqData";
+import { FC, useEffect, useState } from 'react';
+import { siteFaqData, courseFaqData } from "../data/faqData";
 import FAQCard from "../components/FAQCard";
 
 const FAQ: FC = () => {
+    const [showButton, setShowButton] = useState(false);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            if (window.scrollY > 400) {
+                setShowButton(true);
+            } else {
+                setShowButton(false);
+            }
+        };
+
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+
+    const scrollToTop = () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    const scrollToSection = (elementId: string) => {
+        const element = document.getElementById(elementId);
+        element?.scrollIntoView({ behavior: 'smooth' });
+    };
+
     return (
         <div>
-            <h2 className="mb-8 text-2xl font-medium">FAQs + How to use Pathmaker</h2>
+            <div className="bg-neutral1 p-8 rounded-md text-center shadow-sm">
+                <h2 className="text-2xl font-bold">Contents</h2>
+                <ul className="space-y-2 mt-4">
+                    <li>
+                        <button 
+                            onClick={() => scrollToSection('site-faqs')}
+                            className="text-green3 hover:opacity-50 transition-all"
+                        >
+                            FAQs on using Pathmaker
+                        </button>
+                    </li>
+                    <li>
+                        <button 
+                            onClick={() => scrollToSection('course-faqs')}
+                            className="text-green3 hover:opacity-50 transition-all"
+                        >
+                            FAQs on Course Selection
+                        </button>
+                    </li>
+                </ul>
+            </div>
+
+            <h2 className="mb-8 pt-16 text-2xl font-medium" id="site-faqs">
+                FAQs on using Pathmaker
+            </h2>
             <div className="flex flex-col gap-4">
-                {faqData.map((faq, index) => (
+                {siteFaqData.map((faq, index) => (
                     <FAQCard 
                         key={index}
                         question={faq.question} 
@@ -15,6 +63,33 @@ const FAQ: FC = () => {
                     />
                 ))}
             </div>
+            <hr className="mt-12 stroke-2"/>
+            
+            <h2 className="mb-8 pt-12 text-2xl font-medium" id="course-faqs">
+                FAQs on Course Selection
+            </h2>
+            <div className="flex flex-col gap-4">
+                {courseFaqData.map((faq, index) => (
+                    <FAQCard 
+                        key={index}
+                        question={faq.question} 
+                        answer={faq.answer} 
+                    />
+                ))}
+            </div>
+            {showButton && (
+                <button
+                    onClick={scrollToTop}
+                    className="
+                        fixed bottom-8 right-8 bg-green2 text-white p-4 
+                        rounded-full shadow-lg 
+                        hover:bg-opacity-80 transition-all
+                    "
+                    aria-label="Back to top"
+                >
+                    ↑
+                </button>
+            )}
         </div>
     );
 };
