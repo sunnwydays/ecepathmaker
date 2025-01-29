@@ -65,9 +65,13 @@ const FAQ: FC = () => {
             </div>
             <hr className="mt-12 stroke-2"/>
             
-            <h2 className="mb-8 pt-12 text-2xl font-medium" id="course-faqs">
+            <h2 className="mb-4 pt-12 text-2xl font-medium" id="course-faqs">
                 FAQs on Course Selection
             </h2>
+            <p className='mb-8'>
+                I asked the ECE undergrad office in SF basement (SFB540)
+                about the following questions. Here are the answers.
+            </p>
             <div className="flex flex-col gap-4">
                 {courseFaqData.map((faq, index) => (
                     <FAQCard 
