@@ -34,6 +34,11 @@ Contributions are welcome! Please fork the repository and submit a pull request.
 
 - [x] Proper mobile experience
 - [x] Add more courses and course information in database (all courses in Magellan)
+- [ ] Clear grid button
+- [ ] Easier way to edit colors
+- [ ] Better way to add 6 courses per term
+- [ ] Checking for minors and certificates (much hardcoding)
+- [ ] Proper backend to store core course details and improve save/load functionality
 - [ ] Google OAuth login
 - [ ] Store data in the URL
 - [ ] Use `localStorage` to store data in the browser
