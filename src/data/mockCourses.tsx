@@ -441,6 +441,18 @@ const courses: CourseList = {
         isHSS: true,
         color: 'd4a5a5',
     },
+    'TEP343': {
+        name: 'Engineering Leadership',
+        isCS: true,
+        color: 'a89c64',
+    },
+    'TEP442': {
+        name: 'Cognitive and Psychological Foundations of Effective Leadership',
+        isCS: true,
+        isHSS: true,
+        color: 'd4a5a5',
+        onlyS: true,
+    },
     'TEP444': {
         name: 'Positive Psychology for Engineers',
         isCS: true,
@@ -448,12 +460,11 @@ const courses: CourseList = {
         color: 'd4a5a5',
         onlyF: true,
     }, 
-    'TEP442': {
-        name: 'Cognitive and Psychological Foundations of Effective Leadership',
+    'ENT200': {
+        name: 'Introduction to Entrepreneurship',
         isCS: true,
-        isHSS: true,
-        color: 'd4a5a5',
-        onlyS: true,
+        isArtSci: true,
+        color: 'a89c64',
     },
     'HPS120': {
         name: 'How to Think about Science',
