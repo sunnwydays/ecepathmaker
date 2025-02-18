@@ -51,7 +51,7 @@ const FAQ: FC = () => {
                 </ul>
             </div>
 
-            <h2 className="mb-8 pt-16 text-2xl font-medium" id="site-faqs">
+            <h2 className="mb-8 pt-8 text-2xl font-medium" id="site-faqs">
                 FAQs on using Pathmaker
             </h2>
             <div className="flex flex-col gap-4">
