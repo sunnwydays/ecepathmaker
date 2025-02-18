@@ -36,12 +36,12 @@ Contributions are welcome! Please fork the repository and submit a pull request.
 - [x] Add more courses and course information in database (all courses in Magellan)
 - [x] Use `localStorage` to store data in the browser
 - [x] Clear grid button
-- [ ] Screenshot button
+- [x] Screenshot button - grid card text gets clipped a little
 - [ ] Easier way to edit colors
 - [ ] Better way to add 6 courses per term
 - [ ] Checking for minors and certificates (much hardcoding)
 - [ ] Proper backend to store core course details and improve save/load functionality
-- [ ] Google OAuth login
+- [ ] Google OAuth login (Firebase)
 - [ ] Store data in the URL
 - [ ] Extend to other engineering disciplines
 
