@@ -30,14 +30,14 @@ const FAQ: FC = () => {
     return (
         <div>
             <div className="bg-neutral1 p-8 rounded-md text-center shadow-sm">
-                <h2 className="text-2xl font-bold">Contents</h2>
+                <h2 className="text-2xl font-bold">FAQs</h2>
                 <ul className="space-y-2 mt-4">
                     <li>
                         <button 
                             onClick={() => scrollToSection('site-faqs')}
                             className="text-green3 hover:opacity-50 transition-all"
                         >
-                            FAQs on using Pathmaker
+                            Using Pathmaker
                         </button>
                     </li>
                     <li>
@@ -45,7 +45,7 @@ const FAQ: FC = () => {
                             onClick={() => scrollToSection('course-faqs')}
                             className="text-green3 hover:opacity-50 transition-all"
                         >
-                            FAQs on Course Selection
+                            Course Selection
                         </button>
                     </li>
                 </ul>
