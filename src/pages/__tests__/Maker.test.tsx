@@ -102,8 +102,8 @@ describe('Maker', () => {
         const submitButton = screen.getByPlaceholderText('Layout string');
 
         // Clear layout
-        fireEvent.change(stringInput, { target: { value: '@@@@@@@@' } });
-        fireEvent.click(submitButton);
+        const clearButton = screen.getByTestId('clear-grid');
+        fireEvent.click(clearButton);
 
         fireEvent.change(stringInput, { target: { value: 'something@@' } });
         fireEvent.click(submitButton);
@@ -112,7 +112,7 @@ describe('Maker', () => {
         expect(stringInput).toHaveValue('something@@');
     });
 
-    it('clears the grid when the clear button is clicked', () => {
+    it('clears the grid when the reset button is clicked', () => {
         // Load a layout
         const stringInput = screen.getByTestId('string-input');
         fireEvent.change(stringInput, { target: { value: 'ECE331Analog Electronics%%3kf#b3e6b3$$ECE335Introduction to Electronic Devices%%1kf#ffcc99$$ECE302Probability and Applications%%45m#e6b3ff$$ECE361Co-302 Computer Networks I%%5k#ffb3b3$$CST000cs%%c#8faadc@@ECE469Optical Communications and Networks%%145s#ffcc99$$ECE344Operating Systems%%6k#ffd699$$ECE334Digital Electronics%%3k#b3e6b3$$ECE472Engineering Economics%%$$JRE410Markets and Competitive Strategy%%c#8faadc@@ECE446Audio, Acoustics and Sensing%%34f#b3e6b3$$ECE568Computer Security%%56#ffb3b3pECE344|ECE353$$ECE496Design Project h1%%$$HPS120How to Think about Science%%ha#d4a5a5$$@@ECE448Biocomputation%%6sm#ffd699$$ECE419Distributed Systems%%6s#ffd699pECE344|ECE353$$MIE369Introduction to Artificial Intelligence%%s#ffc2e0pMIE236|ECE286|ECE302$$ECE497Design Project h2 not a real course%%$$JRE420People Management and Organizational Behaviour%%h#d4a5a5@@' } });
