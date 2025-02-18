@@ -4,10 +4,13 @@ import LoadLayout from '../components/LoadLayout';
 import StringDisplay from '../components/StringDisplay';
 
 import mockCourses from '../data/mockCourses';
-import { useMemo, useState, useEffect } from 'react';
+import { useMemo, useState, useEffect, useRef } from 'react';
 import { CoursesOnGrid, CoursesUsed } from '../types/CourseTypes';
 
 const Maker = () => {
+    // Add counters for state changes
+    const changeCountRef = useRef(0);
+
     // Load data from localStorage or use default values
     const [courses, setCourses] = useState(() => {
         const savedCourses = localStorage.getItem('courses');
@@ -40,18 +43,25 @@ const Maker = () => {
     const [coursesUsed, setCoursesUsed] = useState<CoursesUsed>(initialCoursesUsed);
     const [coursesOnGrid, setCoursesOnGrid] = useState<CoursesOnGrid>(initialCoursesOnGrid);
 
-    // Save to localStorage whenever state changes
+    // Save to localStorage every 5 changes
     useEffect(() => {
-        localStorage.setItem('courses', JSON.stringify(courses));
-    }, [courses]);
+        changeCountRef.current++;
+        if (changeCountRef.current >= 5) {
+            localStorage.setItem('courses', JSON.stringify(courses));
+            localStorage.setItem('coursesUsed', JSON.stringify(coursesUsed));
+            localStorage.setItem('coursesOnGrid', JSON.stringify(coursesOnGrid));
+            changeCountRef.current = 0;
+        }
+    }, [courses, coursesUsed, coursesOnGrid]);
 
+    // Save everything when component unmounts (e.g. navigate to another page)
     useEffect(() => {
-        localStorage.setItem('coursesUsed', JSON.stringify(coursesUsed));
-    }, [coursesUsed]);
-
-    useEffect(() => {
-        localStorage.setItem('coursesOnGrid', JSON.stringify(coursesOnGrid));
-    }, [coursesOnGrid]);
+        return () => {
+            localStorage.setItem('courses', JSON.stringify(courses));
+            localStorage.setItem('coursesUsed', JSON.stringify(coursesUsed));
+            localStorage.setItem('coursesOnGrid', JSON.stringify(coursesOnGrid));
+        };
+    }, [courses, coursesUsed, coursesOnGrid]);
     
     return (
         <div>
