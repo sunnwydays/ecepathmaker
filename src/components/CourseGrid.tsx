@@ -1,8 +1,10 @@
 import Droppable from '../components/Droppable';
 
-import { FC, useEffect, useMemo, useRef, useState } from 'react';
+import { FC, useState, useEffect, useMemo, useRef, createRef } from 'react';
 import MakerCard from './MakerCard';
 import { CourseGridProps, FilterState, ValidYearTerms, StreamRequirements, GridPosition, CoursesUsed,  } from '../types/CourseTypes';
+// @ts-expect-error - use-react-screenshot is not typed
+import { useScreenshot, createFileName } from "use-react-screenshot";
 
 import {
     DndContext, 
@@ -329,10 +331,27 @@ const CourseGrid: FC<CourseGridProps> = ({
         });
     }
 
+    const screenshotRef = createRef<HTMLDivElement>();
+    const [, takeScreenshot] = useScreenshot({
+      type: "image/png",
+      quality: 1.0
+    });
+  
+    const download = (image: string, { name = "pathmaker", extension = "png" } = {}) => {
+      const a = document.createElement("a");
+      a.href = image;
+      a.download = createFileName(extension, name);
+      a.click();
+    };
+  
+    const downloadScreenshot = () => {
+        takeScreenshot(screenshotRef.current).then(download);
+    };
+
     return (
         <DndContext onDragEnd={handleDragEnd} onDragStart={handleDragStart} sensors={sensors}>
             <section className="flex lg:flex-row flex-col gap-x-6 gap-y-4">
-                <div className="grid grid-cols-5 gap-2 size-max flex-shrink-0">
+                <div className="grid grid-cols-5 gap-2 size-max flex-shrink-0" ref={screenshotRef} >
                     {Object.entries(coursesOnGrid).map(([slot, courseCode]) => (
                         <Droppable 
                             key={slot} 
@@ -360,7 +379,22 @@ const CourseGrid: FC<CourseGridProps> = ({
                     <h2 className="lg:block hidden text-center mb-1">
                         🔍 Click a course to view more details
                     </h2>
-                    <div className='md:mt-4'>
+                    <div className='md:mt-4 flex xl:gap-8 lg:gap-4 gap-8'>
+                        <button 
+                            onClick={downloadScreenshot} 
+                            className="
+                                w-full px-4 py-2 
+                                ring-2 ring-green3 ring-opacity-80
+                                rounded-lg shadow-sm 
+                                bg-white hover:bg-green2
+                                text-green3 hover:text-white
+                                font-semibold
+                                transition-all duration-300
+                                hover:duration-100 active:scale-95
+                            "
+                        >
+                            Screenshot
+                        </button>
                         <button 
                             onClick={clearGrid} 
                             data-testid="clear-grid" 
@@ -372,12 +406,13 @@ const CourseGrid: FC<CourseGridProps> = ({
                                 text-comp3 hover:text-white
                                 font-semibold
                                 transition-all duration-300
+                                hover:duration-100 active:scale-95
                             "
                         >
-                            Clear Grid
+                            Reset
                         </button>
                     </div>
-                    <h2 className="lg:hidden block mb-2 text-lg text-center">
+                    <h2 className="lg:hidden block my-2 text-lg text-center">
                         ☝️ Hold and drag courses into the grid,<br/>
                         🔍 Click a course to view more details
                     </h2>
