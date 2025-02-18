@@ -34,6 +34,7 @@ Contributions are welcome! Please fork the repository and submit a pull request.
 
 - [x] Proper mobile experience
 - [x] Add more courses and course information in database (all courses in Magellan)
+- [x] Use `localStorage` to store data in the browser
 - [ ] Clear grid button
 - [ ] Screenshot button
 - [ ] Easier way to edit colors
@@ -42,7 +43,6 @@ Contributions are welcome! Please fork the repository and submit a pull request.
 - [ ] Proper backend to store core course details and improve save/load functionality
 - [ ] Google OAuth login
 - [ ] Store data in the URL
-- [ ] Use `localStorage` to store data in the browser
 - [ ] Extend to other engineering disciplines
 
 ## Example

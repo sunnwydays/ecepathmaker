@@ -4,28 +4,54 @@ import LoadLayout from '../components/LoadLayout';
 import StringDisplay from '../components/StringDisplay';
 
 import mockCourses from '../data/mockCourses';
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { CoursesOnGrid, CoursesUsed } from '../types/CourseTypes';
 
 const Maker = () => {
-    const [courses, setCourses] = useState(mockCourses);
+    // Load data from localStorage or use default values
+    const [courses, setCourses] = useState(() => {
+        const savedCourses = localStorage.getItem('courses');
+        if (savedCourses) return JSON.parse(savedCourses);
+        return mockCourses;
+    });
 
     const initialCoursesUsed = useMemo<CoursesUsed>(() => {
+        const savedCoursesUsed = localStorage.getItem('coursesUsed');
+        if (savedCoursesUsed) return JSON.parse(savedCoursesUsed);
+
         const posMap: CoursesUsed = {};
         Object.keys(courses).forEach(courseCode => posMap[courseCode] = '');
         return posMap;
     }, [courses]);
     
-    const initialCoursesOnGrid = useMemo<CoursesOnGrid>(() => ({
-        '3F.1': '', '3F.2': '', '3F.3': '', '3F.4': '', '3F.5': '',
-        '3S.1': '', '3S.2': '', '3S.3': '', '3S.4': '', '3S.5': '',
-        '4F.1': '', '4F.2': '', '4F.3': '', '4F.4': '', '4F.5': '',
-        '4S.1': '', '4S.2': '', '4S.3': '', '4S.4': '', '4S.5': '',
-        'XX.1': '', 'XX.2': '', 'XX.3': '', 'XX.4': '', 'XX.5': '',
-    }) as CoursesOnGrid, []);
+    const initialCoursesOnGrid = useMemo<CoursesOnGrid>(() => {
+        const savedCoursesOnGrid = localStorage.getItem('coursesOnGrid');
+        if (savedCoursesOnGrid) return JSON.parse(savedCoursesOnGrid);
+
+        return {
+            '3F.1': '', '3F.2': '', '3F.3': '', '3F.4': '', '3F.5': '',
+            '3S.1': '', '3S.2': '', '3S.3': '', '3S.4': '', '3S.5': '',
+            '4F.1': '', '4F.2': '', '4F.3': '', '4F.4': '', '4F.5': '',
+            '4S.1': '', '4S.2': '', '4S.3': '', '4S.4': '', '4S.5': '',
+            'XX.1': '', 'XX.2': '', 'XX.3': '', 'XX.4': '', 'XX.5': '',
+        } as CoursesOnGrid;
+    }, []);
     
     const [coursesUsed, setCoursesUsed] = useState<CoursesUsed>(initialCoursesUsed);
     const [coursesOnGrid, setCoursesOnGrid] = useState<CoursesOnGrid>(initialCoursesOnGrid);
+
+    // Save to localStorage whenever state changes
+    useEffect(() => {
+        localStorage.setItem('courses', JSON.stringify(courses));
+    }, [courses]);
+
+    useEffect(() => {
+        localStorage.setItem('coursesUsed', JSON.stringify(coursesUsed));
+    }, [coursesUsed]);
+
+    useEffect(() => {
+        localStorage.setItem('coursesOnGrid', JSON.stringify(coursesOnGrid));
+    }, [coursesOnGrid]);
     
     return (
         <div>
