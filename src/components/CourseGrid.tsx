@@ -2,7 +2,7 @@ import Droppable from '../components/Droppable';
 
 import { FC, useEffect, useMemo, useRef, useState } from 'react';
 import MakerCard from './MakerCard';
-import { CourseGridProps, FilterState, ValidYearTerms, StreamRequirements, GridPosition,  } from '../types/CourseTypes';
+import { CourseGridProps, FilterState, ValidYearTerms, StreamRequirements, GridPosition, CoursesUsed,  } from '../types/CourseTypes';
 
 import {
     DndContext, 
@@ -314,6 +314,21 @@ const CourseGrid: FC<CourseGridProps> = ({
         };
     }, [dropError]);
 
+    const clearGrid = () => {
+        setCoursesUsed(() => {
+            const posMap: CoursesUsed = {};
+            Object.keys(courses).forEach(courseCode => posMap[courseCode] = '');
+            return posMap;
+        });
+        setCoursesOnGrid({
+            '3F.1': '', '3F.2': '', '3F.3': '', '3F.4': '', '3F.5': '',
+            '3S.1': '', '3S.2': '', '3S.3': '', '3S.4': '', '3S.5': '',
+            '4F.1': '', '4F.2': '', '4F.3': '', '4F.4': '', '4F.5': '',
+            '4S.1': '', '4S.2': '', '4S.3': '', '4S.4': '', '4S.5': '',
+            'XX.1': '', 'XX.2': '', 'XX.3': '', 'XX.4': '', 'XX.5': '',
+        });
+    }
+
     return (
         <DndContext onDragEnd={handleDragEnd} onDragStart={handleDragStart} sensors={sensors}>
             <section className="flex lg:flex-row flex-col gap-x-6 gap-y-4">
@@ -342,9 +357,26 @@ const CourseGrid: FC<CourseGridProps> = ({
                     <h2 className="lg:block hidden mb-1 text-xl font-medium text-center">
                         👈 Drag courses into the grid
                     </h2>
-                    <h2 className="lg:block hidden mb-4 text-center">
+                    <h2 className="lg:block hidden text-center mb-1">
                         🔍 Click a course to view more details
                     </h2>
+                    <div className='md:mt-4'>
+                        <button 
+                            onClick={clearGrid} 
+                            data-testid="clear-grid" 
+                            className="
+                                w-full px-4 py-2 
+                                ring-2 ring-comp3 ring-opacity-80
+                                rounded-lg shadow-sm 
+                                bg-white hover:bg-comp2
+                                text-comp3 hover:text-white
+                                font-semibold
+                                transition-all duration-300
+                            "
+                        >
+                            Clear Grid
+                        </button>
+                    </div>
                     <h2 className="lg:hidden block mb-2 text-lg text-center">
                         ☝️ Hold and drag courses into the grid,<br/>
                         🔍 Click a course to view more details
@@ -355,6 +387,7 @@ const CourseGrid: FC<CourseGridProps> = ({
                         lg:w-full w-wps 
                         overflow-y-auto 
                         justify-center
+                        mt-4
                     ">
                         {(() => {
                             const filteredCourses = Object.entries(coursesUsed)

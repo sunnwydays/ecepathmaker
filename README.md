@@ -35,7 +35,7 @@ Contributions are welcome! Please fork the repository and submit a pull request.
 - [x] Proper mobile experience
 - [x] Add more courses and course information in database (all courses in Magellan)
 - [x] Use `localStorage` to store data in the browser
-- [ ] Clear grid button
+- [x] Clear grid button
 - [ ] Screenshot button
 - [ ] Easier way to edit colors
 - [ ] Better way to add 6 courses per term
