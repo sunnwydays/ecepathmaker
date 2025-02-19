@@ -148,8 +148,6 @@ const CourseForm:FC<CourseFormProps> = ({ setCourses, setCoursesUsed, customInfo
             onlyS: false,
         });
     }
-    console.log("customInfo:", customInfo);
-
 
     return (
         <section>
