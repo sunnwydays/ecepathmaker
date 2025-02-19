@@ -379,7 +379,7 @@ const CourseGrid: FC<CourseGridProps> = ({
                     <h2 className="lg:block hidden text-center mb-1">
                         🔍 Click a course to view more details
                     </h2>
-                    <div className='md:mt-4 flex xl:gap-8 lg:gap-4 gap-8'>
+                    <div className='lg:mt-4 flex xl:gap-8 lg:gap-4 gap-8'>
                         <button 
                             onClick={downloadScreenshot} 
                             className="
