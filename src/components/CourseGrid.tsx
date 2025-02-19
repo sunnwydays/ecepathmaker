@@ -37,6 +37,7 @@ const CourseGrid: FC<CourseGridProps> = ({
     setCoursesOnGrid,
     setCoursesUsed,
     setCustomInfo,
+    setPreqString,
 }) => {
     const [filters, setFilters] = useState<FilterState>({
         searchTerm: '',
@@ -365,6 +366,7 @@ const CourseGrid: FC<CourseGridProps> = ({
                                     id={courseCode}
                                     code={courseCode}
                                     setCustomInfo={setCustomInfo}
+                                    setPreqString={setPreqString}
                                     {...courses[courseCode]}
                                 />
                             ) : (
@@ -439,6 +441,7 @@ const CourseGrid: FC<CourseGridProps> = ({
                                         id={courseCode}
                                         code={courseCode}
                                         setCustomInfo={setCustomInfo}
+                                        setPreqString={setPreqString}
                                         {...courses[courseCode]}
                                     />
                                 ))

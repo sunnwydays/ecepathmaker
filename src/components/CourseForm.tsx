@@ -1,27 +1,10 @@
 
 import { HexColorPicker, HexColorInput } from "react-colorful";
-import { FC, useEffect, useState } from "react";
+import { FC, useState } from "react";
 import { CourseFormProps } from "../types/CourseTypes";
 import { validateCourseCode, validateCourseName, validatePrerequisites } from "../utils/validateCourse";
 
-const CourseForm:FC<CourseFormProps> = ({ setCourses, setCoursesUsed, customInfo, setCustomInfo }) => {
-    const [preqString, setPreqString] = useState("");
-
-    useEffect(() => {
-        setPreqString(preqsToString(customInfo.preq));
-    }, [customInfo.preq, setCustomInfo]);
-
-    const preqsToString = (preqs: (string | string[])[] | undefined): string => {
-        if (!preqs) return "";
-
-        return preqs.map(preq => {
-            if (Array.isArray(preq)) {
-                return preq.join(' | ');
-            }
-            return preq;
-        }).join(', ');
-    }
-
+const CourseForm:FC<CourseFormProps> = ({ setCourses, setCoursesUsed, customInfo, setCustomInfo, preqString, setPreqString }) => {
     const [errors, setErrors] = useState({
         code: false,
         name: false,

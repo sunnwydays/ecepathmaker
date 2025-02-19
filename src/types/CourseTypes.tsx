@@ -31,6 +31,7 @@ export interface DraggableCardProps extends CourseCardProps {
 export interface MakerCardProps extends DraggableCardProps {
     valid: boolean;
     setCustomInfo: React.Dispatch<React.SetStateAction<CourseCardProps>>;
+    setPreqString: React.Dispatch<React.SetStateAction<string>>;
 };
 
 interface CourseIdentifierWithoutCode {
@@ -93,6 +94,7 @@ export interface CourseGridProps {
     coursesOnGrid: CoursesOnGrid;
     setCoursesOnGrid: React.Dispatch<React.SetStateAction<CoursesOnGrid>>;
     setCustomInfo: React.Dispatch<React.SetStateAction<CourseCardProps>>;
+    setPreqString: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export interface ParseString {
@@ -119,6 +121,8 @@ export interface CourseFormProps {
     setCoursesUsed: React.Dispatch<React.SetStateAction<CoursesUsed>>;
     customInfo: CourseCardProps;
     setCustomInfo: React.Dispatch<React.SetStateAction<CourseCardProps>>;
+    preqString: string;
+    setPreqString: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export interface FilterState {

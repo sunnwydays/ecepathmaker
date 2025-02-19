@@ -7,6 +7,17 @@ import { getOtherLabels, getPreqLabels, getStreamLabels } from '../utils/getLabe
 const MakerCard:FC<MakerCardProps> = (props) => {
     const textColor = getTextColor(props.color);
 
+    const preqsToString = (preqs: (string | string[])[] | undefined): string => {
+        if (!preqs) return "";
+
+        return preqs.map(preq => {
+            if (Array.isArray(preq)) {
+                return preq.join(' | ');
+            }
+            return preq;
+        }).join(', ');
+    }
+
     const handleEdit = () => {
         props.setCustomInfo({
             code: props.code,
@@ -21,6 +32,7 @@ const MakerCard:FC<MakerCardProps> = (props) => {
             onlyF: props.onlyF,
             onlyS: props.onlyS,
         });
+        props.setPreqString(props.preq ? preqsToString(props.preq) : '');
 
         document.getElementById('add-course')?.scrollIntoView({ 
             behavior: 'smooth',
