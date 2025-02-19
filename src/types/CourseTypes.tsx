@@ -19,13 +19,18 @@ interface ValidCourseTypeFlags {
     isSciMath?: boolean;
 };
 
-type CourseCardProps = 
+export type CourseCardProps = 
     CourseIdentifier & 
     ValidTermAvailability &
     ValidCourseTypeFlags;
 
 export interface DraggableCardProps extends CourseCardProps {
     id: string;
+};
+
+export interface MakerCardProps extends DraggableCardProps {
+    valid: boolean;
+    setCustomInfo: React.Dispatch<React.SetStateAction<CourseCardProps>>;
 };
 
 interface CourseIdentifierWithoutCode {
@@ -87,6 +92,7 @@ export interface CourseGridProps {
     setCoursesUsed: React.Dispatch<React.SetStateAction<CoursesUsed>>;
     coursesOnGrid: CoursesOnGrid;
     setCoursesOnGrid: React.Dispatch<React.SetStateAction<CoursesOnGrid>>;
+    setCustomInfo: React.Dispatch<React.SetStateAction<CourseCardProps>>;
 }
 
 export interface ParseString {
@@ -111,6 +117,8 @@ export interface StringDisplayProps {
 export interface CourseFormProps {
     setCourses: React.Dispatch<React.SetStateAction<CourseList>>;
     setCoursesUsed: React.Dispatch<React.SetStateAction<CoursesUsed>>;
+    customInfo: CourseCardProps;
+    setCustomInfo: React.Dispatch<React.SetStateAction<CourseCardProps>>;
 }
 
 export interface FilterState {

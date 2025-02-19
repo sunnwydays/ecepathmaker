@@ -36,6 +36,7 @@ const CourseGrid: FC<CourseGridProps> = ({
     coursesUsed,
     setCoursesOnGrid,
     setCoursesUsed,
+    setCustomInfo,
 }) => {
     const [filters, setFilters] = useState<FilterState>({
         searchTerm: '',
@@ -363,6 +364,7 @@ const CourseGrid: FC<CourseGridProps> = ({
                                     valid={validYearTerms[getYearTerm(slot as GridPosition)]}
                                     id={courseCode}
                                     code={courseCode}
+                                    setCustomInfo={setCustomInfo}
                                     {...courses[courseCode]}
                                 />
                             ) : (
@@ -436,6 +438,7 @@ const CourseGrid: FC<CourseGridProps> = ({
                                         key={courseCode}
                                         id={courseCode}
                                         code={courseCode}
+                                        setCustomInfo={setCustomInfo}
                                         {...courses[courseCode]}
                                     />
                                 ))
@@ -455,10 +458,11 @@ const CourseGrid: FC<CourseGridProps> = ({
                 <DragOverlay>
                     {activeCourse && 
                         <MakerCard
-                        valid={true}
-                        id={activeCourse as string}
-                        code={activeCourse as string}
-                        {...courses[activeCourse]}
+                            valid={true}
+                            id={activeCourse as string}
+                            code={activeCourse as string}
+                            setCustomInfo={setCustomInfo}
+                            {...courses[activeCourse]}
                         />
                     }
                 </DragOverlay>,

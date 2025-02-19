@@ -1,15 +1,32 @@
 import { FC } from 'react';
-import { DraggableCardProps } from '../types/CourseTypes';
+import { MakerCardProps } from '../types/CourseTypes';
 import Draggable from '../components/Draggable';
 import { getTextColor } from '../utils/getTextColor';
 import { getOtherLabels, getPreqLabels, getStreamLabels } from '../utils/getLabels';
 
-interface MakerCardProps extends DraggableCardProps {
-    valid: boolean;
-};
-
 const MakerCard:FC<MakerCardProps> = (props) => {
     const textColor = getTextColor(props.color);
+
+    const handleEdit = () => {
+        props.setCustomInfo({
+            code: props.code,
+            name: props.name,
+            preq: props.preq,
+            streams: props.streams,
+            color: props.color ?? 'E0E0E0',
+            isCS: props.isCS,
+            isHSS: props.isHSS,
+            isSciMath: props.isSciMath,
+            isArtSci: props.isArtSci,
+            onlyF: props.onlyF,
+            onlyS: props.onlyS,
+        });
+
+        document.getElementById('add-course')?.scrollIntoView({ 
+            behavior: 'smooth',
+            block: 'start',
+        });
+    };
     
     return (
         <Draggable id={props.id}>{(isExpanded) =>
@@ -26,8 +43,12 @@ const MakerCard:FC<MakerCardProps> = (props) => {
                 `}
                 style={{backgroundColor: 
                     props.valid ? 
-                        props.color ? `#${props.color}` : undefined : 
-                        'rgba(255, 111, 97, 0.7)',
+                        props.color ? 
+                            props.color[0] === '#' ? 
+                                props.color :    
+                                `#${props.color}` : 
+                            undefined : 
+                            'rgba(255, 111, 97, 0.7)',
                 }}
             >
                 <h1 className="text-xl font-medium">{props.code}</h1> 
@@ -35,6 +56,17 @@ const MakerCard:FC<MakerCardProps> = (props) => {
                 { getStreamLabels(props) && <p>Stream: {getStreamLabels(props)}</p> }
                 { getOtherLabels(props) && <p>{getOtherLabels(props)}</p> }
                 {isExpanded && props.preq && props.preq.length > 0 && <p>Preq: {getPreqLabels(props)}</p>}
+                {isExpanded && 
+                    <div // because button cannot be a child of a button
+                        className="absolute top-0 right-4 text-xs rounded-full p-1"
+                        onClick={handleEdit}
+                        onKeyDown={handleEdit}
+                        tabIndex={0}
+                        role="button"
+                    >
+                        ✏️
+                    </div>
+                }
                 {props.onlyF && <span className="absolute top-0 right-0 text-xs bg-white bg-opacity-20 rounded-full p-1">🍂</span>}
                 {props.onlyS && <span className="absolute top-0 right-0 text-xs bg-white bg-opacity-20 rounded-full p-1">❄️</span>}
             </article>

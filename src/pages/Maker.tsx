@@ -5,9 +5,24 @@ import StringDisplay from '../components/StringDisplay';
 
 import mockCourses from '../data/mockCourses';
 import { useMemo, useState, useEffect } from 'react';
-import { CoursesOnGrid, CoursesUsed } from '../types/CourseTypes';
+import { CourseCardProps, CoursesOnGrid, CoursesUsed } from '../types/CourseTypes';
 
 const Maker = () => {
+    // Course info for custom course
+    const [customInfo, setCustomInfo] = useState<CourseCardProps>({
+        code: "",
+        name: "",
+        preq: [],
+        streams: [],
+        color: "E0E0E0",
+        isCS: false,
+        isHSS: false,
+        isSciMath: false,
+        isArtSci: false,
+        onlyF: false,
+        onlyS: false,
+    });
+
     // Load data from localStorage or use default values
     const [courses, setCourses] = useState(() => {
         const savedCourses = localStorage.getItem('courses');
@@ -72,6 +87,7 @@ const Maker = () => {
                 coursesOnGrid={coursesOnGrid}
                 setCoursesUsed={setCoursesUsed}
                 setCoursesOnGrid={setCoursesOnGrid}
+                setCustomInfo={setCustomInfo}
             />
             <hr className="mt-8 stroke-2"/>
             <div className="grid md:grid-cols-2 grid-cols-1 gap-x-16">
@@ -94,6 +110,8 @@ const Maker = () => {
                 <CourseForm 
                     setCourses={setCourses}
                     setCoursesUsed={setCoursesUsed}
+                    customInfo={customInfo}
+                    setCustomInfo={setCustomInfo}
                 />
             </div>
         </div>

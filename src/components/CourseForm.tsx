@@ -1,25 +1,26 @@
 
 import { HexColorPicker, HexColorInput } from "react-colorful";
-import { FC, useState } from "react";
-import { CourseCardPropsWithoutCode, CourseFormProps } from "../types/CourseTypes";
+import { FC, useEffect, useState } from "react";
+import { CourseFormProps } from "../types/CourseTypes";
 import { validateCourseCode, validateCourseName, validatePrerequisites } from "../utils/validateCourse";
 
-const CourseForm:FC<CourseFormProps> = ({ setCourses, setCoursesUsed }) => {
-    const [colorWithHash, setColorWithHash] = useState("#E0E0E0");
-    const [courseCode, setCourseCode] = useState("");
+const CourseForm:FC<CourseFormProps> = ({ setCourses, setCoursesUsed, customInfo, setCustomInfo }) => {
     const [preqString, setPreqString] = useState("");
 
-    const [courseInfo, setCourseInfo] = useState<CourseCardPropsWithoutCode>({
-        name: "",
-        preq: [],
-        streams: [],
-        isCS: false,
-        isHSS: false,
-        isSciMath: false,
-        isArtSci: false,
-        onlyF: false,
-        onlyS: false,
-    });
+    useEffect(() => {
+        setPreqString(preqsToString(customInfo.preq));
+    }, [customInfo.preq, setCustomInfo]);
+
+    const preqsToString = (preqs: (string | string[])[] | undefined): string => {
+        if (!preqs) return "";
+
+        return preqs.map(preq => {
+            if (Array.isArray(preq)) {
+                return preq.join(' | ');
+            }
+            return preq;
+        }).join(', ');
+    }
 
     const [errors, setErrors] = useState({
         code: false,
@@ -57,50 +58,50 @@ const CourseForm:FC<CourseFormProps> = ({ setCourses, setCoursesUsed }) => {
         switch (name) {
             case 'code':
                 setErrors(prev => ({...prev, code: false}));
-                setCourseCode(value);
+                setCustomInfo(prev => ({...prev, code: value}));
                 break;
             case 'name':
                 setErrors(prev => ({...prev, name: false}));
-                setCourseInfo(prev => ({...prev, name: value}));
+                setCustomInfo(prev => ({...prev, name: value}));
                 break;
             case 'preq':
                 setErrors(prev => ({...prev, preq: false}));
                 setPreqString(value);
-                setCourseInfo(prev => ({...prev, preq: parsePrerequisites(value)}));
+                setCustomInfo(prev => ({...prev, preq: parsePrerequisites(value)}));
                 break;
             case 'streams': {
                 const streamNum = parseInt(value);
-                if (courseInfo.streams?.includes(streamNum)) {
-                    setCourseInfo(prev => ({...prev, streams: courseInfo.streams?.filter(s => s !== streamNum)}));
+                if (customInfo.streams?.includes(streamNum)) {
+                    setCustomInfo(prev => ({...prev, streams: customInfo.streams?.filter(s => s !== streamNum)}));
                 } else {
-                    setCourseInfo(prev => ({...prev, streams: [...(courseInfo.streams || []), streamNum]}));
+                    setCustomInfo(prev => ({...prev, streams: [...(customInfo.streams || []), streamNum]}));
                 }
                 break;
             }
             case 'term':
-                setCourseInfo(prev => ({
+                setCustomInfo(prev => ({
                     ...prev, 
                     onlyF: value === 'F',
                     onlyS: value === 'S',
                 }));
                 break;
             case 'isCS':
-                if (courseInfo.isCS) {
-                    setCourseInfo(prev => ({...prev, isCS: false, isHSS: false}));
+                if (customInfo.isCS) {
+                    setCustomInfo(prev => ({...prev, isCS: false, isHSS: false}));
                 } else {
-                    setCourseInfo(prev => ({...prev, isCS: true}));
+                    setCustomInfo(prev => ({...prev, isCS: true}));
                 }
                 break;
             case 'isHSS':
-                if (courseInfo.isHSS) {
-                    setCourseInfo(prev => ({...prev, isHSS: false}));
+                if (customInfo.isHSS) {
+                    setCustomInfo(prev => ({...prev, isHSS: false}));
                 } else {
-                    setCourseInfo(prev => ({...prev, isCS: true, isHSS: true}));
+                    setCustomInfo(prev => ({...prev, isCS: true, isHSS: true}));
                 }
                 break;
             case 'isSciMath':
             case 'isArtSci':
-                setCourseInfo(prev => ({...prev, [name]: !courseInfo[name]}));
+                setCustomInfo(prev => ({...prev, [name]: !customInfo[name]}));
                 break;
             default:
                 break;
@@ -108,42 +109,37 @@ const CourseForm:FC<CourseFormProps> = ({ setCourses, setCoursesUsed }) => {
     };
 
     const handleColorChange = (color: string) => {
-        setColorWithHash(color);
-        const colorWithoutHash = color.replace('#', '');
-        setCourseInfo(prev => ({...prev, color: colorWithoutHash}));
+        setCustomInfo(prev => ({...prev, color}));
     }
 
     const resetColor = () => {
-        setColorWithHash('#E0E0E0');
-        setCourseInfo(prev => {
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            const { color, ...rest } = prev;
-            return rest;
+        setCustomInfo(prev => {
+            return { ...prev, color: "E0E0E0" };
         });
     }
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        if (!validateCourseCode(courseCode) || !validateCourseName(courseInfo.name) || !validatePrerequisites(preqString)) {
+        if (!validateCourseCode(customInfo.code) || !validateCourseName(customInfo.name) || !validatePrerequisites(preqString)) {
             setErrors(prev => ({
                 ...prev,
-                code: !validateCourseCode(courseCode),
-                name: !validateCourseName(courseInfo.name),
+                code: !validateCourseCode(customInfo.code),
+                name: !validateCourseName(customInfo.name),
                 preq: !validatePrerequisites(preqString),
             }));
             return;
         }
 
-        setCourses(prev => ({...prev, [courseCode.toUpperCase()]: courseInfo}));
-        setCoursesUsed(prev => ({[courseCode.toUpperCase()]: '', ...prev}));
+        setCourses(prev => ({...prev, [customInfo.code.toUpperCase()]: customInfo}));
+        setCoursesUsed(prev => ({[customInfo.code.toUpperCase()]: '', ...prev}));
         
-        setCourseCode('');
         setPreqString('');
-        setColorWithHash('#E0E0E0');
-        setCourseInfo({
+        setCustomInfo({
+            code: "",
             name: "",
             preq: [],
             streams: [],
+            color: "E0E0E0",
             isCS: false,
             isHSS: false,
             isSciMath: false,
@@ -152,17 +148,19 @@ const CourseForm:FC<CourseFormProps> = ({ setCourses, setCoursesUsed }) => {
             onlyS: false,
         });
     }
+    console.log("customInfo:", customInfo);
+
 
     return (
         <section>
-            <h2 className="mt-10 mb-6 text-2xl font-semibold">Add or update courses</h2>
+            <h2 id="add-course" className="mt-10 mb-6 text-2xl font-semibold">Add or update courses</h2>
             <form onSubmit={handleSubmit} className="flex flex-col gap-4" data-testid="course-form">
                 {/* Course Identifier Section */}
                 <div className="space-y-2">
                     <input 
                         name="code"
                         type="text" 
-                        value={courseCode}
+                        value={customInfo.code}
                         placeholder="Course Code (e.g. ECE444)*"
                         className="w-full p-2 border rounded"
                         onChange={handleInputChange}
@@ -172,7 +170,7 @@ const CourseForm:FC<CourseFormProps> = ({ setCourses, setCoursesUsed }) => {
                     <input 
                         name="name"
                         type="text" 
-                        value={courseInfo.name}
+                        value={customInfo.name}
                         placeholder="Course Name"
                         className="w-full p-2 border rounded"
                         onChange={handleInputChange}
@@ -188,9 +186,9 @@ const CourseForm:FC<CourseFormProps> = ({ setCourses, setCoursesUsed }) => {
                         data-testid="preq-input"
                     />
                     {errors.preq && <p className="text-comp3 text-sm">{errorMessages.preq}</p>}
-                    <HexColorPicker color={colorWithHash} onChange={handleColorChange} />
+                    <HexColorPicker color={customInfo.color} onChange={handleColorChange} />
                     <div className="flex gap-2">
-                        <HexColorInput color={colorWithHash} onChange={handleColorChange} placeholder="Colour (e.g. E0E0E0)" className="w-full p-2 border rounded span" />
+                        <HexColorInput color={customInfo.color} onChange={handleColorChange} placeholder="Colour (e.g. E0E0E0)" className="w-full p-2 border rounded span" />
                         <button 
                             type="button"
                             className="bg-neutral3 text-white px-4 py-2 rounded hover:bg-neutral2 transition-all"
@@ -213,7 +211,7 @@ const CourseForm:FC<CourseFormProps> = ({ setCourses, setCoursesUsed }) => {
                                     value={num}
                                     data-testid={`stream-${num}`}
                                     onChange={handleInputChange}
-                                    checked={courseInfo.streams?.includes(num)}
+                                    checked={customInfo.streams?.includes(num)}
                                 />
                                 <span>Stream {num}</span>
                             </label>
@@ -232,7 +230,8 @@ const CourseForm:FC<CourseFormProps> = ({ setCourses, setCoursesUsed }) => {
                                 value="F"
                                 data-testid="only-f"
                                 onChange={handleInputChange}
-                                checked={courseInfo.onlyF}
+                                checked={!!customInfo.onlyF}
+                                // double bang converts undefined to false
                             />
                             <span>Fall Only</span>
                         </label>
@@ -243,7 +242,7 @@ const CourseForm:FC<CourseFormProps> = ({ setCourses, setCoursesUsed }) => {
                                 value="S"
                                 data-testid="only-s"
                                 onChange={handleInputChange}
-                                checked={courseInfo.onlyS}
+                                checked={!!customInfo.onlyS}
                             />
                             <span>Winter Only</span>
                         </label>
@@ -253,7 +252,7 @@ const CourseForm:FC<CourseFormProps> = ({ setCourses, setCoursesUsed }) => {
                                 name="term" 
                                 value="B"
                                 onChange={handleInputChange}
-                                checked={!courseInfo.onlyF && !courseInfo.onlyS}
+                                checked={!customInfo.onlyF && !customInfo.onlyS}
                             />
                             <span>Both Terms</span>
                         </label>
@@ -271,7 +270,7 @@ const CourseForm:FC<CourseFormProps> = ({ setCourses, setCoursesUsed }) => {
                                 data-testid="cs" 
                                 onChange={handleInputChange}
                                 value="CS"
-                                checked={courseInfo.isCS}
+                                checked={!!customInfo.isCS}
                             />
                             <span>CS</span>
                         </label>
@@ -282,7 +281,7 @@ const CourseForm:FC<CourseFormProps> = ({ setCourses, setCoursesUsed }) => {
                                 data-testid="hss" 
                                 onChange={handleInputChange}
                                 value="HSS"
-                                checked={courseInfo.isHSS}
+                                checked={!!customInfo.isHSS}
                             />
                             <span>HSS</span>
                         </label>
@@ -293,7 +292,7 @@ const CourseForm:FC<CourseFormProps> = ({ setCourses, setCoursesUsed }) => {
                                 data-testid="scimath" 
                                 onChange={handleInputChange}
                                 value="SciMath"
-                                checked={courseInfo.isSciMath}
+                                checked={!!customInfo.isSciMath}
                             />
                             <span>Sci/Math</span>
                         </label>
@@ -304,7 +303,7 @@ const CourseForm:FC<CourseFormProps> = ({ setCourses, setCoursesUsed }) => {
                                 data-testid="artsci" 
                                 onChange={handleInputChange}
                                 value="ArtSci"
-                                checked={courseInfo.isArtSci}
+                                checked={!!customInfo.isArtSci}
                             />
                             <span>ArtSci</span>
                         </label>
