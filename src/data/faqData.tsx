@@ -51,7 +51,7 @@ export const siteFaqData: FAQ = [
     },
     {
         question: "How do I update a course (e.g. change the colour)?",
-        answer: "Click on a Maker course card, then update its details in the form."
+        answer: "Click on a Maker course card, click on the pencil in the top right, then update its details in the form."
     },
     {
         question: "Why is the grid red when I try to drag a course onto it?",
