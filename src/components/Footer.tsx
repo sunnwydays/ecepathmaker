@@ -9,6 +9,15 @@ const Footer:FC = () => {
         }
     };
 
+    const resetLocalStorage = () => {
+        if (window.confirm(`Are you sure you want to reset everything saved in local storage? 
+This will remove your custom courses, undo your edits, and clear your layout.`)) {
+            localStorage.clear();
+            window.location.reload();
+        }
+    }
+
+
     return (
         <footer className="bg-green3 md:w-full w-navFoot">
             <div className={`
@@ -50,6 +59,11 @@ const Footer:FC = () => {
                         <a href="https://forms.gle/yBPDvHKAPVmhyz1M8">
                             Provide feedback
                         </a>
+                    </p>
+                    <p className="leading-7">
+                        <button onClick={resetLocalStorage}>
+                            Reset all changes
+                        </button>
                     </p>
                 </div>
             </div>
