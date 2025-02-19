@@ -498,7 +498,7 @@ const courses: CourseList = {
         onlyF: true,
         color: 'e0c400',
         isSciMath: true,
-        preq: ['CHE112H1'],
+        preq: ['CHE112'],
     },
     'CIV300': {
         name: 'Terrestrial Energy Systems',
