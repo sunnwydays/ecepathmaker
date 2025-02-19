@@ -58,7 +58,7 @@ const CourseForm:FC<CourseFormProps> = ({ setCourses, setCoursesUsed, customInfo
         switch (name) {
             case 'code':
                 setErrors(prev => ({...prev, code: false}));
-                setCustomInfo(prev => ({...prev, code: value}));
+                setCustomInfo(prev => ({...prev, code: value.toUpperCase()}));
                 break;
             case 'name':
                 setErrors(prev => ({...prev, name: false}));
@@ -130,8 +130,8 @@ const CourseForm:FC<CourseFormProps> = ({ setCourses, setCoursesUsed, customInfo
             return;
         }
 
-        setCourses(prev => ({...prev, [customInfo.code.toUpperCase()]: customInfo}));
-        setCoursesUsed(prev => ({[customInfo.code.toUpperCase()]: '', ...prev}));
+        setCourses(prev => ({...prev, [customInfo.code]: customInfo}));
+        setCoursesUsed(prev => ({[customInfo.code]: '', ...prev}));
         
         setPreqString('');
         setCustomInfo({
@@ -317,7 +317,7 @@ const CourseForm:FC<CourseFormProps> = ({ setCourses, setCoursesUsed, customInfo
                     "
                     // disabled={???}
                 >
-                    Add Course
+                    Add/Update Course
                 </button>
             </form>
         </section>
