@@ -465,6 +465,7 @@ const CourseGrid: FC<CourseGridProps> = ({
                             id={activeCourse as string}
                             code={activeCourse as string}
                             setCustomInfo={setCustomInfo}
+                            setPreqString={setPreqString}
                             {...courses[activeCourse]}
                         />
                     }
