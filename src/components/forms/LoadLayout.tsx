@@ -1,7 +1,7 @@
 import { FC, useEffect, useRef, useState } from "react";
-import { isValidString, parseString } from "../utils/parseString";
-import { LoadLayoutProps } from "../types/CourseTypes";
-import Announcement from "./Announcement";
+import { isValidString, parseString } from "../../utils/parseString";
+import { LoadLayoutProps } from "../../types/CourseTypes";
+import Announcement from "../info/Announcement";
 
 enum Load {
     NONE,
