@@ -4,7 +4,7 @@ import { Maker } from '../../utils/pageImports';
 const mockCourse = {
     code: 'ECe456',
     name: 'Test Course',
-    preq: ['ECE345'],
+    preq: ['ECE987'],
     stream1: true,
     onlyF: true,
     isCS: true,
@@ -42,8 +42,25 @@ describe('Maker', () => {
 
         expect(screen.getByText(/ECE456/)).toBeInTheDocument();
         expect(screen.getByText(/Test Course/)).toBeInTheDocument();
-        // expect(screen.getByText(/ECE345/)).toBeInTheDocument();
+        // can't expect preq because you have to click the card first to see it
+        // expect(screen.getByText(/ECE987/)).toBeInTheDocument(); // ECE987 is not in the mockCourses list
         // expect(screen.getByText(/\(F\)/)).toBeInTheDocument();
+    });
+    
+    it('parses multiple prerequisites', () => {
+        // Simulate user input
+        const codeInput = screen.getByTestId('code-input')
+        fireEvent.change(codeInput, { target: { value: "ECE999" } });
+        
+        const preqInput = screen.getByTestId('preq-input');
+        fireEvent.change(preqInput, { target: { value: "ECE123|ECE234|ECE345,ECE321,ECE231" } });
+        
+        // Submit the form
+        const form = screen.getByTestId('course-form');
+        fireEvent.submit(form);
+        
+        expect(screen.getByText(/ECE999/)).toBeInTheDocument();
+        expect(screen.queryByText(/ECE123|ECE234|ECE345,ECE321,ECE231/)).not.toBeInTheDocument();
     });
 
     // implicitly tests that string input is parsed correctly
