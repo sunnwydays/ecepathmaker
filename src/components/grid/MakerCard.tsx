@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { MakerCardProps } from "../../types/CourseTypes";
-import Draggable from "../Draggable";
+import Draggable from "./Draggable";
 import { getTextColor } from "../../utils/getTextColor";
 import {
   getOtherLabels,
