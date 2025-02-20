@@ -1,6 +1,6 @@
 import CourseGrid from "../components/grid/CourseGrid";
-import CourseForm from "../components/CourseForm";
-import LoadLayout from "../components/LoadLayout";
+import CourseForm from "../components/forms/CourseForm";
+import LoadLayout from "../components/forms/LoadLayout";
 import StringDisplay from "../components/StringDisplay";
 
 import mockCourses from "../data/mockCourses";

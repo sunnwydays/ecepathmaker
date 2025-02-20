@@ -25,7 +25,7 @@ import {
   useSensors,
 } from "@dnd-kit/core";
 import { createPortal } from "react-dom";
-import Filter from "../Filter";
+import Filter from "../forms/Filter";
 import WillYouGraduate from "../WillYouGraduate";
 import { getValidYearTerms } from "../../utils/getValidYearTerms";
 import { getYearTerm } from "../../utils/getYearTerm";
