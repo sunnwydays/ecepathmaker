@@ -1,6 +1,6 @@
 import { HexColorPicker, HexColorInput } from "react-colorful";
 import { FC, useState } from "react";
-import { CourseFormProps } from "../../types/CourseTypes";
+import { CourseFormProps } from "../../types/types";
 import {
   validateCourseCode,
   validateCourseName,

@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { StreamRequirements } from "../../types/CourseTypes";
+import { StreamRequirements } from "../../types/types";
 import { BarChart } from "@mui/x-charts/BarChart";
 import { ClickableTooltip } from "./ClickableTooltip";
 

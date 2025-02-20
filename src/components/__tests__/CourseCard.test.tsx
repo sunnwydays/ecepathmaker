@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import CourseCard from "../info/CourseCard";
-import { DraggableCardProps } from "../../types/CourseTypes";
+import { DraggableCardProps } from "../../types/types";
 
 describe("CourseCard", () => {
   const courseDetails: DraggableCardProps = {

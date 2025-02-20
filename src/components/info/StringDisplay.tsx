@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from "react";
-import { StringDisplayProps } from "../../types/CourseTypes";
+import { StringDisplayProps } from "../../types/types";
 
 const StringDisplay: FC<StringDisplayProps> = ({ courses, coursesOnGrid }) => {
   const [str, setStr] = useState("");

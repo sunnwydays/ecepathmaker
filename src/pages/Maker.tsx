@@ -5,11 +5,7 @@ import StringDisplay from "../components/info/StringDisplay";
 
 import mockCourses from "../data/mockCourses";
 import { useMemo, useState, useEffect } from "react";
-import {
-  CourseCardProps,
-  CoursesOnGrid,
-  CoursesUsed,
-} from "../types/CourseTypes";
+import { CourseCardProps, CoursesOnGrid, CoursesUsed } from "../types/types";
 
 const Maker = () => {
   // Course info for custom course

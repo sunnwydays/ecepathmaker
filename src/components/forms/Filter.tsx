@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { FilterState } from "../../types/CourseTypes";
+import { FilterState } from "../../types/types";
 
 const Filter: FC<{
   filters: FilterState;

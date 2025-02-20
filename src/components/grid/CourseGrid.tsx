@@ -9,7 +9,7 @@ import {
   StreamRequirements,
   GridPosition,
   CoursesUsed,
-} from "../../types/CourseTypes";
+} from "../../types/types";
 // @ts-expect-error - use-react-screenshot is not typed
 import { useScreenshot, createFileName } from "use-react-screenshot";
 

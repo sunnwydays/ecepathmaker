@@ -1,5 +1,5 @@
-import { GridPosition, YearTerm } from "../types/CourseTypes";
+import { GridPosition, YearTerm } from "../types/types";
 
 export const getYearTerm = (pos: GridPosition): YearTerm => {
-    return pos.split('.')[0] as YearTerm;
-}
+  return pos.split(".")[0] as YearTerm;
+};

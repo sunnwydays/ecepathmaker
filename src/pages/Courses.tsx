@@ -16,7 +16,7 @@ import { arrayMove, SortableContext } from "@dnd-kit/sortable";
 import CourseCard from "../components/info/CourseCard";
 import { createPortal } from "react-dom";
 import Filter from "../components/forms/Filter";
-import { FilterState } from "../types/CourseTypes";
+import { FilterState } from "../types/types";
 
 const Courses = () => {
   const sensors = useSensors(
