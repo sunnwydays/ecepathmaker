@@ -1,7 +1,7 @@
 import { FC } from "react";
-import { StreamRequirements } from "../../types/types";
 import { BarChart } from "@mui/x-charts/BarChart";
-import { ClickableTooltip } from "./ClickableTooltip";
+import { StreamRequirements } from "../../types/types";
+import { ClickableTooltip } from "../../utils/componentImports";
 
 interface WillYouGraduateProps {
   conditions: StreamRequirements;

@@ -1,13 +1,13 @@
 import { FC } from "react";
-import { DraggableCardProps } from "../../types/types";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { getTextColor } from "../../utils/getTextColor";
+import { DraggableCardProps } from "../../types/types";
 import {
+  getTextColor,
   getOtherLabels,
   getPreqLabels,
   getStreamLabels,
-} from "../../utils/getLabels";
+} from "../../utils/utilImports";
 
 const CourseCard: FC<DraggableCardProps> = (props) => {
   const {

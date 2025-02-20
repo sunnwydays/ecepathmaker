@@ -1,11 +1,12 @@
-import CourseGrid from "../components/grid/CourseGrid";
-import CourseForm from "../components/forms/CourseForm";
-import LoadLayout from "../components/forms/LoadLayout";
-import StringDisplay from "../components/info/StringDisplay";
-
-import mockCourses from "../data/mockCourses";
 import { useMemo, useState, useEffect } from "react";
 import { CourseCardProps, CoursesOnGrid, CoursesUsed } from "../types/types";
+import { mockCourses } from "../utils/dataImports";
+import {
+  CourseForm,
+  CourseGrid,
+  LoadLayout,
+  StringDisplay,
+} from "../utils/componentImports";
 
 const Maker = () => {
   // Course info for custom course

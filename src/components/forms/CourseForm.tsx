@@ -5,7 +5,7 @@ import {
   validateCourseCode,
   validateCourseName,
   validatePrerequisites,
-} from "../../utils/validateCourse";
+} from "../../utils/utilImports";
 
 const CourseForm: FC<CourseFormProps> = ({
   setCourses,

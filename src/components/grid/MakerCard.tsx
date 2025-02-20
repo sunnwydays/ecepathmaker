@@ -1,12 +1,12 @@
 import { FC } from "react";
 import { MakerCardProps } from "../../types/types";
-import Draggable from "./Draggable";
-import { getTextColor } from "../../utils/getTextColor";
+import { Draggable } from "../../utils/componentImports";
 import {
+  getTextColor,
   getOtherLabels,
   getPreqLabels,
   getStreamLabels,
-} from "../../utils/getLabels";
+} from "../../utils/utilImports";
 
 const MakerCard: FC<MakerCardProps> = (props) => {
   const textColor = getTextColor(props.color);

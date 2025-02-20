@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
-import { siteFaqData } from "../../data/faqData";
-import FAQ from '../FAQ';
+import { siteFaqData } from '../../utils/dataImports';
+import { FAQ } from '../../utils/pageImports';
 
 describe('FAQ', () => {
     beforeEach(() => {

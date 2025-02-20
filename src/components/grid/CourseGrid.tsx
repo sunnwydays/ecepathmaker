@@ -1,7 +1,4 @@
-import Droppable from "./Droppable";
-
 import { FC, useState, useEffect, useMemo, useRef, createRef } from "react";
-import MakerCard from "./MakerCard";
 import {
   CourseGridProps,
   FilterState,
@@ -10,6 +7,10 @@ import {
   GridPosition,
   CoursesUsed,
 } from "../../types/types";
+import {
+    Droppable,
+    MakerCard,
+} from "../../utils/componentImports";
 // @ts-expect-error - use-react-screenshot is not typed
 import { useScreenshot, createFileName } from "use-react-screenshot";
 

@@ -1,4 +1,4 @@
-import chillguy from '../assets/chillguy.png';
+import { chillguy } from '../utils/assetImports';
 
 const NotFound = () => {
     return (

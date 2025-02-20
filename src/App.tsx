@@ -1,9 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Layout from "./components/layout/Layout";
-import NotFound from "./pages/NotFound";
-import Maker from "./pages/Maker";
-import Courses from "./pages/Courses";
-import FAQ from "./pages/FAQ";
+import { Layout } from "./utils/componentImports";
+import { NotFound, Maker, Courses, FAQ } from "./utils/pageImports";
 
 export default function App() {
   return (

@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import Maker from '../Maker';
+import { Maker } from '../../utils/pageImports';
 
 const mockCourse = {
     code: 'ECe456',

@@ -1,6 +1,4 @@
 import { useState } from "react";
-import mockCourses from "../data/mockCourses";
-
 import {
   DndContext,
   DragEndEvent,
@@ -13,10 +11,11 @@ import {
   useSensors,
 } from "@dnd-kit/core";
 import { arrayMove, SortableContext } from "@dnd-kit/sortable";
-import CourseCard from "../components/info/CourseCard";
 import { createPortal } from "react-dom";
-import Filter from "../components/forms/Filter";
+
 import { FilterState } from "../types/types";
+import { mockCourses } from "../utils/dataImports";
+import { CourseCard, Filter } from "../utils/componentImports";
 
 const Courses = () => {
   const sensors = useSensors(

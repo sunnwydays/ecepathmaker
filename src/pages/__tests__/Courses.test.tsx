@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import Courses from "../Courses";
+import { Courses } from '../../utils/pageImports';
 
 describe('Courses page', () => {
     beforeEach(() => {

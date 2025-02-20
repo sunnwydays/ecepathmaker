@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from 'react';
 import { siteFaqData, courseFaqData } from "../data/faqData";
-import FAQCard from "../components/info/FAQCard";
+import { FAQCard } from "../utils/componentImports";
 
 const FAQ: FC = () => {
     const [showButton, setShowButton] = useState(false);
