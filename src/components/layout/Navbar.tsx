@@ -1,6 +1,6 @@
 import { IoIosMenu, IoIosClose } from "react-icons/io";
 import { FC, useState, useEffect, useRef } from 'react';
-import logo from '../assets/logo.png';
+import logo from '../../assets/logo.png';
 
 const Navbar:FC = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
