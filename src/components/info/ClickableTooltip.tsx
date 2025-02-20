@@ -12,7 +12,7 @@ type ToolbarTooltipProps = {
   children: string;
 };
 
-const ClickableTooltip = ({ children }: ToolbarTooltipProps) => {
+export const ClickableTooltip = ({ children }: ToolbarTooltipProps) => {
   return (
     <TooltipProvider>
       <Popover>
@@ -39,5 +39,3 @@ const ClickableTooltip = ({ children }: ToolbarTooltipProps) => {
     </TooltipProvider>
   );
 };
-
-export default ClickableTooltip;
