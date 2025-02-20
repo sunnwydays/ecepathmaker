@@ -318,6 +318,17 @@ const CourseGrid: FC<CourseGridProps> = ({
         };
     }, [dropError]);
 
+    const buttonStyle = `
+        w-full px-4 py-1 
+        ring-1 ring-opacity-80
+        rounded-lg shadow-sm 
+        bg-white 
+        hover:text-white hover:bg-opacity-90
+        font-medium
+        transition-all duration-300
+        hover:duration-100 active:scale-95
+    `; // specify default text- color, hover:bg- color, and ring- color
+
     const clearGrid = () => {
         setCoursesUsed(() => {
             const posMap: CoursesUsed = {};
@@ -386,34 +397,26 @@ const CourseGrid: FC<CourseGridProps> = ({
                     <div className='lg:mt-4 flex xl:gap-8 lg:gap-4 gap-8'>
                         <button 
                             onClick={downloadScreenshot} 
-                            className="
-                                w-full px-4 py-2 
-                                ring-2 ring-green3 ring-opacity-80
-                                rounded-lg shadow-sm 
-                                bg-white hover:bg-green2
-                                text-green3 hover:text-white
-                                font-semibold
-                                transition-all duration-300
-                                hover:duration-100 active:scale-95
-                            "
+                            className={`
+                                ${buttonStyle}
+                                ring-green3
+                                text-green3
+                                hover:bg-green2
+                            `}
                         >
                             Screenshot
                         </button>
                         <button 
                             onClick={clearGrid} 
                             data-testid="clear-grid" 
-                            className="
-                                w-full px-4 py-2 
-                                ring-2 ring-comp3 ring-opacity-80
-                                rounded-lg shadow-sm 
-                                bg-white hover:bg-comp2
-                                text-comp3 hover:text-white
-                                font-semibold
-                                transition-all duration-300
-                                hover:duration-100 active:scale-95
-                            "
+                            className={`
+                                ${buttonStyle}
+                                ring-comp3
+                                text-comp3
+                                hover:bg-comp2
+                            `}
                         >
-                            Reset
+                            Clear
                         </button>
                     </div>
                     <h2 className="lg:hidden block my-2 text-lg text-center">
