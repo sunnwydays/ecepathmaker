@@ -26,10 +26,10 @@ import {
 } from "@dnd-kit/core";
 import { createPortal } from "react-dom";
 import Filter from "../forms/Filter";
-import WillYouGraduate from "../WillYouGraduate";
+import WillYouGraduate from "../info/WillYouGraduate";
 import { getValidYearTerms } from "../../utils/getValidYearTerms";
 import { getYearTerm } from "../../utils/getYearTerm";
-import Announcement from "../Announcement";
+import Announcement from "../info/Announcement";
 
 enum DropError {
   NONE = "NONE",
