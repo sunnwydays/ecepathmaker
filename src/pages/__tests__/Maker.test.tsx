@@ -115,6 +115,9 @@ describe('Maker', () => {
     });
     
     it('prevents invalid layouts from being loaded', () => {
+        // Mock clicking true on the alert window
+        const confirmSpy = jest.spyOn(window, 'confirm').mockImplementation(() => true);
+                
         const stringInput = screen.getByTestId('string-input');
         const submitButton = screen.getByPlaceholderText('Layout string');
 
@@ -125,11 +128,16 @@ describe('Maker', () => {
         fireEvent.change(stringInput, { target: { value: 'something@@' } });
         fireEvent.click(submitButton);
 
+        expect(confirmSpy).toHaveBeenCalled();
+
         expect(screen.getByText(/No courses in any stream yet/)).toBeInTheDocument();
         expect(stringInput).toHaveValue('something@@');
     });
 
-    it('clears the grid when the reset button is clicked', () => {
+    it('clears the grid when the reset button is clicked and confirmed', () => {
+        // Mock clicking true on the alert window
+        const confirmSpy = jest.spyOn(window, 'confirm').mockImplementation(() => true);
+
         // Load a layout
         const stringInput = screen.getByTestId('string-input');
         fireEvent.change(stringInput, { target: { value: 'ECE331Analog Electronics%%3kf#b3e6b3$$ECE335Introduction to Electronic Devices%%1kf#ffcc99$$ECE302Probability and Applications%%45m#e6b3ff$$ECE361Co-302 Computer Networks I%%5k#ffb3b3$$CST000cs%%c#8faadc@@ECE469Optical Communications and Networks%%145s#ffcc99$$ECE344Operating Systems%%6k#ffd699$$ECE334Digital Electronics%%3k#b3e6b3$$ECE472Engineering Economics%%$$JRE410Markets and Competitive Strategy%%c#8faadc@@ECE446Audio, Acoustics and Sensing%%34f#b3e6b3$$ECE568Computer Security%%56#ffb3b3pECE344|ECE353$$ECE496Design Project h1%%$$HPS120How to Think about Science%%ha#d4a5a5$$@@ECE448Biocomputation%%6sm#ffd699$$ECE419Distributed Systems%%6s#ffd699pECE344|ECE353$$MIE369Introduction to Artificial Intelligence%%s#ffc2e0pMIE236|ECE286|ECE302$$ECE497Design Project h2 not a real course%%$$JRE420People Management and Organizational Behaviour%%h#d4a5a5@@' } });
@@ -140,6 +148,34 @@ describe('Maker', () => {
         const clearButton = screen.getByTestId('clear-grid');
         fireEvent.click(clearButton);
 
+        // Verify the confirm dialog was shown
+        expect(confirmSpy).toHaveBeenCalled();
+        expect(confirmSpy).toHaveBeenCalledWith("Are you sure you want to clear your layout? This will remove all courses from the grid.");
+
         expect(screen.getByText(/No courses in any stream yet/)).toBeInTheDocument();
+    });
+
+    it('does not clear the grid when user cancels the confirmation', () => {
+        // Mock window.confirm to return false (user clicks "Cancel")
+        const confirmSpy = jest.spyOn(window, 'confirm').mockImplementation(() => false);
+        
+        // Load a layout
+        const stringInput = screen.getByTestId('string-input');
+        fireEvent.change(stringInput, { target: { value: 'ECE331Analog Electronics%%3kf#b3e6b3$$' } });
+        const submitButton = screen.getByTestId('load-layout');
+        fireEvent.click(submitButton);
+        
+        // Attempt to clear the grid but cancel
+        const clearButton = screen.getByTestId('clear-grid');
+        fireEvent.click(clearButton);
+        
+        // Verify the confirm dialog was shown
+        expect(confirmSpy).toHaveBeenCalled();
+        
+        // Verify the grid was NOT cleared - course should still be visible
+        expect(screen.queryByText(/No courses in any stream yet/)).not.toBeInTheDocument();
+        
+        // Clean up the mock
+        confirmSpy.mockRestore();
     });
 });
