@@ -362,6 +362,9 @@ const CourseGrid: FC<CourseGridProps> = ({
     `; // specify default text- color, hover:bg- color, and ring- color
 
   const clearGrid = () => {
+    if (!window.confirm("Are you sure you want to clear your layout? This will remove all courses from the grid."))
+      return;
+
     setCoursesUsed(() => {
       const posMap: CoursesUsed = {};
       Object.keys(courses).forEach((courseCode) => (posMap[courseCode] = ""));
