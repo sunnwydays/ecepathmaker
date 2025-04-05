@@ -453,7 +453,7 @@ const courses: CourseList = {
     name: "Special Topics in Creative Writing",
     isCS: true,
     isHSS: true,
-    color: "a89c64",
+    color: "d4a5a5",
   },
   TEP343: {
     name: "Engineering Leadership",
@@ -480,18 +480,18 @@ const courses: CourseList = {
     isHSS: true,
     color: "d4a5a5",
   },
-  ENV100: {
-    name: "Introduction to Environmental Studies",
-    isCS: true,
-    isHSS: true,
-    isArtSci: true,
-    color: "a89c64",
-  },
   ENT200: {
     name: "Introduction to Entrepreneurship",
     isCS: true,
     isArtSci: true,
     color: "a89c64",
+  },
+  ENV100: {
+    name: "Introduction to Environmental Studies",
+    isCS: true,
+    isHSS: true,
+    isArtSci: true,
+    color: "d4a5a5",
   },
   HPS120: {
     name: "How to Think about Science",
