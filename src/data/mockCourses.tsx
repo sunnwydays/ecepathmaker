@@ -449,6 +449,12 @@ const courses: CourseList = {
     isHSS: true,
     color: "d4a5a5",
   },
+  TEP326: {
+    name: "Special Topics in Creative Writing",
+    isCS: true,
+    isHSS: true,
+    color: "a89c64",
+  },
   TEP343: {
     name: "Engineering Leadership",
     isCS: true,
@@ -467,6 +473,19 @@ const courses: CourseList = {
     isHSS: true,
     color: "d4a5a5",
     onlyF: true,
+  },
+  TEP445: {
+    name: "The Power of Story: Discovering Your Leadership Narrative",
+    isCS: true,
+    isHSS: true,
+    color: "d4a5a5",
+  },
+  ENV100: {
+    name: "Introduction to Environmental Studies",
+    isCS: true,
+    isHSS: true,
+    isArtSci: true,
+    color: "a89c64",
   },
   ENT200: {
     name: "Introduction to Entrepreneurship",
