@@ -71,7 +71,7 @@ export const siteFaqData: FAQ = [
     },
     {
         question: "Does this tool work on mobile?",
-        answer: "Yes! The site is responsive and works on mobile devices. To maintain the grid width, the site must be scrolled horizontally, but the functionality remains. To prevent unwanted movement, I designed it so that you must hold a tile momentarily before dragging."
+        answer: "Yes! The site is responsive and works on mobile devices. I suggest zooming out by pinching to be able to see the whole width of the grid, otherwise the site must be scrolled horizontally. To prevent unwanted movement, I designed it so that you must hold a tile momentarily before dragging."
     },
     {
         question: "How do I report a bug or suggest a feature?",
