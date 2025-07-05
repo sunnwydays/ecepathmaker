@@ -38,11 +38,12 @@ Contributions are welcome! Please fork the repository and submit a pull request.
 - [x] Clear grid button
 - [x] Screenshot button - grid card text gets clipped a little
 - [x] Easier way to edit colors
-- [ ] Better way to add 6 courses per term
-- [ ] Checking for minors and certificates (much hardcoding)
+- [ ] 6th column for overloading (in a different color)
 - [ ] Proper backend to store core course details and improve save/load functionality
-- [ ] Google OAuth login (Firebase)
 - [ ] Store data in the URL
+- [ ] Support for co-requisites
+- [ ] Google OAuth login (Firebase)
+- [ ] Checking for minors and certificates (much hardcoding)
 - [ ] Extend to other engineering disciplines
 
 ## Example
