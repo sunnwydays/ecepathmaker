@@ -65,12 +65,12 @@ const CourseForm: FC<CourseFormProps> = ({
         break;
       case "preq":
         setErrors((prev) => ({ ...prev, preq: false }));
-        setPreqString(value);
+        setPreqString(value.toUpperCase());
         setCustomInfo((prev) => ({ ...prev, preq: parsePrerequisites(value) }));
         break;
       case "coreq":
         setErrors((prev) => ({ ...prev, coreq: false }));
-        setCoreqString(value);
+        setCoreqString(value.toUpperCase());
         setCustomInfo((prev) => ({ ...prev, coreq: parsePrerequisites(value) }));
         // may need to create a separate function for coreq to ensure it only accepts one coreq
         console.log("Coreq set to:", value);
