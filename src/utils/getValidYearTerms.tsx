@@ -86,8 +86,8 @@ export const getValidYearTerms = ({
     latestYearTerm[1] === "F"
       ? `${latestYearTerm[0]}S`
       : latestYearTerm[0] === "3"
-      ? "4F"
-      : null;
+        ? "4F"
+        : null;
   if (!nextYearTerm) return ALL_FALSE;
 
   for (const yearTerm of Object.keys(validYearTerms)) {
