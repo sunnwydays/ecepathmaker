@@ -65,7 +65,10 @@ const CourseCard: FC<DraggableCardProps> = (props) => {
       {getStreamLabels(props) && <p>Streams: {getStreamLabels(props)}</p>}
       {getOtherLabels(props) && <p>Other labels: {getOtherLabels(props)}</p>}
       {props.preq && props.preq.length > 0 && (
-        <p>Prerequisites: {getPreqLabels(props)}</p>
+        <p>Prerequisites: {getPreqLabels(props.preq)}</p>
+      )}
+      {props.coreq && props.coreq.length > 0 && (
+        <p>Corequisites: {getPreqLabels(props.coreq)}</p>
       )}
       {(props.onlyF || props.onlyS) && (
         <p>{props.onlyF ? "Fall (F)" : "Winter (S)"} term only</p>

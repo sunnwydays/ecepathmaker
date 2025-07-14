@@ -2,6 +2,7 @@ interface CourseIdentifier {
     code: string;
     name: string;
     preq?: (string | string[])[];
+    coreq?: (string | string[])[];
     color?: string;
     streams?: number[];
     kernel?: boolean;
@@ -32,11 +33,13 @@ export interface MakerCardProps extends DraggableCardProps {
     valid: boolean;
     setCustomInfo: React.Dispatch<React.SetStateAction<CourseCardProps>>;
     setPreqString: React.Dispatch<React.SetStateAction<string>>;
+    setCoreqString: React.Dispatch<React.SetStateAction<string>>;
 };
 
 interface CourseIdentifierWithoutCode {
     name: string;
     preq?: (string | string[])[];
+    coreq?: (string | string[])[];
     color?: string;
     streams?: number[];
     kernel?: boolean;
@@ -87,6 +90,12 @@ export interface ValidYearTermsProps {
     course: CourseCardPropsWithoutCode;
 }
 
+export interface fulfillsCoreqProps {
+    coursesOnGrid: CoursesOnGrid;
+    coursesUsed: CoursesUsed;
+    code: string;
+}
+
 export interface CourseGridProps {
     courses: CourseList;
     coursesUsed: CoursesUsed;
@@ -95,6 +104,7 @@ export interface CourseGridProps {
     setCoursesOnGrid: React.Dispatch<React.SetStateAction<CoursesOnGrid>>;
     setCustomInfo: React.Dispatch<React.SetStateAction<CourseCardProps>>;
     setPreqString: React.Dispatch<React.SetStateAction<string>>;
+    setCoreqString: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export interface ParseString {
@@ -123,6 +133,8 @@ export interface CourseFormProps {
     setCustomInfo: React.Dispatch<React.SetStateAction<CourseCardProps>>;
     preqString: string;
     setPreqString: React.Dispatch<React.SetStateAction<string>>;
+    coreqString: string;
+    setCoreqString: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export interface FilterState {

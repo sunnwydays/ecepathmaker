@@ -29,6 +29,7 @@ const MakerCard: FC<MakerCardProps> = (props) => {
       code: props.code,
       name: props.name,
       preq: props.preq,
+      coreq: props.coreq,
       streams: props.streams,
       color: props.color ?? "E0E0E0",
       isCS: props.isCS,
@@ -39,6 +40,7 @@ const MakerCard: FC<MakerCardProps> = (props) => {
       onlyS: props.onlyS,
     });
     props.setPreqString(props.preq ? preqsToString(props.preq) : "");
+    props.setCoreqString(props.coreq ? preqsToString(props.coreq) : "");
 
     document.getElementById("add-course")?.scrollIntoView({
       behavior: "smooth",
@@ -85,11 +87,14 @@ const MakerCard: FC<MakerCardProps> = (props) => {
           {getStreamLabels(props) && <p>Stream: {getStreamLabels(props)}</p>}
           {getOtherLabels(props) && <p>{getOtherLabels(props)}</p>}
           {isExpanded && props.preq && props.preq.length > 0 && (
-            <p>Preq: {getPreqLabels(props)}</p>
+            <p>Preq: {getPreqLabels(props.preq)}</p>
+          )}
+          {isExpanded && props.coreq && props.coreq.length > 0 && (
+            <p>Coreq: {getPreqLabels(props.coreq)}</p>
           )}
           {isExpanded && (
             <div // because button cannot be a child of a button
-              className="absolute top-0 right-4 text-xs rounded-full p-1"
+              className="absolute top-0 right-4 text-xs rouned-full p-1"
               onClick={handleEdit}
               onKeyDown={handleEdit}
               tabIndex={0}

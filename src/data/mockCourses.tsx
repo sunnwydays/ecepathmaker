@@ -124,6 +124,7 @@ const courses: CourseList = {
     onlyS: true,
     color: "99ccff",
     preq: [["ECE314", "ECE315", "ECE349", "ECE359"]],
+    coreq: [["ECE311", "ECE356", "AER372"]],
   },
   // area 3
   ECE331: {
@@ -274,10 +275,11 @@ const courses: CourseList = {
   },
   // area 5
   ECE361: {
-    name: "Co-302 Computer Networks I",
+    name: "Computer Networks I",
     streams: [5],
     color: "ffb3b3", // Light Red for Stream 5
     kernel: true,
+    coreq: ["ECE311"],
   },
   ECE342: {
     name: "Computer Hardware",

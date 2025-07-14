@@ -24,6 +24,7 @@ const Maker = () => {
     onlyS: false,
   });
   const [preqString, setPreqString] = useState("");
+  const [coreqString, setCoreqString] = useState("");
 
   // Load data from localStorage or use default values
   const [courses, setCourses] = useState(() => {
@@ -113,6 +114,7 @@ const Maker = () => {
         setCoursesOnGrid={setCoursesOnGrid}
         setCustomInfo={setCustomInfo}
         setPreqString={setPreqString}
+        setCoreqString={setCoreqString}
       />
       <hr className="mt-8 stroke-2" />
       <div className="grid md:grid-cols-2 grid-cols-1 gap-x-16">
@@ -142,6 +144,8 @@ const Maker = () => {
           setCustomInfo={setCustomInfo}
           preqString={preqString}
           setPreqString={setPreqString}
+          coreqString={coreqString}
+          setCoreqString={setCoreqString}
         />
       </div>
     </div>

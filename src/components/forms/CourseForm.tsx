@@ -14,6 +14,8 @@ const CourseForm: FC<CourseFormProps> = ({
   setCustomInfo,
   preqString,
   setPreqString,
+  coreqString,
+  setCoreqString,
 }) => {
   const [errors, setErrors] = useState({
     code: false,
@@ -65,6 +67,14 @@ const CourseForm: FC<CourseFormProps> = ({
         setErrors((prev) => ({ ...prev, preq: false }));
         setPreqString(value);
         setCustomInfo((prev) => ({ ...prev, preq: parsePrerequisites(value) }));
+        break;
+      case "coreq":
+        setErrors((prev) => ({ ...prev, coreq: false }));
+        setCoreqString(value);
+        setCustomInfo((prev) => ({ ...prev, coreq: parsePrerequisites(value) }));
+        // may need to create a separate function for coreq to ensure it only accepts one coreq
+        console.log("Coreq set to:", value);
+        console.log("Parsed coreq:", parsePrerequisites(value));
         break;
       case "streams": {
         const streamNum = parseInt(value);
@@ -141,10 +151,14 @@ const CourseForm: FC<CourseFormProps> = ({
     setCoursesUsed((prev) => ({ [customInfo.code]: "", ...prev }));
 
     setPreqString("");
+    setCoreqString("");
+    // print the customInfo to console for debugging
+    console.log("Custom Info submitted:", customInfo);
     setCustomInfo({
       code: "",
       name: "",
       preq: [],
+      coreq: [],
       streams: [],
       color: "E0E0E0",
       isCS: false,
@@ -199,6 +213,15 @@ const CourseForm: FC<CourseFormProps> = ({
             className="w-full p-2 border rounded"
             onChange={handleInputChange}
             data-testid="preq-input"
+          />
+          <input
+            name="coreq"
+            type="text"
+            value={coreqString}
+            placeholder="Corequisites (e.g. ECE302|ECE356)"
+            className="w-full p-2 border rounded"
+            onChange={handleInputChange}
+            data-testid="coreq-input"
           />
           {errors.preq && (
             <p className="text-comp3 text-sm">{errorMessages.preq}</p>

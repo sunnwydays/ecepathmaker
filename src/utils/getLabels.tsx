@@ -18,10 +18,10 @@ export const getOtherLabels = (props: DraggableCardProps) => {
   return labels.length ? labels.join(", ") : null;
 };
 
-export const getPreqLabels = (props: DraggableCardProps) => {
-  if (!props.preq || props.preq.length === 0) return null;
+export const getPreqLabels = (preq: (string | string[])[]) => {
+  if (!preq?.length) return null;
 
-  return props.preq
+  return preq
     .map((prereq) => {
       if (Array.isArray(prereq)) {
         return prereq.join(" or ");

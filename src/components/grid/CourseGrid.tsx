@@ -35,6 +35,7 @@ import Announcement from "../info/Announcement";
 enum DropError {
   NONE = "NONE",
   PREREQ = "PREREQ",
+  COREQ = "COREQ",
   TERM = "TERM",
 }
 
@@ -46,6 +47,7 @@ const CourseGrid: FC<CourseGridProps> = ({
   setCoursesUsed,
   setCustomInfo,
   setPreqString,
+  setCoreqString,
 }) => {
   const [filters, setFilters] = useState<FilterState>({
     searchTerm: "",
@@ -443,6 +445,7 @@ const CourseGrid: FC<CourseGridProps> = ({
                   code={courseCode}
                   setCustomInfo={setCustomInfo}
                   setPreqString={setPreqString}
+                  setCoreqString={setCoreqString}
                   {...courses[courseCode]}
                 />
               ) : (
@@ -513,6 +516,7 @@ const CourseGrid: FC<CourseGridProps> = ({
                     code={courseCode}
                     setCustomInfo={setCustomInfo}
                     setPreqString={setPreqString}
+                    setCoreqString={setCoreqString}
                     {...courses[courseCode]}
                   />
                 ))
@@ -538,6 +542,7 @@ const CourseGrid: FC<CourseGridProps> = ({
               code={activeCourse as string}
               setCustomInfo={setCustomInfo}
               setPreqString={setPreqString}
+              setCoreqString={setCoreqString}
               {...courses[activeCourse]}
             />
           )}
@@ -548,7 +553,7 @@ const CourseGrid: FC<CourseGridProps> = ({
         <Announcement>
           {dropError === DropError.TERM
             ? "Invalid term for this course!"
-            : "Missing prerequisites!"}
+            : "Missing co/prerequisites!"}
         </Announcement>
       )}
       <Filter filters={filters} setFilters={setFilters} />
