@@ -39,6 +39,7 @@ Contributions are welcome! Please fork the repository and submit a pull request.
 - [x] Screenshot button
 - [x] Easier way to edit colors
 - [x] Support for co-requisites
+- [ ] Dark mode
 - [ ] 6th column for overloading (in a different color)
 - [ ] Proper backend to store core course details and improve save/load functionality
 - [ ] Store data in the URL
