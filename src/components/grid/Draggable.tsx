@@ -24,8 +24,8 @@ const Draggable:FC<DraggableProps> = (props) => {
       isDragging
         ? "size-32 z-20 rounded-md shadow-lg"
         : isExpanded
-          ? "size-[10rem] z-30"
-          : "size-32 z-20"
+          ? "z-30"
+          : "z-20"
     }
     flex items-center justify-center 
     text-black

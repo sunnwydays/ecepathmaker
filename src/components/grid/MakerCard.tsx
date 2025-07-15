@@ -59,7 +59,7 @@ const MakerCard: FC<MakerCardProps> = (props) => {
                         ? "size-[10rem] border-2 border-black border-opacity-20"
                         : "size-32"
                     }
-                    hover:transition-[width,height]
+                    transition-[width,height]
                     flex flex-col items-center justify-center 
                     rounded-md
                     relative
