@@ -36,7 +36,7 @@ Contributions are welcome! Please fork the repository and submit a pull request.
 - [x] Add more courses and course information in database (all courses in Magellan)
 - [x] Use `localStorage` to store data in the browser
 - [x] Clear grid button
-- [x] Screenshot button - grid card text gets clipped a little
+- [x] Screenshot button
 - [x] Easier way to edit colors
 - [x] Support for co-requisites
 - [ ] 6th column for overloading (in a different color)
