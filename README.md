@@ -38,10 +38,10 @@ Contributions are welcome! Please fork the repository and submit a pull request.
 - [x] Clear grid button
 - [x] Screenshot button - grid card text gets clipped a little
 - [x] Easier way to edit colors
+- [x] Support for co-requisites
 - [ ] 6th column for overloading (in a different color)
 - [ ] Proper backend to store core course details and improve save/load functionality
 - [ ] Store data in the URL
-- [ ] Support for co-requisites
 - [ ] Google OAuth login (Firebase)
 - [ ] Checking for minors and certificates (much hardcoding)
 - [ ] Extend to other engineering disciplines
