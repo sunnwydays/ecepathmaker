@@ -11,8 +11,7 @@ import {
     Droppable,
     MakerCard,
 } from "../../utils/componentImports";
-// @ts-expect-error - use-react-screenshot is not typed
-import { useScreenshot, createFileName } from "use-react-screenshot";
+import { toPng } from 'html-to-image';
 
 import {
   DndContext,
@@ -402,23 +401,20 @@ const CourseGrid: FC<CourseGridProps> = ({
   };
 
   const screenshotRef = createRef<HTMLDivElement>();
-  const [, takeScreenshot] = useScreenshot({
-    type: "image/png",
-    quality: 1.0,
-  });
 
-  const download = (
-    image: string,
-    { name = "pathmaker", extension = "png" } = {}
-  ) => {
-    const a = document.createElement("a");
-    a.href = image;
-    a.download = createFileName(extension, name);
-    a.click();
-  };
+  const handleCapture = async () => {
+    if (!screenshotRef.current) return;
 
-  const downloadScreenshot = () => {
-    takeScreenshot(screenshotRef.current).then(download);
+    try {
+      const dataUrl = await toPng(screenshotRef.current, { cacheBust: true });
+
+      const link = document.createElement('a');
+      link.download = 'pathmaker.png';
+      link.href = dataUrl;
+      link.click();
+    } catch (error) {
+      console.error('Could not generate layout screenshot', error);
+    }
   };
 
   return (
@@ -464,7 +460,8 @@ const CourseGrid: FC<CourseGridProps> = ({
           </h2>
           <div className="lg:mt-4 flex xl:gap-8 lg:gap-4 gap-8">
             <button
-              onClick={downloadScreenshot}
+              onClick={handleCapture}
+              // onClick={downloadScreenshot}
               className={`
                                 ${buttonStyle}
                                 ring-green3
