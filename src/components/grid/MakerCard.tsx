@@ -80,7 +80,7 @@ const MakerCard: FC<MakerCardProps> = (props) => {
           <p
             className={`${
               isExpanded ? "w-36 line-clamp-3" : "w-28 line-clamp-2"
-            } text-center text-sm`}
+            } text-center text-sm transition-width]`}
           >
             {props.name}
           </p>
