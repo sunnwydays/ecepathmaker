@@ -269,14 +269,13 @@ const CourseGrid: FC<CourseGridProps> = ({
         (course.onlyF && targetTerm === "S") ||
         (course.onlyS && targetTerm === "F")
       ) {
-        if (!validYearTerms[getYearTerm(sourceContainer)]) {
-          // return course to the bucket
-          setCoursesOnGrid((prev) => ({
-            ...prev,
-            ...(sourceContainer && { [sourceContainer]: "" }),
-          }));
-          setCoursesUsed({ ...coursesUsed, [active.id]: "" as GridPosition });
-        }
+        // return course to the bucket
+        setCoursesOnGrid((prev) => ({
+          ...prev,
+          ...(sourceContainer && { [sourceContainer]: "" }),
+        }));
+        setCoursesUsed({ ...coursesUsed, [active.id]: "" as GridPosition });
+        
         setDropError(DropError.TERM);
         return;
       }
@@ -494,7 +493,7 @@ const CourseGrid: FC<CourseGridProps> = ({
                         flex flex-wrap gap-2 
                         lg:max-h-[37.5rem] max-h-[22rem]
                         lg:w-full w-wps 
-                        overflow-y-auto 
+                        overflow-y-auto +
                         justify-center
                         mt-4
                     "
