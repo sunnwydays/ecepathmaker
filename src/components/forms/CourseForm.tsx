@@ -1,11 +1,12 @@
 import { HexColorPicker, HexColorInput } from "react-colorful";
-import { FC, useState } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 import { CourseFormProps } from "../../types/types";
 import {
   validateCourseCode,
   validateCourseName,
   validatePrerequisites,
 } from "../../utils/utilImports";
+import Announcement from "../info/Announcement";
 
 const CourseForm: FC<CourseFormProps> = ({
   setCourses,
@@ -131,6 +132,23 @@ const CourseForm: FC<CourseFormProps> = ({
     });
   };
 
+  const [justSubmitted, setJustSubmitted] = useState(false);
+  const timeoutRef = useRef<NodeJS.Timeout>();
+
+  useEffect(() => {
+    if (justSubmitted) {
+      timeoutRef.current = setTimeout(() => {
+        setJustSubmitted(false);
+      }, 2000);
+    }
+
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, [justSubmitted]);
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (
@@ -168,6 +186,8 @@ const CourseForm: FC<CourseFormProps> = ({
       onlyF: false,
       onlyS: false,
     });
+
+    setJustSubmitted(true);
   };
 
   return (
@@ -370,6 +390,10 @@ const CourseForm: FC<CourseFormProps> = ({
           Add/Update Course
         </button>
       </form>
+
+      { justSubmitted && (
+        <Announcement success={true}>Course updated!</Announcement>
+      )}
     </section>
   );
 };
