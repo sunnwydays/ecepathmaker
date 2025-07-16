@@ -1,7 +1,6 @@
 import { ValidYearTermsProps, ValidYearTerms, YearTerm } from "../types/types";
 import { getNextYearTerm, getPrevYearTerm, getYearTerm } from "./getYearTerm";
 
-// Determines the valid terms for a course based on its prerequisites and corequisites
 export const getValidYearTerms = ({
   coursesOnGrid,
   coursesUsed,
@@ -15,7 +14,13 @@ export const getValidYearTerms = ({
     XX: true,
   };
 
-  // Only fall/winter is already handled in the grid
+  if (course.onlyF) {
+    validYearTerms["3S"] = false;
+    validYearTerms["4S"] = false;
+  } else if (course.onlyS) {
+    validYearTerms["3F"] = false;
+    validYearTerms["4F"] = false;
+  }
 
   if (!course.preq?.length && !course.coreq?.length) return validYearTerms;
 
