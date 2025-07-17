@@ -99,7 +99,7 @@ const Courses = () => {
 
   return (
     <div>
-      <h2 className="mb-8 text-2xl font-medium">
+      <h2 className="mb-8 text-2xl font-medium dark:text-gray-50">
         🗂️ Explore and rearrange courses (all the courses on Magellan and more)!
       </h2>
       <Filter filters={filters} setFilters={setFilters} />

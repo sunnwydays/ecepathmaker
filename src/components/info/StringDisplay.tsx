@@ -54,7 +54,9 @@ const StringDisplay: FC<StringDisplayProps> = ({ courses, coursesOnGrid }) => {
       <p
         className="
                 p-2 border-2 border-green3 border-opacity-70 rounded-md 
-                bg-green1 bg-opacity-50 break-all select-all"
+                bg-green1 bg-opacity-50 
+                dark:text-gray-200
+                break-all select-all"
       >
         {str}
       </p>
@@ -63,6 +65,7 @@ const StringDisplay: FC<StringDisplayProps> = ({ courses, coursesOnGrid }) => {
         className={`
                     bg-green2 text-white px-4 py-2 rounded
                     hover:bg-green3 transition-all
+                    dark:bg-green3 dark:hover:bg-green4
                     mt-4
                     ${copied && "opacity-80"}
                 `}

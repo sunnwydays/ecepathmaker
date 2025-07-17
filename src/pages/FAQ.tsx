@@ -28,14 +28,14 @@ const FAQ: FC = () => {
     };
 
     return (
-        <div>
-            <div className="bg-neutral1 p-8 rounded-md text-center shadow-sm">
-                <h2 className="text-2xl font-bold">FAQs</h2>
+        <div className="dark:text-gray-50">
+            <div className="bg-neutral2 dark:bg-slate-600 p-8 rounded-md text-center shadow-sm">
+                <h2 className="text-2xl font-bold dark:text-gray-50">FAQs</h2>
                 <ul className="space-y-2 mt-4">
                     <li>
                         <button 
                             onClick={() => scrollToSection('site-faqs')}
-                            className="text-green3 hover:opacity-50 transition-all"
+                            className="text-green3 dark:text-green1 hover:opacity-50 transition-all"
                         >
                             Using Pathmaker
                         </button>
@@ -43,7 +43,7 @@ const FAQ: FC = () => {
                     <li>
                         <button 
                             onClick={() => scrollToSection('course-faqs')}
-                            className="text-green3 hover:opacity-50 transition-all"
+                            className="text-green3 dark:text-green1 hover:opacity-50 transition-all"
                         >
                             Course Selection
                         </button>

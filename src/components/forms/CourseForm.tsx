@@ -191,7 +191,7 @@ const CourseForm: FC<CourseFormProps> = ({
   };
 
   return (
-    <section>
+    <section className="dark:text-gray-50">
       <h2 id="add-course" className="mt-10 mb-6 text-2xl font-semibold">
         Add or update courses
       </h2>
@@ -207,7 +207,9 @@ const CourseForm: FC<CourseFormProps> = ({
             type="text"
             value={customInfo.code}
             placeholder="Course Code (e.g. ECE444)*"
-            className="w-full p-2 border rounded"
+            className="
+              w-full p-2 border rounded min-w-72 
+              dark:bg-gray-400 dark:border-gray-300 dark:placeholder-gray-200"
             onChange={handleInputChange}
             data-testid="code-input"
           />
@@ -219,7 +221,9 @@ const CourseForm: FC<CourseFormProps> = ({
             type="text"
             value={customInfo.name}
             placeholder="Course Name"
-            className="w-full p-2 border rounded"
+            className="
+              w-full p-2 border rounded min-w-72
+              dark:bg-gray-400 dark:border-gray-300 dark:placeholder-gray-200"
             onChange={handleInputChange}
           />
           {errors.name && (
@@ -230,7 +234,9 @@ const CourseForm: FC<CourseFormProps> = ({
             type="text"
             value={preqString}
             placeholder="Prerequisites (e.g. ECE444,ECE345|ECE346)"
-            className="w-full p-2 border rounded"
+            className="
+              w-full p-2 border rounded min-w-72
+              dark:bg-gray-400 dark:border-gray-300 dark:placeholder-gray-200"
             onChange={handleInputChange}
             data-testid="preq-input"
           />
@@ -239,7 +245,9 @@ const CourseForm: FC<CourseFormProps> = ({
             type="text"
             value={coreqString}
             placeholder="Corequisites (e.g. ECE302|ECE356)"
-            className="w-full p-2 border rounded"
+            className="
+              w-full p-2 border rounded min-w-72
+              dark:bg-gray-400 dark:border-gray-300 dark:placeholder-gray-200"
             onChange={handleInputChange}
             data-testid="coreq-input"
           />
@@ -255,11 +263,15 @@ const CourseForm: FC<CourseFormProps> = ({
               color={customInfo.color}
               onChange={handleColorChange}
               placeholder="Colour (e.g. E0E0E0)"
-              className="w-full p-2 border rounded span"
-            />
+              className="
+                w-full p-2 border rounded min-w-72
+                dark:bg-gray-400 dark:border-gray-300 dark:placeholder-gray-200"
+              />
             <button
               type="button"
-              className="bg-neutral3 text-white px-4 py-2 rounded hover:bg-neutral2 transition-all"
+              className="
+                bg-neutral3 text-white px-4 py-2 rounded hover:bg-neutral2 transition-all
+                dark:bg-gray-500 dark:hover:bg-gray-600"
               onClick={resetColor}
             >
               reset
@@ -269,7 +281,7 @@ const CourseForm: FC<CourseFormProps> = ({
 
         {/* Stream Flags */}
         <div className="space-y-2">
-          <h3 className="font-medium">Streams</h3>
+          <h3 className="font-semibold">Streams</h3>
           <div className="grid grid-cols-3 gap-2">
             {[1, 2, 3, 4, 5, 6].map((num) => (
               <label key={num} className="flex items-center gap-2">
@@ -289,7 +301,7 @@ const CourseForm: FC<CourseFormProps> = ({
 
         {/* Term Availability */}
         <div className="space-y-2">
-          <h3 className="font-medium">Term Availability</h3>
+          <h3 className="font-semibold">Term Availability</h3>
           <div className="flex gap-4">
             <label className="flex items-center gap-2">
               <input
@@ -329,7 +341,7 @@ const CourseForm: FC<CourseFormProps> = ({
 
         {/* Course Type Flags */}
         <div className="space-y-2">
-          <h3 className="font-medium">Course Type</h3>
+          <h3 className="font-semibold">Course Type</h3>
           <div className="flex gap-4">
             <label className="flex items-center gap-2">
               <input
@@ -383,6 +395,7 @@ const CourseForm: FC<CourseFormProps> = ({
           className="
                         bg-green2 text-white px-4 py-2 rounded 
                         hover:bg-green3 transition-all
+                        dark:bg-green3 dark:hover:bg-green4
                         disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-green2
                     "
           // disabled={???}

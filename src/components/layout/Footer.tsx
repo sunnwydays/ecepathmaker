@@ -19,7 +19,7 @@ This will remove your custom courses, undo your edits, and clear your layout. Th
 
 
     return (
-        <footer className="bg-green3 md:w-full w-navFoot">
+        <footer className="bg-green3 dark:bg-green4 md:w-full w-navFoot">
             <div className={`
                 mx-auto 
                 px-4 py-12 

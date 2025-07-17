@@ -117,7 +117,7 @@ const Maker = () => {
         setCoreqString={setCoreqString}
       />
       <hr className="mt-8 stroke-2" />
-      <div className="grid md:grid-cols-2 grid-cols-1 gap-x-16">
+      <div className="grid md:grid-cols-2 grid-cols-1 gap-x-16 dark:text-gray-50">
         <div>
           <h2 className="mt-10 mb-6 text-2xl font-semibold">
             Save/load layout

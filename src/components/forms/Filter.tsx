@@ -40,13 +40,20 @@ const Filter: FC<{
   };
 
   return (
-    <div className="p-4 mt-4 bg-green1 bg-opacity-50 rounded shadow text-center items-center flex flex-col">
+    <div
+      className="
+      p-4 mt-4 bg-green1 dark:bg-green3 bg-opacity-50 dark:bg-opacity-70 
+      rounded shadow text-center items-center flex flex-col dark:text-gray-50
+    "
+    >
       <form className="flex gap-x-8 gap-y-4 justify-center items-center flex-wrap">
         <h2 className="font-semibold text-xl">Filter</h2>
         <button
           type="button"
           onClick={resetFilters}
-          className="text-sm text-gray-500 hover:text-gray-700 py-2"
+          className="
+            text-sm text-gray-500 hover:text-gray-700 py-2
+            dark:text-gray-300 dark:hover:text-gray-200"
           data-testid="reset-filters"
         >
           Reset Filters
@@ -57,7 +64,9 @@ const Filter: FC<{
             type="text"
             value={filters.searchTerm}
             placeholder="Search by code or name"
-            className="w-full p-2 border rounded min-w-72"
+            className="
+              w-full p-2 border rounded min-w-72 
+              dark:bg-gray-400 dark:border-gray-300 dark:placeholder-gray-200"
             onChange={handleInputChange}
           />
         </div>

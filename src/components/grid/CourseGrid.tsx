@@ -354,8 +354,9 @@ const CourseGrid: FC<CourseGridProps> = ({
         w-full px-4 py-1 
         ring-1 ring-opacity-80
         rounded-lg shadow-sm 
-        bg-white 
+        bg-white dark:bg-gray-700
         hover:text-white hover:bg-opacity-90
+        dark:hover:text-gray-50 dark:hover:bg-opacity-90
         font-medium
         transition-all duration-300
         hover:duration-100 active:scale-95
@@ -451,10 +452,10 @@ const CourseGrid: FC<CourseGridProps> = ({
         </div>
         <div>
           {/* Courses to choose from */}
-          <h2 className="lg:block hidden mb-1 text-xl font-medium text-center">
+          <h2 className="lg:block hidden mb-1 text-xl font-medium text-center dark:text-gray-50">
             👈 Drag courses into the grid
           </h2>
-          <h2 className="lg:block hidden text-center mb-1">
+          <h2 className="lg:block hidden text-center mb-1 dark:text-gray-50">
             🔍 Click a course to view more details
           </h2>
           <div className="lg:mt-4 flex xl:gap-8 lg:gap-4 gap-8">
@@ -463,9 +464,9 @@ const CourseGrid: FC<CourseGridProps> = ({
               // onClick={downloadScreenshot}
               className={`
                                 ${buttonStyle}
-                                ring-green3
-                                text-green3
-                                hover:bg-green2
+                                ring-green3 dark:ring-green2
+                                text-green3 dark:text-green2
+                                hover:bg-green2 dark:hover:bg-green4
                             `}
             >
               Screenshot
@@ -475,15 +476,15 @@ const CourseGrid: FC<CourseGridProps> = ({
               data-testid="clear-grid"
               className={`
                                 ${buttonStyle}
-                                ring-comp3
-                                text-comp3
-                                hover:bg-comp2
+                                ring-comp3 dark:ring-comp2
+                                text-comp3 dark:text-comp2
+                                hover:bg-comp2 dark:hover:bg-comp4
                             `}
             >
               Clear
             </button>
           </div>
-          <h2 className="lg:hidden block my-2 text-lg text-center">
+          <h2 className="lg:hidden block my-2 text-lg text-center dark:text-gray-50">
             ☝️ Hold and drag courses into the grid,
             <br />
             🔍 Click a course to view more details

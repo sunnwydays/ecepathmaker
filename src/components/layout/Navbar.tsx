@@ -1,6 +1,7 @@
 import { IoIosMenu, IoIosClose } from "react-icons/io";
 import { FC, useState, useEffect, useRef } from 'react';
 import { logo } from '../../utils/assetImports';
+import ThemeToggle from "../ThemeToggle";
 
 const Navbar:FC = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -34,6 +35,7 @@ const Navbar:FC = () => {
             fixed z-40 top-0 w-full 
             transition-all ${isScrolled ? 'h-12' : 'h-24'} 
             bg-white bg-opacity-95 shadow border-b-1 
+            dark:bg-gray-800 dark:bg-opacity-95 dark:text-white
         `}>
             <div className="
                 mx-auto xl:wp lg:w-wpl w-wps 
@@ -51,6 +53,7 @@ const Navbar:FC = () => {
                             top-0 ${isMenuOpen ? 'right-0' : '-right-full'}
                             md:h-auto h-screen
                             md:bg-transparent bg-white 
+                            dark:md:bg-transparent dark:bg-gray-800 
                             md:w-auto w-64
                             md:shadow-none shadow-md
                             flex flex-col md:flex-row
@@ -58,6 +61,7 @@ const Navbar:FC = () => {
                             md:transition-none transition-all duration-500
                             md:gap-[3vw] gap-8
                             md:text-base font-medium text-xl
+                            dark:text-white
                             ${isScrolled 
                                 ? 'text-l md:font-normal' 
                                 : 'md:font-medium md:text-xl'
@@ -103,6 +107,9 @@ const Navbar:FC = () => {
                                 >
                                     FAQs
                                 </a>
+                            </li>
+                            <li>
+                                <ThemeToggle />
                             </li>
                         </ul>
                         <button 

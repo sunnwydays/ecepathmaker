@@ -21,7 +21,7 @@ const Droppable: FC<DroppableProps> = (props) => {
           props.valid
             ? isOver
               ? "bg-green1 bg-opacity-70 size-36"
-              : "bg-neutral1 size-32"
+              : "bg-neutral1 dark:bg-gray-600 size-32"
             : "bg-comp3 bg-opacity-55 size-32 text-opacity-0"
         }
     `;

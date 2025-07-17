@@ -66,7 +66,9 @@ const LoadLayout: FC<LoadLayoutProps> = ({
             type="text"
             value={str}
             placeholder="Layout string"
-            className="w-full p-2 border rounded"
+            className="
+              w-full p-2 border rounded
+              dark:bg-gray-400 dark:border-gray-300 dark:placeholder-gray-200"
             onChange={handleInputChange}
             data-testid="string-input"
           />
@@ -74,11 +76,17 @@ const LoadLayout: FC<LoadLayoutProps> = ({
         <button
           type="submit"
           className="
-                        bg-green2 text-white px-4 py-2 rounded
+                        px-4 py-2 rounded
+                        bg-green2 text-white
                         hover:bg-green3 transition-all
                         disabled:bg-opacity-70 
                         disabled:hover:bg-green2 disabled:hover:bg-opacity-70
                         disabled:cursor-not-allowed
+
+                        dark:bg-green3 dark:hover:bg-green4
+                        dark:text-gray-50
+                        dark:disabled:bg-opacity-70 dark:disabled:hover:bg-green3
+                        dark:disabled:hover:bg-opacity-70
                     "
           data-testid="load-layout"
           disabled={!str.trim().length}

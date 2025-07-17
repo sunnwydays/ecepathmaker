@@ -2,6 +2,7 @@ import { FC } from "react";
 import { BarChart } from "@mui/x-charts/BarChart";
 import { StreamRequirements } from "../../types/types";
 import { ClickableTooltip } from "../../utils/componentImports";
+import { useDarkMode } from "../../utils/utilImports";
 
 interface WillYouGraduateProps {
   conditions: StreamRequirements;
@@ -67,6 +68,10 @@ const WillYouGraduate: FC<WillYouGraduateProps> = ({ conditions }) => {
   const streams = streamData.map(([stream]) => Number(stream));
   const counts = streamData.map(([, count]) => count);
   const colors = streams.map((stream) => graphColors[stream - 1]);
+
+  const isDarkMode = useDarkMode();
+  const axisColor = isDarkMode ? '#f9fafb' : '#000000'; // gray-50 / black
+
   const otherChartSettings = {
     width: 220,
     height: 170,
@@ -75,7 +80,7 @@ const WillYouGraduate: FC<WillYouGraduateProps> = ({ conditions }) => {
   };
 
   return (
-    <div className="mt-6">
+    <div className="mt-6 dark:text-gray-200">
       <div className="grid grid-cols-3 gap-3">
         <div className="mb-4">
           <h3 className="text-lg font-semibold mb-1">Basics</h3>
@@ -133,18 +138,32 @@ const WillYouGraduate: FC<WillYouGraduateProps> = ({ conditions }) => {
           <h3 className="text-lg font-semibold mb-1">Courses per stream</h3>
           {streams.length > 0 ? (
             <BarChart
-              xAxis={[
-                {
-                  id: "streamCategories",
-                  data: streams,
-                  scaleType: "band",
-                  colorMap: {
-                    type: "ordinal",
-                    colors: colors,
-                  },
-                  label: "Stream",
+            xAxis={[
+              {
+                id: "streamCategories",
+                data: streams,
+                scaleType: "band",
+                colorMap: {
+                  type: "ordinal",
+                  colors: colors,
                 },
-              ]}
+                label: "Stream",
+                labelStyle: {
+                  fill: axisColor,
+                },
+                tickLabelStyle: {
+                  fill: axisColor,
+                },
+              },
+            ]}
+            yAxis={[
+              {
+                tickLabelStyle: {
+                  fill: axisColor,
+                },
+              },
+              
+            ]}
               series={[
                 {
                   data: counts,
@@ -162,7 +181,7 @@ const WillYouGraduate: FC<WillYouGraduateProps> = ({ conditions }) => {
       <div
         className="
                 mt-4 p-8 flex flex-col items-center justify-center 
-                w-full bg-neutral1 rounded shadow"
+                w-full bg-neutral1 dark:bg-gray-800 rounded shadow"
       >
         {graduation ? (
           <h2 className="text-2xl font-semibold text-green3">
@@ -173,7 +192,7 @@ const WillYouGraduate: FC<WillYouGraduateProps> = ({ conditions }) => {
             😅 You are not graduating with this one
           </h2>
         )}
-        <div className="text-neutral-500 mt-4 text-sm">
+        <div className="text-neutral-500 dark:text-gray-400 mt-4 text-sm">
           <p>
             Check on your own: Natural sciences, Free & technical elective, PEY
             / 600h technical XP, CEAB, No exclusion violation, Within 1.5 credit
