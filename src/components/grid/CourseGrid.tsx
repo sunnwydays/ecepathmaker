@@ -501,11 +501,12 @@ const CourseGrid: FC<CourseGridProps> = ({
           >
             {(() => {
               const filteredCourses = Object.entries(coursesUsed)
-                .filter(([, isUsed]) => !isUsed)
                 .filter(([courseCode]) => filterCourses(courseCode));
+              const unusedFilteredCourses = filteredCourses
+                .filter(([, isUsed]) => !isUsed);
 
-              return filteredCourses.length ? (
-                filteredCourses.map(([courseCode]) => (
+              return unusedFilteredCourses.length ? (
+                unusedFilteredCourses.map(([courseCode]) => (
                   <MakerCard
                     valid={true}
                     key={courseCode}
@@ -518,13 +519,28 @@ const CourseGrid: FC<CourseGridProps> = ({
                   />
                 ))
               ) : (
-                <div
-                  className="
-                                    w-full text-center 
-                                    text-neutral3 italic select-none"
+                filteredCourses.length ? (
+                  // print the courses that match
+                  <ul className="
+                                    text-neutral3 italic select-none
+                                    list-disc list-inside"
+                  >
+                    Courses on grid that match the filter: {
+                      filteredCourses.map(([courseCode, pos]) => (
+                        <li className="not-italic">
+                          {pos}: {courseCode} - {courses[courseCode].name}
+                        </li>
+                      ))
+                    }
+                  </ul>
+                ) : (
+                <div className="
+                                  w-full text-center 
+                                  text-neutral3 italic select-none"
                 >
                   No courses match the current filter
                 </div>
+                )
               );
             })()}
           </div>
