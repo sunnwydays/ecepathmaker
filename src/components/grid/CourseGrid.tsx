@@ -240,6 +240,15 @@ const CourseGrid: FC<CourseGridProps> = ({
     })
   );
 
+  // Does not check prerequisites
+  const removeCourseFromSlot = (course: string | UniqueIdentifier, slot: GridPosition) => {
+    setCoursesOnGrid((prev) => ({
+      ...prev,
+      ...(slot && { [slot]: "" }),
+    }));
+    setCoursesUsed({ ...coursesUsed, [course]: "" as GridPosition });
+  }
+
   const handleDragStart = (e: DragStartEvent) => {
     setActiveCourse(e.active.id);
     const ValidYearTermsProps = {
@@ -269,13 +278,7 @@ const CourseGrid: FC<CourseGridProps> = ({
         (course.onlyF && targetTerm === "S") ||
         (course.onlyS && targetTerm === "F")
       ) {
-        // return course to the bucket
-        setCoursesOnGrid((prev) => ({
-          ...prev,
-          ...(sourceContainer && { [sourceContainer]: "" }),
-        }));
-        setCoursesUsed({ ...coursesUsed, [active.id]: "" as GridPosition });
-        
+        removeCourseFromSlot(active.id, sourceContainer);
         setDropError(DropError.TERM);
         return;
       }
@@ -285,12 +288,7 @@ const CourseGrid: FC<CourseGridProps> = ({
       if (!validYearTerms[yearTerm]) {
         // somewhat accounting for moving prereq after moving the course
         if (!validYearTerms[getYearTerm(sourceContainer)]) {
-          // return course to the bucket
-          setCoursesOnGrid((prev) => ({
-            ...prev,
-            ...(sourceContainer && { [sourceContainer]: "" }),
-          }));
-          setCoursesUsed({ ...coursesUsed, [active.id]: "" as GridPosition });
+          removeCourseFromSlot(active.id, sourceContainer);
         }
         setDropError(DropError.PREREQ);
         return;
@@ -324,12 +322,7 @@ const CourseGrid: FC<CourseGridProps> = ({
         [courseAtDestination]: "",
       });
     } else {
-      // return course to the bucket
-      setCoursesOnGrid((prev) => ({
-        ...prev,
-        ...(sourceContainer && { [sourceContainer]: "" }),
-      }));
-      setCoursesUsed({ ...coursesUsed, [active.id]: "" as GridPosition });
+      removeCourseFromSlot(active.id, sourceContainer);
     }
   };
 
