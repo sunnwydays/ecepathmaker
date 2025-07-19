@@ -494,7 +494,7 @@ const CourseGrid: FC<CourseGridProps> = ({
                         flex flex-wrap gap-2 
                         lg:max-h-[37.5rem] max-h-[22rem]
                         lg:w-full w-wps 
-                        overflow-y-auto +
+                        overflow-y-auto
                         justify-center
                         mt-4
                     "
