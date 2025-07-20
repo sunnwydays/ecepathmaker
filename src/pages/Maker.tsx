@@ -95,15 +95,6 @@ const Maker = () => {
     localStorage.setItem("coursesOnGrid", JSON.stringify(coursesOnGrid));
   }, [coursesOnGrid]);
 
-  // Save everything when component unmounts (e.g. navigate to another page)
-  useEffect(() => {
-    return () => {
-      localStorage.setItem("courses", JSON.stringify(courses));
-      localStorage.setItem("coursesUsed", JSON.stringify(coursesUsed));
-      localStorage.setItem("coursesOnGrid", JSON.stringify(coursesOnGrid));
-    };
-  }, [courses, coursesUsed, coursesOnGrid]);
-
   return (
     <div>
       <CourseGrid
