@@ -520,7 +520,7 @@ const CourseGrid: FC<CourseGridProps> = ({
                   >
                     Courses on grid that match the filter: {
                       filteredCourses.map(([courseCode, pos]) => (
-                        <li className="not-italic">
+                        <li className="not-italic" key={courseCode}>
                           {pos}: {courseCode} - {courses[courseCode].name}
                         </li>
                       ))
