@@ -12,7 +12,9 @@ const Footer:FC = () => {
     const resetLocalStorage = () => {
         if (window.confirm(`Are you sure you want to reset everything saved in local storage? 
 This will remove your custom courses, undo your edits, and clear your layout. This will also allow updates to take effect.`)) {
+            const savedTheme = localStorage.getItem('theme');
             localStorage.clear();
+            if (savedTheme) localStorage.setItem('theme', savedTheme);
             window.location.reload();
         }
     }
