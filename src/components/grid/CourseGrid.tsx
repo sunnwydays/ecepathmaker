@@ -264,11 +264,12 @@ const CourseGrid: FC<CourseGridProps> = ({
     setActiveCourse(null);
     setValidYearTerms(initialValidYearTerms);
     const { over, active } = e;
+    const courseCode = active.id;
 
     // jest testing good for setting objectives
     // console logging very useful for debugging here along with dev tools
     // also looking online for documentation, videos, and examples
-    const sourceContainer = coursesUsed[active.id];
+    const sourceContainer = coursesUsed[courseCode];
     if (over) {
       // term offering restrictions
       const targetTerm = (over.id as string)[1];
@@ -278,7 +279,7 @@ const CourseGrid: FC<CourseGridProps> = ({
         (course.onlyF && targetTerm === "S") ||
         (course.onlyS && targetTerm === "F")
       ) {
-        removeCourseFromSlot(active.id, sourceContainer);
+        removeCourseFromSlot(courseCode, sourceContainer);
         setDropError(DropError.TERM);
         return;
       }
@@ -288,7 +289,7 @@ const CourseGrid: FC<CourseGridProps> = ({
       if (!validYearTerms[yearTerm]) {
         // somewhat accounting for moving prereq after moving the course
         if (!validYearTerms[getYearTerm(sourceContainer)]) {
-          removeCourseFromSlot(active.id, sourceContainer);
+          removeCourseFromSlot(courseCode, sourceContainer);
         }
         setDropError(DropError.PREREQ);
         return;
@@ -299,7 +300,7 @@ const CourseGrid: FC<CourseGridProps> = ({
 
       setCoursesOnGrid((prev) => ({
         ...prev,
-        [over.id]: active.id,
+        [over.id]: courseCode,
         ...(sourceContainer && { [sourceContainer]: "" }),
       }));
 
@@ -310,7 +311,7 @@ const CourseGrid: FC<CourseGridProps> = ({
       if (courseAtDestination === "") {
         setCoursesUsed({
           ...coursesUsed,
-          [active.id]: over.id as GridPosition,
+          [courseCode]: over.id as GridPosition,
         });
         return;
       }
@@ -318,7 +319,7 @@ const CourseGrid: FC<CourseGridProps> = ({
       // destination already has a course
       setCoursesUsed({
         ...coursesUsed,
-        [active.id]: over.id as GridPosition,
+        [courseCode]: over.id as GridPosition,
         [courseAtDestination]: "",
       });
     } else {
