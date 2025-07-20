@@ -36,7 +36,6 @@ export const getValidYearTerms = ({
     (code) => code !== ""
   );
   
-  console.log("Valid year terms:", validYearTerms);
   let latestYearTerm = "";
 
   if (course.coreq?.length) {
@@ -96,8 +95,6 @@ export const getValidYearTerms = ({
         }
       } else {
         if (!gridCourses.includes(preq)) {
-          console.log(gridCourses, preq);
-          console.log("Valid year termseee:", validYearTerms);
           return ALL_FALSE;
         }
       }
