@@ -279,7 +279,6 @@ const CourseGrid: FC<CourseGridProps> = ({
         (course.onlyF && targetTerm === "S") ||
         (course.onlyS && targetTerm === "F")
       ) {
-        removeCourseFromSlot(courseCode, sourceContainer);
         setDropError(DropError.TERM);
         return;
       }
