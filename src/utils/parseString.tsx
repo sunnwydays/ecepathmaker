@@ -128,7 +128,7 @@ export const parseString = (str: string): ParseString => {
       };
 
       if (optionsWithPreq) {
-        const [options, preq] = optionsWithPreq.split("p");
+        const [options, coAndPreq] = optionsWithPreq.split("p");
 
         // Parse options
         if (options)
@@ -141,22 +141,12 @@ export const parseString = (str: string): ParseString => {
                 course.onlyS = true;
                 break;
               case "1":
-                course.streams?.push(1);
-                break;
               case "2":
-                course.streams?.push(2);
-                break;
               case "3":
-                course.streams?.push(3);
-                break;
               case "4":
-                course.streams?.push(4);
-                break;
               case "5":
-                course.streams?.push(5);
-                break;
               case "6":
-                course.streams?.push(6);
+                course.streams?.push(Number(options[i]));
                 break;
               case "k":
                 course.kernel = true;
@@ -183,15 +173,22 @@ export const parseString = (str: string): ParseString => {
           }
 
         // Parse prerequisites
-        if (preq) {
-          const andPrereqs = preq.split(",").map((andGroup) => {
-            // For each AND group, check if it has OR conditions
-            if (andGroup.includes("|")) {
-              return andGroup.split("|").map((p) => p.trim().toUpperCase());
-            }
-            return andGroup.trim();
-          });
-          course.preq = andPrereqs;
+        if (coAndPreq) {
+          const [preq, coreq] = coAndPreq.split("o");
+
+          const splitPreq = (prereq: string) => {
+            const andPrereqs = prereq.split(",").map((andGroup) => {
+                // For each AND group, check if it has OR conditions
+              if (andGroup.includes("|")) {
+                return andGroup.split("|").map((p) => p.trim().toUpperCase());
+              }
+              return andGroup.trim();
+            });
+            return andPrereqs;
+          }
+
+          if (preq) course.preq = splitPreq(preq);
+          if (coreq) course.coreq = splitPreq(coreq);
         }
       }
 

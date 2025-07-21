@@ -15,6 +15,12 @@ const StringDisplay: FC<StringDisplayProps> = ({ courses, coursesOnGrid }) => {
     }
   };
 
+  const serializeReqs = (label: string, reqs?: (string | string[])[]) => {
+    if (!reqs?.length) return "";
+    const parts = reqs.map((r) => (Array.isArray(r) ? r.join("|") : r));
+    return label + parts.join(",");
+  };
+
   useEffect(() => {
     let newStr = "";
     Object.entries(coursesOnGrid).forEach(([pos, courseCode]) => {
@@ -31,19 +37,12 @@ const StringDisplay: FC<StringDisplayProps> = ({ courses, coursesOnGrid }) => {
       if (course.isSciMath) newStr += "m";
       if (course.isArtSci) newStr += "a";
       if (course.color) newStr += "#" + course.color;
-      if (course.preq?.length) {
-        newStr += "p";
-        course.preq.forEach((preq, index) => {
-          if (Array.isArray(preq)) {
-            newStr += preq.join("|");
-          } else {
-            newStr += preq;
-          }
-          if (course.preq && index < course.preq.length - 1) {
-            newStr += ",";
-          }
-        });
-      }
+
+      const hasPreq = course.preq?.length;
+      const hasCoreq = course.coreq?.length;
+      if (hasPreq) newStr += serializeReqs("p", course.preq);
+      if (hasCoreq) newStr += serializeReqs(hasPreq ? "o" : "po", course.coreq);
+
       if (pos[3] != "5") newStr += "$$";
     });
     setStr(newStr);
