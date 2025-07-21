@@ -218,6 +218,7 @@ const CourseForm: FC<CourseFormProps> = ({
           )}
           <input
             name="name"
+            autoComplete="off"
             type="text"
             value={customInfo.name}
             placeholder="Course Name"
@@ -260,6 +261,7 @@ const CourseForm: FC<CourseFormProps> = ({
           />
           <div className="flex gap-2">
             <HexColorInput
+              name="color"
               color={customInfo.color}
               onChange={handleColorChange}
               placeholder="Colour (e.g. E0E0E0)"

@@ -63,6 +63,7 @@ const LoadLayout: FC<LoadLayoutProps> = ({
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <div className="space-y-2">
           <input
+            name="layout-string"
             type="text"
             value={str}
             placeholder="Layout string"
