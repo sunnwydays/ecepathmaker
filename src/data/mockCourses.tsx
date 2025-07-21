@@ -28,7 +28,7 @@ const courses: CourseList = {
     onlyF: true,
     color: "ffcc99",
     preq: [
-      ["ECE286", "MIE286", "ECE302"],
+      ["MIE286", "ECE302"],
       ["ECE335", "ECE350"],
       ["ECE231", "ECE360"],
       ["ECE320", "ECE357"],
@@ -202,7 +202,7 @@ const courses: CourseList = {
   ECE421: {
     name: "Introduction to Machine Learning",
     streams: [4],
-    preq: [["STA286", "ECE302"]],
+    preq: ["ECE302"],
     color: "e6b3ff",
   },
   ECE431: {
@@ -245,7 +245,7 @@ const courses: CourseList = {
     onlyS: true,
     color: "e6b3ff",
     isSciMath: true,
-    preq: [["STA286", "ECE302"]],
+    preq: ["ECE302"],
   },
   ECE411: {
     name: "Adaptive Control and Reinforcement Learning",
@@ -427,7 +427,7 @@ const courses: CourseList = {
   MIE369: {
     name: "Introduction to Artificial Intelligence",
     onlyS: true,
-    preq: [["MIE236", "ECE286", "ECE302"]],
+    preq: [["MIE236", "ECE302"]],
     color: "ffc2e0",
   },
   CSC413: {
