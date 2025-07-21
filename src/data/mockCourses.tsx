@@ -279,7 +279,7 @@ const courses: CourseList = {
     streams: [5],
     color: "ffb3b3", // Light Red for Stream 5
     kernel: true,
-    coreq: ["ECE311"],
+    coreq: ["ECE302"],
   },
   ECE342: {
     name: "Computer Hardware",
