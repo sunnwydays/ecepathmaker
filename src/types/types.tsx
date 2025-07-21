@@ -1,3 +1,5 @@
+import { UniqueIdentifier } from "@dnd-kit/core";
+
 interface CourseIdentifier {
     code: string;
     name: string;
@@ -83,6 +85,12 @@ export type GridPosition = GridPositionBase | '';
 export type CoursesOnGrid = Record<GridPositionBase, string>;
 export type CoursesUsed = Record<string, GridPosition>;
 export type ValidYearTerms = Record<YearTerm, boolean>
+export type addDependenciesProps = {
+    code: UniqueIdentifier;
+    courses: CourseList;
+    dependencies: Map<UniqueIdentifier, Set<UniqueIdentifier>>;
+    setDependencies?: React.Dispatch<React.SetStateAction<Map<UniqueIdentifier, Set<UniqueIdentifier>>>>;
+}
 
 export interface ValidYearTermsProps {
     coursesOnGrid: CoursesOnGrid;
@@ -99,18 +107,21 @@ export interface fulfillsCoreqProps {
 export interface CourseGridProps {
     courses: CourseList;
     coursesUsed: CoursesUsed;
-    setCoursesUsed: React.Dispatch<React.SetStateAction<CoursesUsed>>;
     coursesOnGrid: CoursesOnGrid;
+    dependencies: Map<UniqueIdentifier, Set<UniqueIdentifier>>;
+    setCoursesUsed: React.Dispatch<React.SetStateAction<CoursesUsed>>;
     setCoursesOnGrid: React.Dispatch<React.SetStateAction<CoursesOnGrid>>;
     setCustomInfo: React.Dispatch<React.SetStateAction<CourseCardProps>>;
     setPreqString: React.Dispatch<React.SetStateAction<string>>;
     setCoreqString: React.Dispatch<React.SetStateAction<string>>;
+    setDependencies: React.Dispatch<React.SetStateAction<Map<UniqueIdentifier, Set<UniqueIdentifier>>>>;
 }
 
 export interface ParseString {
     courses: CourseList;
     coursesOnGrid: CoursesOnGrid;
     coursesUsed: CoursesUsed;
+    dependencies: Map<UniqueIdentifier, Set<UniqueIdentifier>>;
 }
 
 export interface LoadLayoutProps {
@@ -119,6 +130,7 @@ export interface LoadLayoutProps {
     setCourses: React.Dispatch<React.SetStateAction<CourseList>>;
     setCoursesUsed: React.Dispatch<React.SetStateAction<CoursesUsed>>;
     setCoursesOnGrid: React.Dispatch<React.SetStateAction<CoursesOnGrid>>;
+    setDependencies: React.Dispatch<React.SetStateAction<Map<UniqueIdentifier, Set<UniqueIdentifier>>>>;
 }
 
 export interface StringDisplayProps {

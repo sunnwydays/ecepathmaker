@@ -5,3 +5,4 @@ export { getYearTerm } from "./getYearTerm";
 export { isValidString, parseString } from "./parseString";
 export { validateCourseCode, validateCourseName, validatePrerequisites } from "./validateCourse";
 export { useDarkMode } from "./useDarkMode";
+export { addDependencies } from "./addDependencies";

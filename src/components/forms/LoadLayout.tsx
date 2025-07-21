@@ -15,6 +15,7 @@ const LoadLayout: FC<LoadLayoutProps> = ({
   setCourses,
   setCoursesOnGrid,
   setCoursesUsed,
+  setDependencies,
 }) => {
   const [str, setStr] = useState("");
   const [load, setLoad] = useState(Load.NONE);
@@ -40,6 +41,7 @@ const LoadLayout: FC<LoadLayoutProps> = ({
       coursesUsed[key] = "";
     });
     setCoursesUsed({ ...coursesUsed, ...result.coursesUsed });
+    setDependencies(result.dependencies);
     setLoad(Load.SUCCESS);
     setStr("");
   };

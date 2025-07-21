@@ -30,11 +30,13 @@ import WillYouGraduate from "../info/WillYouGraduate";
 import { getValidYearTerms } from "../../utils/getValidYearTerms";
 import { getYearTerm } from "../../utils/getYearTerm";
 import Announcement from "../info/Announcement";
+import { addDependencies } from "../../utils/utilImports";
 
 enum DropError {
   NONE = "NONE",
   PREREQ = "PREREQ",
   COREQ = "COREQ",
+  DEPEND = "DEPEND",
   TERM = "TERM",
 }
 
@@ -42,11 +44,13 @@ const CourseGrid: FC<CourseGridProps> = ({
   courses,
   coursesOnGrid,
   coursesUsed,
+  dependencies,
   setCoursesOnGrid,
   setCoursesUsed,
   setCustomInfo,
   setPreqString,
   setCoreqString,
+  setDependencies,
 }) => {
   const [filters, setFilters] = useState<FilterState>({
     searchTerm: "",
@@ -103,12 +107,8 @@ const CourseGrid: FC<CourseGridProps> = ({
     []
   );
 
-  const [validYearTerms, setValidYearTerms] = useState<ValidYearTerms>(
-    initialValidYearTerms
-  );
-  const [activeCourse, setActiveCourse] = useState<UniqueIdentifier | null>(
-    null
-  );
+  const [validYearTerms, setValidYearTerms] = useState<ValidYearTerms>(initialValidYearTerms);
+  const [activeCourse, setActiveCourse] = useState<UniqueIdentifier | null>(null);
 
   const conditions = useMemo(() => {
     const gridCourses = Object.values(coursesOnGrid).filter(
@@ -241,12 +241,98 @@ const CourseGrid: FC<CourseGridProps> = ({
   );
 
   // Does not check prerequisites
-  const removeCourseFromSlot = (course: string | UniqueIdentifier, slot: GridPosition) => {
-    setCoursesOnGrid((prev) => ({
+  const removeCourseFromSlot = (code: UniqueIdentifier, slot: GridPosition) => {
+    setCoursesOnGrid((prev) => {
+      if (!slot) return prev;
+      return { ...prev, [slot]: "" }
+    });
+    setCoursesUsed((prev) => ({
       ...prev,
-      ...(slot && { [slot]: "" }),
+      [code]: "" as GridPosition,
     }));
-    setCoursesUsed({ ...coursesUsed, [course]: "" as GridPosition });
+    setCurrDeps(new Set());
+    setDropError(DropError.NONE);
+    console.log(dependencies)
+  }
+
+  const [courseToRemove, setCourseToRemove] = useState<UniqueIdentifier>();
+  const [currDeps, setCurrDeps] = useState<Set<UniqueIdentifier>>(new Set());
+
+  // Remove a course from the grid safely by checking dependencies
+  // Returns true if no dependency on grid, false otherwise
+  const checkPreqRemove = (course: UniqueIdentifier, slot: GridPosition): boolean => {
+    const deps = dependencies.get(course);
+    if (deps) {
+      // check if any dependencies are on the grid
+      for (const dep of deps) {
+        const depPreqs = courses[dep].preq ?? [];
+        if (coursesUsed[dep]) {
+          // check if course is a OR prereq
+          for (const andPreq of depPreqs) {
+            if (Array.isArray(andPreq)) {
+              // not a problem if there is another OR preq on grid - minimum 2 to ignore
+              let numOrPreqs = 0;
+              for (const orPreq of andPreq) {
+                if (numOrPreqs >= 2) break;
+                if (coursesUsed[orPreq]) numOrPreqs++;
+              }
+              if (numOrPreqs >= 2) {
+                for (const orPreq of andPreq) {
+                  if (course == orPreq) {
+                    // skip any more checking, it's good
+                    removeCourseFromSlot(course, slot);
+                    return true;
+                  }
+                }
+              } else {
+                currDeps.add(dep);
+              }
+            } else {
+              // removing an AND preq is not okay
+              currDeps.add(dep);
+            }
+          }
+        }
+
+        const depCoreqs = courses[dep].coreq ?? [];
+        if (coursesUsed[dep]) {
+          // check if course is a OR prereq
+          for (const andPreq of depCoreqs) {
+            if (Array.isArray(andPreq)) {
+              // not a problem if there is another OR preq on grid - minimum 2 to ignore
+              let numOrPreqs = 0;
+              for (const orPreq of andPreq) {
+                if (numOrPreqs >= 2) break;
+                if (coursesUsed[orPreq]) numOrPreqs++;
+              }
+              if (numOrPreqs >= 2) {
+                for (const orPreq of andPreq) {
+                  if (course == orPreq) {
+                    // skip any more checking, it's good
+                    removeCourseFromSlot(course, slot);
+                    return true;
+                  }
+                }
+              } else {
+                currDeps.add(dep);
+              }
+            } else {
+              // removing an AND preq is not okay
+              currDeps.add(dep);
+            }
+          }
+        }
+      }
+
+      if (currDeps.size) {
+        setCourseToRemove(course);
+        setDropError(DropError.DEPEND);
+        return false;
+      }
+    }
+
+    removeCourseFromSlot(course, slot);
+    return true;
   }
 
   const handleDragStart = (e: DragStartEvent) => {
@@ -264,66 +350,82 @@ const CourseGrid: FC<CourseGridProps> = ({
     setActiveCourse(null);
     setValidYearTerms(initialValidYearTerms);
     const { over, active } = e;
-    const courseCode = active.id;
+    const code = active.id;
 
     // jest testing good for setting objectives
     // console logging very useful for debugging here along with dev tools
     // also looking online for documentation, videos, and examples
-    const sourceContainer = coursesUsed[courseCode];
-    if (over) {
-      // term offering restrictions
-      const targetTerm = (over.id as string)[1];
-      const course = courses[active.id as string];
-
-      if (
-        (course.onlyF && targetTerm === "S") ||
-        (course.onlyS && targetTerm === "F")
-      ) {
-        setDropError(DropError.TERM);
-        return;
-      }
-
-      const yearTerm = getYearTerm(over.id as GridPosition);
-
-      if (!validYearTerms[yearTerm]) {
-        // somewhat accounting for moving prereq after moving the course
-        if (!validYearTerms[getYearTerm(sourceContainer)]) {
-          removeCourseFromSlot(courseCode, sourceContainer);
-        }
-        setDropError(DropError.PREREQ);
-        return;
-      }
-
-      // same slot
-      if (sourceContainer === over.id) return;
-
-      setCoursesOnGrid((prev) => ({
-        ...prev,
-        [over.id]: courseCode,
-        ...(sourceContainer && { [sourceContainer]: "" }),
-      }));
-
-      const courseAtDestination =
-        coursesOnGrid[over.id as keyof typeof coursesOnGrid];
-
-      // destination is empty
-      if (courseAtDestination === "") {
-        setCoursesUsed({
-          ...coursesUsed,
-          [courseCode]: over.id as GridPosition,
-        });
-        return;
-      }
-
-      // destination already has a course
-      setCoursesUsed({
-        ...coursesUsed,
-        [courseCode]: over.id as GridPosition,
-        [courseAtDestination]: "",
-      });
-    } else {
-      removeCourseFromSlot(active.id, sourceContainer);
+    const sourceContainer = coursesUsed[code];
+      
+    if (!over) {
+      checkPreqRemove(code, sourceContainer);
+      return;
     }
+
+    // term offering restrictions
+    const targetTerm = (over.id as string)[1];
+    const course = courses[active.id as string];
+
+    if (
+      (course.onlyF && targetTerm === "S") ||
+      (course.onlyS && targetTerm === "F")
+    ) {
+      setCourseToRemove(code);
+      setDropError(DropError.TERM);
+      return;
+    }
+
+    const yearTerm = getYearTerm(over.id as GridPosition);
+
+    if (!validYearTerms[yearTerm]) {
+      // somewhat accounting for moving prereq after moving the course
+      if (!validYearTerms[getYearTerm(sourceContainer)]) {
+        removeCourseFromSlot(code, sourceContainer);
+      }
+      setDropError(DropError.PREREQ);
+      return;
+    }
+
+    // same slot
+    if (sourceContainer === over.id) return;
+
+    addDependencies({code, courses, dependencies, setDependencies});
+
+    const courseAtDestination =
+      coursesOnGrid[over.id as keyof typeof coursesOnGrid];
+
+    // Remove the course at destination if it doesn't have dependencies on grid
+    if (courseAtDestination && 
+        !checkPreqRemove(courseAtDestination, over.id as GridPosition)) {
+      return;
+    }
+
+    setCoursesOnGrid((prev) => ({
+      ...prev,
+      [over.id]: code,
+      ...(sourceContainer && { [sourceContainer]: "" }),
+    }));
+
+    setCoursesOnGrid((prev) => {
+      if (!over.id) return prev;
+
+      return {
+        ...prev,
+        [over.id]: code,
+        ...(sourceContainer && { [sourceContainer]: "" }),
+      };
+    });
+
+    // put active course at the destination
+    // Functional updater form (with prev) to use most up-to-date state, no batch
+    setCoursesUsed((prev) => ({
+      ...prev,
+      [code]: over.id as GridPosition,
+    }));
+    setCoursesOnGrid((prev) => {
+      if (!over.id) return prev
+      return { ...prev, [over.id]: code };
+    });
   };
 
   const [dropError, setDropError] = useState<DropError>(DropError.NONE);
@@ -333,6 +435,8 @@ const CourseGrid: FC<CourseGridProps> = ({
     if (dropError !== DropError.NONE) {
       timeoutRef.current = setTimeout(() => {
         setDropError(DropError.NONE);
+        setCourseToRemove("");
+        setCurrDeps(new Set());
       }, 2000);
     }
 
@@ -555,13 +659,27 @@ const CourseGrid: FC<CourseGridProps> = ({
         </DragOverlay>,
         document.body
       )}
-      {dropError !== DropError.NONE && (
-        <Announcement>
-          {dropError === DropError.TERM
-            ? "Invalid term for this course!"
-            : "Missing co/prerequisites!"}
-        </Announcement>
-      )}
+      {dropError !== DropError.NONE && (() => {
+        let message = "Error";
+
+        switch (dropError) {
+          case DropError.TERM:
+            message = courseToRemove 
+              ? `${courseToRemove} is ${courses[courseToRemove].onlyF ? 
+                "fall" : "winter"} only!`
+              : `Invalid term for this course!`;
+            break;
+          case DropError.PREREQ:
+            message = "Missing co/prerequisites!";
+            break;
+          case DropError.DEPEND:
+            message = `${[...currDeps].join(', ')} depend${currDeps.size == 1 ? 
+              's' : ''} on ${courseToRemove}!`;
+            break;
+        }
+
+        return <Announcement>{message}</Announcement>;
+      })()}
       <Filter filters={filters} setFilters={setFilters} />
       <WillYouGraduate conditions={conditions} />
     </DndContext>
