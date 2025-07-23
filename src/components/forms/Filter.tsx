@@ -1,5 +1,6 @@
 import { FC } from "react";
 import { FilterState } from "../../types/types";
+import TextInput from "./TextInput";
 
 const Filter: FC<{
   filters: FilterState;
@@ -59,14 +60,10 @@ const Filter: FC<{
           Reset Filters
         </button>
         <div className="space-y-2">
-          <input
+          <TextInput
             name="searchTerm"
-            type="text"
             value={filters.searchTerm}
             placeholder="Search by code or name"
-            className="
-              w-full p-2 border rounded min-w-72 
-              dark:bg-gray-400 dark:border-gray-300 dark:placeholder-gray-200"
             onChange={handleInputChange}
           />
         </div>
