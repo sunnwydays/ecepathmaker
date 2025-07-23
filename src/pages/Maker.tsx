@@ -76,17 +76,13 @@ const Maker = () => {
   const initialDependencies = useMemo<Map<UniqueIdentifier, Set<UniqueIdentifier>>>(() => {
     const saved = localStorage.getItem("dependencies");
     if (!saved) {
-      console.log("yo no found");
       return new Map(); 
     }
-    console.log("getting deps from local")
 
     try {
       const parsed: [string, string[]][] = JSON.parse(saved);
-      console.log(saved)
       return new Map(parsed.map(([key, values]) => [key, new Set(values)]));
     } catch {
-      console.log("yo no founuu");
       return new Map();
     }
   }, []);
@@ -97,7 +93,6 @@ const Maker = () => {
       ([key, valueSet]) => [key, Array.from(valueSet)]
     );
     localStorage.setItem("dependencies", JSON.stringify(obj));
-    console.log("OBJECT: ", obj)
   }, [dependencies]);
 
   return (

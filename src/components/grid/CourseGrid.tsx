@@ -252,7 +252,6 @@ const CourseGrid: FC<CourseGridProps> = ({
     }));
     setCurrDeps(new Set());
     setDropError(DropError.NONE);
-    console.log(dependencies)
   }
 
   const [courseToRemove, setCourseToRemove] = useState<UniqueIdentifier>();

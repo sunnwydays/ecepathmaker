@@ -98,7 +98,6 @@ export const parseString = (str: string): ParseString => {
   };
   const coursesUsed: CoursesUsed = {};
   const dependencies: Map<UniqueIdentifier, Set<UniqueIdentifier>> = new Map();
-  console.log("why here")
 
   const termMap: { [key: number]: string } = {
     0: "3F",
