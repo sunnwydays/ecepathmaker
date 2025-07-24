@@ -144,6 +144,7 @@ export interface TextInputProps {
   placeholder: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   testId?: string;
+  minWidth?: string;
 }
 
 export interface CourseFormProps {

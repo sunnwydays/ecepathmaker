@@ -6,6 +6,7 @@ const TextInput: React.FC<TextInputProps> = ({
   placeholder,
   onChange,
   testId,
+  minWidth = "72"
 }) => {
   return (
     <input
@@ -14,9 +15,10 @@ const TextInput: React.FC<TextInputProps> = ({
       autoComplete="off"
       value={value}
       placeholder={placeholder}
-      className="
-        w-full p-2 border rounded min-w-72
-        dark:bg-gray-400 dark:border-gray-300 dark:placeholder-gray-200"
+      className={`
+        w-full p-2 border rounded min-w-${minWidth}
+        dark:bg-gray-400 dark:border-gray-300 dark:placeholder-gray-200
+      `}
       onChange={onChange}
       {...(testId ? { 'data-testid': testId } : {})}
     />
