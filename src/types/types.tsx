@@ -138,6 +138,14 @@ export interface StringDisplayProps {
     coursesOnGrid: CoursesOnGrid;
 }
 
+export interface TextInputProps {
+  name: string;
+  value: string;
+  placeholder: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  testId?: string;
+}
+
 export interface CourseFormProps {
     setCourses: React.Dispatch<React.SetStateAction<CourseList>>;
     setCoursesUsed: React.Dispatch<React.SetStateAction<CoursesUsed>>;

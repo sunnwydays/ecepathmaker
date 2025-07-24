@@ -7,6 +7,7 @@ import {
   validatePrerequisites,
 } from "../../utils/utilImports";
 import Announcement from "../info/Announcement";
+import TextInput from "./TextInput";
 
 const CourseForm: FC<CourseFormProps> = ({
   setCourses,
@@ -202,55 +203,39 @@ const CourseForm: FC<CourseFormProps> = ({
       >
         {/* Course Identifier Section */}
         <div className="space-y-2">
-          <input
+          <TextInput
             name="code"
-            type="text"
             value={customInfo.code}
             placeholder="Course Code (e.g. ECE444)*"
-            className="
-              w-full p-2 border rounded min-w-72 
-              dark:bg-gray-400 dark:border-gray-300 dark:placeholder-gray-200"
             onChange={handleInputChange}
-            data-testid="code-input"
+            testId="code-input"
           />
           {errors.code && (
             <p className="text-comp3 text-sm">{errorMessages.code}</p>
           )}
-          <input
+          <TextInput
             name="name"
-            autoComplete="off"
-            type="text"
             value={customInfo.name}
             placeholder="Course Name"
-            className="
-              w-full p-2 border rounded min-w-72
-              dark:bg-gray-400 dark:border-gray-300 dark:placeholder-gray-200"
             onChange={handleInputChange}
+            testId="name-input"
           />
           {errors.name && (
             <p className="text-comp3 text-sm">{errorMessages.name}</p>
           )}
-          <input
+          <TextInput
             name="preq"
-            type="text"
             value={preqString}
             placeholder="Prerequisites (e.g. ECE444,ECE345|ECE346)"
-            className="
-              w-full p-2 border rounded min-w-72
-              dark:bg-gray-400 dark:border-gray-300 dark:placeholder-gray-200"
             onChange={handleInputChange}
-            data-testid="preq-input"
+            testId="preq-input"
           />
-          <input
+          <TextInput
             name="coreq"
-            type="text"
             value={coreqString}
             placeholder="Corequisites (e.g. ECE302|ECE356)"
-            className="
-              w-full p-2 border rounded min-w-72
-              dark:bg-gray-400 dark:border-gray-300 dark:placeholder-gray-200"
             onChange={handleInputChange}
-            data-testid="coreq-input"
+            testId="coreq-input"
           />
           {errors.preq && (
             <p className="text-comp3 text-sm">{errorMessages.preq}</p>

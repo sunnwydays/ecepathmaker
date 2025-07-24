@@ -2,6 +2,7 @@ import { FC, useEffect, useRef, useState } from "react";
 import { LoadLayoutProps } from "../../types/types";
 import { Announcement } from "../../utils/componentImports";
 import { isValidString, parseString } from "../../utils/utilImports";
+import TextInput from "./TextInput";
 
 enum Load {
   NONE,
@@ -64,16 +65,12 @@ const LoadLayout: FC<LoadLayoutProps> = ({
     <section>
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <div className="space-y-2">
-          <input
+          <TextInput
             name="layout-string"
-            type="text"
             value={str}
             placeholder="Layout string"
-            className="
-              w-full p-2 border rounded
-              dark:bg-gray-400 dark:border-gray-300 dark:placeholder-gray-200"
             onChange={handleInputChange}
-            data-testid="string-input"
+            testId="string-input"
           />
         </div>
         <button
