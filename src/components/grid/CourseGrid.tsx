@@ -31,6 +31,7 @@ import { getValidYearTerms } from "../../utils/getValidYearTerms";
 import { getYearTerm } from "../../utils/getYearTerm";
 import Announcement from "../info/Announcement";
 import { addDependencies } from "../../utils/utilImports";
+import { emptyGrid } from "../../utils/utilImports";
 
 enum DropError {
   NONE = "NONE",
@@ -467,33 +468,7 @@ const CourseGrid: FC<CourseGridProps> = ({
       Object.keys(courses).forEach((courseCode) => (posMap[courseCode] = ""));
       return posMap;
     });
-    setCoursesOnGrid({
-      "3F.1": "",
-      "3F.2": "",
-      "3F.3": "",
-      "3F.4": "",
-      "3F.5": "",
-      "3S.1": "",
-      "3S.2": "",
-      "3S.3": "",
-      "3S.4": "",
-      "3S.5": "",
-      "4F.1": "",
-      "4F.2": "",
-      "4F.3": "",
-      "4F.4": "",
-      "4F.5": "",
-      "4S.1": "",
-      "4S.2": "",
-      "4S.3": "",
-      "4S.4": "",
-      "4S.5": "",
-      "XX.1": "",
-      "XX.2": "",
-      "XX.3": "",
-      "XX.4": "",
-      "XX.5": "",
-    });
+    setCoursesOnGrid(emptyGrid);
   };
 
   const screenshotRef = createRef<HTMLDivElement>();
@@ -594,7 +569,7 @@ const CourseGrid: FC<CourseGridProps> = ({
                         justify-center
                         mt-4
                     "
-            data-testid="course-bucket"
+            data-testid="bucket"
           >
             {(() => {
               const filteredCourses = Object.entries(coursesUsed)

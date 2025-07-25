@@ -1,13 +1,13 @@
 import {
   CourseList,
   CourseCardPropsWithoutCode,
-  CoursesOnGrid,
   CoursesUsed,
   ParseString,
   GridPosition,
   GridPositionBase,
 } from "../types/types";
 import { addDependencies } from "./addDependencies";
+import { emptyGrid } from "./utilImports";
 import { validateCourseCode, validateCourseName } from "./validateCourse";
 import { UniqueIdentifier } from "@dnd-kit/core";
 
@@ -89,13 +89,8 @@ export const parseString = (str: string): ParseString => {
   str = str.trim();
   const terms = str.split("@@");
   const courses: CourseList = {};
-  const coursesOnGrid: CoursesOnGrid = {
-    "3F.1": "", "3F.2": "", "3F.3": "", "3F.4": "", "3F.5": "",
-    "3S.1": "", "3S.2": "", "3S.3": "", "3S.4": "", "3S.5": "",
-    "4F.1": "", "4F.2": "", "4F.3": "", "4F.4": "", "4F.5": "",
-    "4S.1": "", "4S.2": "", "4S.3": "", "4S.4": "", "4S.5": "",
-    "XX.1": "", "XX.2": "", "XX.3": "", "XX.4": "", "XX.5": "",
-  };
+  const coursesOnGrid = { ...emptyGrid };
+
   const coursesUsed: CoursesUsed = {};
   const dependencies: Map<UniqueIdentifier, Set<UniqueIdentifier>> = new Map();
 
