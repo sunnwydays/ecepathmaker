@@ -2,6 +2,7 @@ import { FC, useEffect, useRef, useState } from "react";
 import { SaveLayoutProps } from "../../types/types";
 import { Announcement } from "../../utils/componentImports";
 import TextInput from "./TextInput";
+import SubmitButton from "../SubmitButton";
 
 enum Save {
   NONE,
@@ -155,18 +156,10 @@ const SaveLayout: FC<SaveLayoutProps> = ({
             ))}
           </div>
         </div>
-        <button
-          type="submit"
-          className="
-                        bg-green2 text-white px-4 py-2 rounded 
-                        hover:bg-green3 transition-all
-                        dark:bg-green3 dark:hover:bg-green4
-                        disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-green2
-                    "
-          // disabled={???}
-        >
+          
+        <SubmitButton testId="save-layout">
           Save current layout in slot {saveIndex + 1}
-        </button>
+        </SubmitButton>
       </form>
 
       {save === Save.SUCCESS && (<Announcement success>
