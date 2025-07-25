@@ -74,9 +74,6 @@ const CourseForm: FC<CourseFormProps> = ({
         setErrors((prev) => ({ ...prev, coreq: false }));
         setCoreqString(value.toUpperCase());
         setCustomInfo((prev) => ({ ...prev, coreq: parsePrerequisites(value) }));
-        // may need to create a separate function for coreq to ensure it only accepts one coreq
-        console.log("Coreq set to:", value);
-        console.log("Parsed coreq:", parsePrerequisites(value));
         break;
       case "streams": {
         const streamNum = parseInt(value);
@@ -172,7 +169,6 @@ const CourseForm: FC<CourseFormProps> = ({
     setPreqString("");
     setCoreqString("");
     // print the customInfo to console for debugging
-    console.log("Custom Info submitted:", customInfo);
     setCustomInfo({
       code: "",
       name: "",
