@@ -17,9 +17,17 @@ const mockLayouts = {
 }
 
 describe('Maker', () => {
+    let stringInput: HTMLElement;
+    let loadLayout: HTMLElement;
+    let filterSearch: HTMLElement;
+
     beforeEach(() => {
         localStorage.clear();
         render(<Maker />);
+        stringInput = screen.getByPlaceholderText('Layout string');
+        loadLayout = screen.getByTestId('load-layout');
+        filterSearch = screen.getByTestId('filter-search');
+
     });
 
     it('adds custom courses to the course list', () => {
@@ -71,37 +79,29 @@ describe('Maker', () => {
 
     // implicitly tests that string input is parsed correctly
     it('evaluates computer engineering based on streams', () => {
-        const stringInput = screen.getByTestId('string-input');
         fireEvent.change(stringInput, { target: { value: mockLayouts.CE } });
-        const submitButton = screen.getByTestId('load-layout');
-        fireEvent.click(submitButton);
+        fireEvent.click(loadLayout);
 
         expect(screen.getByText(/CE 🖥/)).toBeInTheDocument();
     });
     
     it('evaluates electrical engineering based on streams', () => {
-        const stringInput = screen.getByTestId('string-input');
         fireEvent.change(stringInput, { target: { value: mockLayouts.EE } });
-        const submitButton = screen.getByTestId('load-layout');
-        fireEvent.click(submitButton);
+        fireEvent.click(loadLayout);
         
         expect(screen.getByText(/EE 🔌/)).toBeInTheDocument();
     });
 
     it('evaluates computer or electrical engineering based on streams', () => {
-        const stringInput = screen.getByTestId('string-input');
         fireEvent.change(stringInput, { target: { value: mockLayouts.ECE } });
-        const submitButton = screen.getByTestId('load-layout');
-        fireEvent.click(submitButton);
+        fireEvent.click(loadLayout);
         
         expect(screen.getByText(/CE or EE/)).toBeInTheDocument();
     });
 
     it('evaluates basic requirements', () => {
-        const stringInput = screen.getByTestId('string-input');
         fireEvent.change(stringInput, { target: { value: 'AAA000placeholder%%#cccccc$$CST000cs%%c#8faadc$$HSS000hss%%h#d4a5a5$$ECE335Introduction to Electronic Devices%%1kf#ffcc99$$ECE318Fundamentals of Optics%%1k#ffcc99@@ECE342Computer Hardware%%5ks#ffb3b3$$ECE313Energy Systems and Distributed Generation%%2ks#99ccff$$ECE472Engineering Economics%%$$@@ECE427Photonic Devices%%1f#ffcc99pECE318|ECE320|ECE357$$ECE424Microwave Circuits%%23f#99ccff$$ECE526Power System Protection and Automation%%2f#99ccffpECE313|ECE314|ECE349$$BME498Biomedical Engineering Capstone Design h1%%$$@@ECE345Algorithms & Data Structures%%6k#ffd699$$ECE469Optical Communications and Networks%%145s#ffcc99$$BME499Biomedical Engineering Capstone Design h2 not a real course%%$$@@ECE419Distributed Systems%%6s#ffd699pECE344|ECE353$$' } });
-        const submitButton = screen.getByTestId('load-layout');
-        fireEvent.click(submitButton);
+        fireEvent.click(loadLayout);
         
         expect(screen.getByText(/You are not graduating with this one/)).toBeInTheDocument();
         expect(screen.getByText(/CS: ❌/)).toBeInTheDocument();
@@ -111,10 +111,8 @@ describe('Maker', () => {
     });
     
     it('evaluates successful graduation', () => {
-        const stringInput = screen.getByTestId('string-input');
         fireEvent.change(stringInput, { target: { value: 'ECE331Analog Electronics%%3kf#b3e6b3$$ECE335Introduction to Electronic Devices%%1kf#ffcc99$$ECE302Probability and Applications%%45m#e6b3ff$$ECE361Co-302 Computer Networks I%%5k#ffb3b3$$CST000cs%%c#8faadc@@ECE469Optical Communications and Networks%%145s#ffcc99$$ECE344Operating Systems%%6k#ffd699$$ECE334Digital Electronics%%3k#b3e6b3$$ECE472Engineering Economics%%$$JRE410Markets and Competitive Strategy%%c#8faadc@@ECE446Audio, Acoustics and Sensing%%34f#b3e6b3$$ECE568Computer Security%%56#ffb3b3pECE344|ECE353$$ECE496Design Project h1%%$$HPS120How to Think about Science%%ha#d4a5a5$$@@ECE448Biocomputation%%6sm#ffd699$$ECE419Distributed Systems%%6s#ffd699pECE344|ECE353$$MIE369Introduction to Artificial Intelligence%%s#ffc2e0pMIE236|ECE286|ECE302$$ECE497Design Project h2 not a real course%%$$JRE420People Management and Organizational Behaviour%%h#d4a5a5@@' } });
-        const submitButton = screen.getByTestId('load-layout');
-        fireEvent.click(submitButton);
+        fireEvent.click(loadLayout);
         expect(screen.getByText(/You graduate/)).toBeInTheDocument();
         expect(screen.getByText(/CE /)).toBeInTheDocument();
         expect(stringInput).toHaveValue('');
@@ -124,15 +122,12 @@ describe('Maker', () => {
         // Mock clicking true on the alert window
         const confirmSpy = jest.spyOn(window, 'confirm').mockImplementation(() => true);
                 
-        const stringInput = screen.getByTestId('string-input');
-        const submitButton = screen.getByPlaceholderText('Layout string');
-
         // Clear layout
         const clearButton = screen.getByTestId('clear-grid');
         fireEvent.click(clearButton);
 
         fireEvent.change(stringInput, { target: { value: 'something@@' } });
-        fireEvent.click(submitButton);
+        fireEvent.click(loadLayout);
 
         expect(confirmSpy).toHaveBeenCalled();
 
@@ -145,10 +140,8 @@ describe('Maker', () => {
         const confirmSpy = jest.spyOn(window, 'confirm').mockImplementation(() => true);
 
         // Load a layout
-        const stringInput = screen.getByTestId('string-input');
         fireEvent.change(stringInput, { target: { value: 'ECE331Analog Electronics%%3kf#b3e6b3$$ECE335Introduction to Electronic Devices%%1kf#ffcc99$$ECE302Probability and Applications%%45m#e6b3ff$$ECE361Co-302 Computer Networks I%%5k#ffb3b3$$CST000cs%%c#8faadc@@ECE469Optical Communications and Networks%%145s#ffcc99$$ECE344Operating Systems%%6k#ffd699$$ECE334Digital Electronics%%3k#b3e6b3$$ECE472Engineering Economics%%$$JRE410Markets and Competitive Strategy%%c#8faadc@@ECE446Audio, Acoustics and Sensing%%34f#b3e6b3$$ECE568Computer Security%%56#ffb3b3pECE344|ECE353$$ECE496Design Project h1%%$$HPS120How to Think about Science%%ha#d4a5a5$$@@ECE448Biocomputation%%6sm#ffd699$$ECE419Distributed Systems%%6s#ffd699pECE344|ECE353$$MIE369Introduction to Artificial Intelligence%%s#ffc2e0pMIE236|ECE286|ECE302$$ECE497Design Project h2 not a real course%%$$JRE420People Management and Organizational Behaviour%%h#d4a5a5@@' } });
-        const submitButton = screen.getByTestId('load-layout');
-        fireEvent.click(submitButton);
+        fireEvent.click(loadLayout);
 
         // Clear the grid
         const clearButton = screen.getByTestId('clear-grid');
@@ -166,10 +159,8 @@ describe('Maker', () => {
         const confirmSpy = jest.spyOn(window, 'confirm').mockImplementation(() => false);
         
         // Load a layout
-        const stringInput = screen.getByTestId('string-input');
         fireEvent.change(stringInput, { target: { value: 'ECE331Analog Electronics%%3kf#b3e6b3$$' } });
-        const submitButton = screen.getByTestId('load-layout');
-        fireEvent.click(submitButton);
+        fireEvent.click(loadLayout);
         
         // Attempt to clear the grid but cancel
         const clearButton = screen.getByTestId('clear-grid');
@@ -232,7 +223,6 @@ describe('Maker', () => {
         expect(screen.queryByText(/No courses match the current filter/)).not.toBeInTheDocument();
 
         // Combination of search text and stream filter
-        const filterSearch = screen.getByTestId('filter-search');
         fireEvent.change(filterSearch, { target: { value: 'NON_EXISTENT_COURSE' } });
         const filterStream2 = screen.getByTestId('filter-stream-2');
         fireEvent.click(filterStream2);
@@ -252,10 +242,8 @@ describe('Maker', () => {
 
     it('specifies the course on the grid if filtered', () => {
         // Load a course onto the grid
-        const stringInput = screen.getByTestId('string-input');
         fireEvent.change(stringInput, { target: { value: 'ECE311' } });
-        const submitButton = screen.getByTestId('load-layout');
-        fireEvent.click(submitButton);
+        fireEvent.click(loadLayout);
 
         // Search for the course but it's on the grid
         const filterSearch = screen.getByTestId('filter-search');
