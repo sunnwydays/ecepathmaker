@@ -42,4 +42,63 @@ background: rgb(106, 106, 106);
     :root {
         --radius: 0.5rem;
     }
+    label {
+        @apply cursor-pointer;
+    }
+    input[type='checkbox'],
+    input[type='radio']
+    {
+        @apply size-4;
+    }
+/*
+    input[type='radio'] {
+        -webkit-appearance: none;
+        appearance: none;
+        position: relative;
+        border-radius: 50%;
+        outline: none;
+        transition: all 0.1s ease;
+        
+        border: 1px solid theme('colors.gray.300');
+        box-shadow: inset 0 0 3px 1px rgba(0, 0, 0, 0.1);
+    }
+    .dark input[type='radio'] {
+        border-color: theme('colors.gray.400');
+        box-shadow: inset 0 0 3px 1px rgba(0, 0, 0, 0.4);
+    }
+
+    input[type='radio']:hover {
+        background: theme('colors.gray.50');
+    }
+    .dark input[type='radio']:hover {
+        background: theme('colors.gray.600');
+    }
+
+    input[type='radio']::before {
+        content: '';
+        display: block;
+        width: 50%;
+        height: 50%;
+        margin: 25% auto;
+        border-radius: 50%;
+    }
+
+    input[type="radio"]:checked::before {
+        background-color: theme('colors.white');
+    }
+    input[type="radio"]:checked {
+        background-color: theme('colors.green2radio');
+        box-shadow: none;
+    }
+    input[type='radio']:hover:checked {
+        background-color: theme('colors.green2radio');
+    }
+    .dark input[type="radio"]:checked {
+        background-color: theme('colors.green3radio');
+        box-shadow: none;
+    }
+    .dark input[type='radio']:hover:checked {
+        background-color: theme('colors.green3radio');
+    }
+    */
 }

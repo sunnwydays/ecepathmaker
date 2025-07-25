@@ -12,7 +12,9 @@ export default {
   		colors: {
   			green1: '#A8E6CF',
   			green2: '#56C596',
+			green2radio: '#77B79C',
   			green3: '#379683',
+  			green3radio: '#519688',
 			green4: '#287163',
   			comp1: '#FF8C94',
   			comp2: '#FF6F61',
