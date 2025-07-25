@@ -248,7 +248,7 @@ const CourseForm: FC<CourseFormProps> = ({
               placeholder="Colour (e.g. E0E0E0)"
               className="
                 w-full p-2 border rounded min-w-72
-                dark:bg-gray-400 dark:border-gray-300 dark:placeholder-gray-200"
+              dark:bg-gray-500 dark:border-gray-400 dark:placeholder-gray-300"
               />
             <button
               type="button"

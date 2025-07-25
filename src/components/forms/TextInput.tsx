@@ -17,7 +17,7 @@ const TextInput: React.FC<TextInputProps> = ({
       placeholder={placeholder}
       className={`
         w-full p-2 border rounded min-w-${minWidth}
-        dark:bg-gray-400 dark:border-gray-300 dark:placeholder-gray-200
+        dark:bg-gray-500 dark:border-gray-400 dark:placeholder-gray-300
       `}
       onChange={onChange}
       {...(testId ? { 'data-testid': testId } : {})}
