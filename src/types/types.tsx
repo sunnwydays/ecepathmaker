@@ -91,6 +91,10 @@ export type addDependenciesProps = {
     dependencies: Map<UniqueIdentifier, Set<UniqueIdentifier>>;
     setDependencies?: React.Dispatch<React.SetStateAction<Map<UniqueIdentifier, Set<UniqueIdentifier>>>>;
 }
+export type savedLayout = {
+  name: string;
+  str: string;
+};
 
 export interface ValidYearTermsProps {
     coursesOnGrid: CoursesOnGrid;
@@ -131,11 +135,21 @@ export interface LoadLayoutProps {
     setCoursesUsed: React.Dispatch<React.SetStateAction<CoursesUsed>>;
     setCoursesOnGrid: React.Dispatch<React.SetStateAction<CoursesOnGrid>>;
     setDependencies: React.Dispatch<React.SetStateAction<Map<UniqueIdentifier, Set<UniqueIdentifier>>>>;
+    savedLayouts: savedLayout[];
 }
 
-export interface StringDisplayProps {
+export interface SaveLayoutProps {
     courses: CourseList;
     coursesOnGrid: CoursesOnGrid;
+    savedLayouts: savedLayout[];
+    setSavedLayouts: React.Dispatch<React.SetStateAction<savedLayout[]>>;
+}
+
+export interface PresetProps {
+    name: string;
+    index: number;
+    clicked?: boolean;
+    loadPreset: (index: number) => void;
 }
 
 export interface TextInputProps {

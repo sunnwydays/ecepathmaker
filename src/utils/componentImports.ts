@@ -15,7 +15,7 @@ export { ClickableTooltip } from "../components/info/ClickableTooltip";
 export { default as CourseCard } from "../components/info/CourseCard";
 export { default as FAQCard } from "../components/info/FAQCard";
 export { default as WillYouGraduate } from "../components/info/WillYouGraduate";
-export { default as StringDisplay } from "../components/info/StringDisplay";
+export { default as SaveLayout } from "../components/forms/SaveLayout";
 
 // Layout Components
 export { default as Footer } from "../components/layout/Footer";

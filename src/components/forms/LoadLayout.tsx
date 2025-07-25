@@ -2,6 +2,7 @@ import { FC, useEffect, useRef, useState } from "react";
 import { LoadLayoutProps } from "../../types/types";
 import { Announcement } from "../../utils/componentImports";
 import { isValidString, parseString } from "../../utils/utilImports";
+import Preset from "./Preset";
 import TextInput from "./TextInput";
 
 enum Load {
@@ -17,6 +18,7 @@ const LoadLayout: FC<LoadLayoutProps> = ({
   setCoursesOnGrid,
   setCoursesUsed,
   setDependencies,
+  savedLayouts,
 }) => {
   const [str, setStr] = useState("");
   const [load, setLoad] = useState(Load.NONE);
@@ -26,14 +28,7 @@ const LoadLayout: FC<LoadLayoutProps> = ({
     setStr(e.target.value);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!str.trim().length) return;
-    if (!isValidString(str)) {
-      setLoad(Load.ERROR);
-      return;
-    }
-
+  const applyString = (str: string) => {
     const result = parseString(str);
 
     setCoursesOnGrid(result.coursesOnGrid);
@@ -45,6 +40,21 @@ const LoadLayout: FC<LoadLayoutProps> = ({
     setDependencies(result.dependencies);
     setLoad(Load.SUCCESS);
     setStr("");
+  }
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!str.trim().length) return;
+    if (!isValidString(str)) {
+      setLoad(Load.ERROR);
+      return;
+    }
+
+    applyString(str);
+  };
+
+  const loadPreset = (index: number) => {
+    applyString(savedLayouts[index].str);
   };
 
   useEffect(() => {
@@ -98,6 +108,17 @@ const LoadLayout: FC<LoadLayoutProps> = ({
         <Announcement success>Layout loaded!</Announcement>
       )}
       {load === Load.ERROR && <Announcement>Invalid layout!</Announcement>}
+
+      <div className="lg:grid grid-cols-2 flex flex-col gap-2 mt-4">
+        {savedLayouts.map((layout, index) => (
+          layout && <Preset
+            key={index}
+            name={layout.name}
+            index={index}
+            loadPreset={loadPreset}
+          />
+        ))}
+      </div>
     </section>
   );
 };

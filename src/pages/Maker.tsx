@@ -1,11 +1,11 @@
 import { useMemo, useState, useEffect } from "react";
-import { CourseCardProps, CoursesOnGrid, CoursesUsed } from "../types/types";
+import { CourseCardProps, CoursesOnGrid, CoursesUsed, savedLayout } from "../types/types";
 import { mockCourses } from "../utils/dataImports";
 import {
   CourseForm,
   CourseGrid,
   LoadLayout,
-  StringDisplay,
+  SaveLayout,
 } from "../utils/componentImports";
 import { UniqueIdentifier } from "@dnd-kit/core";
 
@@ -95,6 +95,17 @@ const Maker = () => {
     localStorage.setItem("dependencies", JSON.stringify(obj));
   }, [dependencies]);
 
+
+  // Saved layouts
+  const [savedLayouts, setSavedLayouts] = useState<savedLayout[]>(() => {
+    const saved = localStorage.getItem("savedLayouts");
+    if (saved) return JSON.parse(saved);
+    return [];
+  });
+  useEffect(() => {
+    localStorage.setItem("savedLayouts", JSON.stringify(savedLayouts));
+  }, [savedLayouts]);
+
   return (
     <div>
       <CourseGrid
@@ -112,15 +123,11 @@ const Maker = () => {
       <hr className="mt-8 stroke-2" />
       <div className="grid md:grid-cols-2 grid-cols-1 gap-x-16 dark:text-gray-50">
         <div>
-          <h2 className="mt-10 mb-6 text-2xl font-semibold">
-            Save/load layout
+          <h2 className="mt-10 mb-4 text-2xl font-semibold">
+            Load layout
           </h2>
-          <p className="mb-2 max-w-xl">
-            Copy this string and save it for later
-          </p>
-          <StringDisplay courses={courses} coursesOnGrid={coursesOnGrid} />
-          <p className="mt-8 mb-2 max-w-xl">
-            Paste your previously copied string below to load it
+          <p className=" mb-2 max-w-xl">
+            Paste your previously copied string or load from cache
           </p>
           <LoadLayout
             courses={courses}
@@ -129,6 +136,19 @@ const Maker = () => {
             setCoursesUsed={setCoursesUsed}
             setCoursesOnGrid={setCoursesOnGrid}
             setDependencies={setDependencies}
+            savedLayouts={savedLayouts}
+          />
+          <h2 className="mt-10 mb-4 text-2xl font-semibold">
+            Save layout
+          </h2>
+          <p className="mb-2 max-w-xl">
+            Copy this string and save it for later or store layout in cache
+          </p>
+          <SaveLayout 
+            courses={courses}
+            coursesOnGrid={coursesOnGrid}
+            savedLayouts={savedLayouts}
+            setSavedLayouts={setSavedLayouts}
           />
         </div>
         <CourseForm
