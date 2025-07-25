@@ -85,9 +85,11 @@ const FAQ: FC = () => {
                 <button
                     onClick={scrollToTop}
                     className="
-                        fixed bottom-8 right-8 bg-green2 text-white p-4 
-                        rounded-full shadow-lg 
-                        hover:bg-opacity-80 transition-all
+                        fixed bottom-8 right-8 bg-green2 text-white 
+                        shadow-lg rounded-full size-12
+                        flex items-center justify-center
+                        hover:bg-green3 transition-all
+                        dark:bg-green3 dark:hover:bg-green4
                     "
                     aria-label="Back to top"
                 >
