@@ -152,6 +152,13 @@ export interface PresetProps {
     loadPreset: (index: number) => void;
 }
 
+export interface SubmitButtonProps {
+    children: React.ReactNode;
+    additionalStyles?: string;
+    disabled?: boolean;
+    testId?: string;
+}
+
 export interface TextInputProps {
   name: string;
   value: string;

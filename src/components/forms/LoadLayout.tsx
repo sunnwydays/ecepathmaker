@@ -4,6 +4,7 @@ import { Announcement } from "../../utils/componentImports";
 import { isValidString, parseString } from "../../utils/utilImports";
 import Preset from "./Preset";
 import TextInput from "./TextInput";
+import SubmitButton from "../SubmitButton";
 
 enum Load {
   NONE,
@@ -40,7 +41,7 @@ const LoadLayout: FC<LoadLayoutProps> = ({
     setDependencies(result.dependencies);
     setLoad(Load.SUCCESS);
     setStr("");
-  }
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -83,26 +84,9 @@ const LoadLayout: FC<LoadLayoutProps> = ({
             testId="string-input"
           />
         </div>
-        <button
-          type="submit"
-          className="
-                        px-4 py-2 rounded
-                        bg-green2 text-white
-                        hover:bg-green3 transition-all
-                        disabled:bg-opacity-70 
-                        disabled:hover:bg-green2 disabled:hover:bg-opacity-70
-                        disabled:cursor-not-allowed
-
-                        dark:bg-green3 dark:hover:bg-green4
-                        dark:text-gray-50
-                        dark:disabled:bg-opacity-70 dark:disabled:hover:bg-green3
-                        dark:disabled:hover:bg-opacity-70
-                    "
-          data-testid="load-layout"
-          disabled={!str.trim().length}
-        >
+        <SubmitButton disabled={!str.trim().length} testId="load-layout">
           Load layout
-        </button>
+        </SubmitButton>
       </form>
       {load === Load.SUCCESS && (
         <Announcement success>Layout loaded!</Announcement>
@@ -110,14 +94,17 @@ const LoadLayout: FC<LoadLayoutProps> = ({
       {load === Load.ERROR && <Announcement>Invalid layout!</Announcement>}
 
       <div className="lg:grid grid-cols-2 flex flex-col gap-2 mt-4">
-        {savedLayouts.map((layout, index) => (
-          layout && <Preset
-            key={index}
-            name={layout.name}
-            index={index}
-            loadPreset={loadPreset}
-          />
-        ))}
+        {savedLayouts.map(
+          (layout, index) =>
+            layout && (
+              <Preset
+                key={index}
+                name={layout.name}
+                index={index}
+                loadPreset={loadPreset}
+              />
+            )
+        )}
       </div>
     </section>
   );

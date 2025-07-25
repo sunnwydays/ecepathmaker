@@ -8,6 +8,7 @@ import {
 } from "../../utils/utilImports";
 import Announcement from "../info/Announcement";
 import TextInput from "./TextInput";
+import SubmitButton from "../SubmitButton";
 
 const CourseForm: FC<CourseFormProps> = ({
   setCourses,
@@ -73,7 +74,10 @@ const CourseForm: FC<CourseFormProps> = ({
       case "coreq":
         setErrors((prev) => ({ ...prev, coreq: false }));
         setCoreqString(value.toUpperCase());
-        setCustomInfo((prev) => ({ ...prev, coreq: parsePrerequisites(value) }));
+        setCustomInfo((prev) => ({
+          ...prev,
+          coreq: parsePrerequisites(value),
+        }));
         break;
       case "streams": {
         const streamNum = parseInt(value);
@@ -249,7 +253,7 @@ const CourseForm: FC<CourseFormProps> = ({
               className="
                 w-full p-2 border rounded min-w-72
               dark:bg-gray-500 dark:border-gray-400 dark:placeholder-gray-300"
-              />
+            />
             <button
               type="button"
               className="
@@ -373,21 +377,10 @@ const CourseForm: FC<CourseFormProps> = ({
           </div>
         </div>
 
-        <button
-          type="submit"
-          className="
-                        bg-green2 text-white px-4 py-2 rounded 
-                        hover:bg-green3 transition-all
-                        dark:bg-green3 dark:hover:bg-green4
-                        disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-green2
-                    "
-          // disabled={???}
-        >
-          Add/Update Course
-        </button>
+        <SubmitButton>Add/Update Course</SubmitButton>
       </form>
 
-      { justSubmitted && (
+      {justSubmitted && (
         <Announcement success={true}>Course updated!</Announcement>
       )}
     </section>
