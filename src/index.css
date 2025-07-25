@@ -12,9 +12,17 @@
 background: #f1f1f1;
 }
 
+.dark ::-webkit-scrollbar-track {
+background: #2d2d2d; /* adjust as needed */
+}
+
 /* Handle */
 ::-webkit-scrollbar-thumb {
 background: #888;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+background: #5a5a5a;
 }
 
 /* Handle on hover */
@@ -22,12 +30,16 @@ background: #888;
 background: #555;
 }
 
+.dark ::-webkit-scrollbar-thumb:hover {
+background: rgb(106, 106, 106);
+}
+
 ::-webkit-scrollbar-button {
     display: none;
 }
 
 @layer base {
-  :root {
+    :root {
         --radius: 0.5rem;
     }
 }
