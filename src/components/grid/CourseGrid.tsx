@@ -594,6 +594,7 @@ const CourseGrid: FC<CourseGridProps> = ({
                         justify-center
                         mt-4
                     "
+            data-testid="course-bucket"
           >
             {(() => {
               const filteredCourses = Object.entries(coursesUsed)

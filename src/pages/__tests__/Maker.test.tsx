@@ -243,4 +243,19 @@ describe('Maker', () => {
         fireEvent.click(filterEng);
         expect(screen.getByText(/No courses match the current filter/)).toBeInTheDocument();
     });
+
+    it('specifies the course on the grid if filtered', () => {
+        // Load a course onto the grid
+        const stringInput = screen.getByTestId('string-input');
+        fireEvent.change(stringInput, { target: { value: 'ECE311' } });
+        const submitButton = screen.getByTestId('load-layout');
+        fireEvent.click(submitButton);
+
+        // Search for the course but it's on the grid
+        const filterSearch = screen.getByTestId('filter-search');
+        fireEvent.change(filterSearch, { target: { value: 'ece311' } });
+        expect(screen.getByText(/Courses on grid that match the filter:/)).toBeInTheDocument();
+        expect(screen.getByText(/: ECE311/)).toBeInTheDocument();
+        expect(screen.queryByText(/ECE302/)).not.toBeInTheDocument();
+    });
 });
