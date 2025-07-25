@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, prettyDOM } from '@testing-library/react';
 import { Maker } from '../../utils/pageImports';
 
 const mockCourse = {
@@ -12,7 +12,7 @@ const mockCourse = {
 
 describe('Maker', () => {
     beforeEach(() => {
-        // Render the Maker component before each test
+        localStorage.clear();
         render(<Maker />);
     });
 
@@ -177,5 +177,70 @@ describe('Maker', () => {
         
         // Clean up the mock
         confirmSpy.mockRestore();
+    });
+
+    it('filters courses by course code and name', () => {
+        // Filter using code
+        expect(screen.getByText(/ECE302/)).toBeInTheDocument();
+
+        // console.log("printing filter element");
+        // const element = screen.getByTestId('filter');
+        // console.log(prettyDOM(element, 99999));
+
+        // so i don't get error about prettyDOM unused
+        console.log(prettyDOM(screen.getByTestId('filter'), 1));
+
+        const filterSearch = screen.getByTestId('filter-search');
+        fireEvent.change(filterSearch, { target: { value: 'ECE311' } });
+
+        expect(screen.queryByText(/ECE302/)).not.toBeInTheDocument();
+        expect(screen.getByText(/ECE311/)).toBeInTheDocument();
+        
+        // Filter using name
+        fireEvent.change(filterSearch, { target: { value: 'introduction TO contr' } });
+
+        expect(screen.queryByText(/ECE302/)).not.toBeInTheDocument();
+        expect(screen.getByText(/ECE311/)).toBeInTheDocument();
+        expect(screen.getByText(/Introduction to Control Systems/)).toBeInTheDocument();
+    });
+
+    it('filters courses using a combination of options', () => {
+        // Filter using code
+        expect(screen.getByText(/ECE302/)).toBeInTheDocument();
+        
+        const filterSearch = screen.getByTestId('filter-search');
+        fireEvent.change(filterSearch, { target: { value: 'ECE311' } });
+
+        expect(screen.queryByText(/ECE302/)).not.toBeInTheDocument();
+        expect(screen.getByText(/ECE311/)).toBeInTheDocument();
+        
+        // Filter using name
+        fireEvent.change(filterSearch, { target: { value: 'introduction TO contr' } });
+
+        expect(screen.queryByText(/ECE302/)).not.toBeInTheDocument();
+        expect(screen.getByText(/ECE311/)).toBeInTheDocument();
+        expect(screen.getByText(/Introduction to Control Systems/)).toBeInTheDocument();
+    });
+
+    it('displays no courses given no matching filter', () => {
+        expect(screen.queryByText(/No courses match the current filter/)).not.toBeInTheDocument();
+
+        // Combination of search text and stream filter
+        const filterSearch = screen.getByTestId('filter-search');
+        fireEvent.change(filterSearch, { target: { value: 'NON_EXISTENT_COURSE' } });
+        const filterStream2 = screen.getByTestId('filter-stream-2');
+        fireEvent.click(filterStream2);
+        expect(screen.getByText(/No courses match the current filter/)).toBeInTheDocument();
+
+        fireEvent.change(filterSearch, { target: { value: '' } });
+        fireEvent.click(filterStream2);
+        expect(screen.queryByText(/No courses match the current filter/)).not.toBeInTheDocument();
+
+        // Two conflicting types
+        const filterArtsci = screen.getByTestId('filter-artsci');
+        const filterEng = screen.getByTestId('filter-eng');
+        fireEvent.click(filterArtsci);
+        fireEvent.click(filterEng);
+        expect(screen.getByText(/No courses match the current filter/)).toBeInTheDocument();
     });
 });

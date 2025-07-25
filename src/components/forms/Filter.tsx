@@ -43,9 +43,10 @@ const Filter: FC<{
   return (
     <div
       className="
-      p-4 mt-4 bg-green1 dark:bg-green3 bg-opacity-50 dark:bg-opacity-70 
-      rounded shadow text-center items-center flex flex-col dark:text-gray-50
-    "
+        p-4 mt-4 bg-green1 dark:bg-green3 bg-opacity-50 dark:bg-opacity-70 
+        rounded shadow text-center items-center flex flex-col dark:text-gray-50
+      "
+      data-testid="filter"
     >
       <form className="flex gap-x-8 gap-y-4 justify-center items-center flex-wrap">
         <h2 className="font-semibold text-xl">Filter</h2>
@@ -65,6 +66,7 @@ const Filter: FC<{
             value={filters.searchTerm}
             placeholder="Search by code or name"
             onChange={handleInputChange}
+            testId="filter-search"
           />
         </div>
 
@@ -154,6 +156,7 @@ const Filter: FC<{
                 onChange={handleInputChange}
                 value="ArtSci"
                 checked={filters.isArtSci}
+                data-testid="filter-artsci"
               />
               <span>ArtSci</span>
             </label>
@@ -164,6 +167,7 @@ const Filter: FC<{
                 onChange={handleInputChange}
                 value="Eng"
                 checked={filters.isEng}
+                data-testid="filter-eng"
               />
               <span>Engi</span>
             </label>
