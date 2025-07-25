@@ -129,7 +129,7 @@ const SaveLayout: FC<SaveLayoutProps> = ({
       <form
         onSubmit={handleSave}
         className="flex flex-col gap-4 mt-4"
-        data-testid="course-form"
+        data-testid="save-form"
       >
         <div className="flex gap-4">
           <TextInput
