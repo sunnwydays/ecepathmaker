@@ -138,7 +138,7 @@ const Maker = () => {
             setDependencies={setDependencies}
             savedLayouts={savedLayouts}
           />
-          <h2 className="mt-10 mb-4 text-2xl font-semibold">
+          <h2 className="mt-8 mb-4 text-2xl font-semibold">
             Save layout
           </h2>
           <p className="mb-2 max-w-xl">

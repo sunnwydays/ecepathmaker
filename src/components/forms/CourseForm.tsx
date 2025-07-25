@@ -193,7 +193,7 @@ const CourseForm: FC<CourseFormProps> = ({
 
   return (
     <section className="dark:text-gray-50">
-      <h2 id="add-course" className="mt-10 mb-6 text-2xl font-semibold">
+      <h2 id="add-course" className="md:mt-10 mt-8 mb-6 text-2xl font-semibold">
         Add or update courses
       </h2>
       <form
