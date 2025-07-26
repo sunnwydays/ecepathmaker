@@ -498,6 +498,7 @@ const CourseGrid: FC<CourseGridProps> = ({
         <div
           className="grid grid-cols-5 gap-2 size-max flex-shrink-0"
           ref={screenshotRef}
+          data-testid="grid"
         >
           {Object.entries(coursesOnGrid).map(([slot, courseCode]) => (
             <Droppable

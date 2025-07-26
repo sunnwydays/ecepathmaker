@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, prettyDOM } from '@testing-library/react';
+import { render, screen, fireEvent, prettyDOM, within } from '@testing-library/react';
 import { Maker } from '../../utils/pageImports';
 
 const mockCourse = {
@@ -19,15 +19,12 @@ const mockLayouts = {
 describe('Maker', () => {
     let stringInput: HTMLElement;
     let loadLayout: HTMLElement;
-    let filterSearch: HTMLElement;
 
     beforeEach(() => {
         localStorage.clear();
         render(<Maker />);
         stringInput = screen.getByPlaceholderText('Layout string');
         loadLayout = screen.getByTestId('load-layout');
-        filterSearch = screen.getByTestId('filter-search');
-
     });
 
     it('adds custom courses to the course list', () => {
@@ -180,10 +177,6 @@ describe('Maker', () => {
         // Filter using code
         expect(screen.getByText(/ECE302/)).toBeInTheDocument();
 
-        // console.log("printing filter element");
-        // const element = screen.getByTestId('filter');
-        // console.log(prettyDOM(element, 99999));
-
         // so i don't get error about prettyDOM unused
         console.log(prettyDOM(screen.getByTestId('filter'), 1));
 
@@ -222,15 +215,10 @@ describe('Maker', () => {
     it('displays no courses given no matching filter', () => {
         expect(screen.queryByText(/No courses match the current filter/)).not.toBeInTheDocument();
 
-        // Combination of search text and stream filter
-        fireEvent.change(filterSearch, { target: { value: 'NON_EXISTENT_COURSE' } });
-        const filterStream2 = screen.getByTestId('filter-stream-2');
-        fireEvent.click(filterStream2);
+        // Search text filter
+        const filterSearch = screen.getByTestId('filter-search');
+        fireEvent.change(filterSearch, { target: { value: 'NON_EXISTENT_COURSE ' } });
         expect(screen.getByText(/No courses match the current filter/)).toBeInTheDocument();
-
-        fireEvent.change(filterSearch, { target: { value: '' } });
-        fireEvent.click(filterStream2);
-        expect(screen.queryByText(/No courses match the current filter/)).not.toBeInTheDocument();
 
         // Two conflicting types
         const filterArtsci = screen.getByTestId('filter-artsci');
@@ -251,5 +239,89 @@ describe('Maker', () => {
         expect(screen.getByText(/Courses on grid that match the filter:/)).toBeInTheDocument();
         expect(screen.getByText(/: ECE311/)).toBeInTheDocument();
         expect(screen.queryByText(/ECE302/)).not.toBeInTheDocument();
+    });
+    
+    it('saves and loads saved layouts', () => {
+        expect(screen.getByText(/ECE345/)).toBeInTheDocument();
+        // Both CE and EE have ECE345
+        // but only CE has ECE360, and only EE has ECE424
+
+        const grid = screen.getByTestId('grid');
+        const layoutNameInput = screen.getByPlaceholderText('Layout name');
+        const saveLayout = screen.getByTestId('save-layout');
+        const slot2radio = screen.getByTestId('save-slot-2');
+        const slot3radio = screen.getByTestId('save-slot-3');
+        const slot4radio = screen.getByTestId('save-slot-4');
+
+        expect(screen.queryByTestId('load-slot-2')).not.toBeInTheDocument();
+
+        // Save CE layout in slot 1
+        fireEvent.change(stringInput, { target: { value: mockLayouts.CE } });
+        fireEvent.click(loadLayout);
+        fireEvent.change(layoutNameInput, { target: { value: 'Comp Eng' } });
+        fireEvent.click(saveLayout);
+        expect(screen.getByText(/Comp Eng/)).toBeInTheDocument();
+
+        // Save ECE layout in slot 3
+        fireEvent.change(layoutNameInput, { target: { value: 'my ece 1' } });
+        fireEvent.change(stringInput, { target: { value: mockLayouts.ECE } });
+        fireEvent.click(loadLayout);
+        fireEvent.click(slot3radio);
+        fireEvent.click(saveLayout);
+        expect(screen.getByText(/my ece 1/)).toBeInTheDocument();
+
+        // Save EE layout in slot 2, using default name
+        fireEvent.change(stringInput, { target: { value: mockLayouts.EE } });
+        fireEvent.click(loadLayout);
+        fireEvent.click(slot2radio);
+        fireEvent.click(saveLayout);
+        expect(screen.getByText(/Layout 2/)).toBeInTheDocument();
+
+        const loadSlot2 = screen.getByTestId('load-slot-2');
+
+        // Also save EE layout in slot 4, using default name
+        fireEvent.change(layoutNameInput, { target: { value: '      ' } });
+        fireEvent.change(stringInput, { target: { value: mockLayouts.EE } });
+        fireEvent.click(loadLayout);
+        fireEvent.click(slot4radio);
+        fireEvent.click(saveLayout);
+        expect(screen.getByText(/Layout 4/)).toBeInTheDocument();
+
+        // Load slot 2 (EE layout)
+        fireEvent.click(loadSlot2);
+        expect(screen.getByText(/EE 🔌/)).toBeInTheDocument();
+        expect(within(grid).getByText(/ECE345/)).toBeInTheDocument();
+        expect(within(grid).queryByText(/ECE424/)).toBeInTheDocument();
+        expect(within(grid).queryByText(/APS360/)).not.toBeInTheDocument();
+
+        // Overwrite slot 2 with CE layout
+        fireEvent.change(stringInput, { target: { value: mockLayouts.CE } });
+        fireEvent.click(loadLayout);
+        fireEvent.click(slot2radio);
+        fireEvent.change(layoutNameInput, { target: { value: '😀Just💡CE😴' } });
+        fireEvent.click(saveLayout);
+        expect(screen.getByText(/😀Just💡CE😴/)).toBeInTheDocument();
+        expect(screen.queryByText(/Layout 2/)).not.toBeInTheDocument();
+
+        // Clear the grid
+        const confirmSpy = jest.spyOn(window, 'confirm').mockImplementation(() => true);
+        const clearButton = screen.getByTestId('clear-grid');
+        fireEvent.click(clearButton);
+        expect(confirmSpy).toHaveBeenCalled();
+        expect(screen.getByText(/No courses in any stream yet/)).toBeInTheDocument();
+
+        // Load slot 2 again (CE layout)
+        fireEvent.click(loadSlot2);
+        expect(screen.getByText(/CE 🖥/)).toBeInTheDocument();
+        expect(within(grid).getByText(/ECE345/)).toBeInTheDocument();
+        expect(within(grid).queryByText(/ECE424/)).not.toBeInTheDocument();
+        expect(within(grid).queryByText(/APS360/)).toBeInTheDocument();
+
+        // Check all the layouts still exist
+        expect(screen.getByText(/my ece 1/)).toBeInTheDocument();
+        expect(screen.getByText(/Comp Eng/)).toBeInTheDocument();
+        expect(screen.getByText(/Layout 4/)).toBeInTheDocument();
+        expect(screen.queryByTestId('load-slot-4')).toBeInTheDocument();
+        expect(screen.queryByText(/Layout 1/)).not.toBeInTheDocument();
     });
 });

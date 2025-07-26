@@ -11,7 +11,8 @@ const Preset: FC<PresetProps> = ({ name, index, clicked, loadPreset }) => {
                         dark:bg-green3 dark:hover:bg-green4
                         ${clicked && "opacity-80"}
                     `}
-            >
+            data-testid={`load-slot-${index + 1}`}
+        >
             {name}
         </button>
     )

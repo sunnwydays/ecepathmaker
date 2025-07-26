@@ -150,6 +150,7 @@ const SaveLayout: FC<SaveLayoutProps> = ({
                   value={i}
                   checked={saveIndex === i}
                   onChange={() => setSaveIndex(i)}
+                  data-testid={`save-slot-${i+1}`}
                 />
                 <span>{i + 1}</span>
               </label>
