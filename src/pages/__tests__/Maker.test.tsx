@@ -19,12 +19,14 @@ const mockLayouts = {
 describe('Maker', () => {
     let stringInput: HTMLElement;
     let loadLayout: HTMLElement;
+    let bucket: HTMLElement;
 
     beforeEach(() => {
         localStorage.clear();
         render(<Maker />);
         stringInput = screen.getByPlaceholderText('Layout string');
         loadLayout = screen.getByTestId('load-layout');
+        bucket = screen.getByTestId('bucket');
     });
 
     it('adds custom courses to the course list', () => {
@@ -53,9 +55,12 @@ describe('Maker', () => {
 
         expect(screen.getByText(/ECE456/)).toBeInTheDocument();
         expect(screen.getByText(/Test Course/)).toBeInTheDocument();
-        // can't expect preq because you have to click the card first to see it
-        // expect(screen.getByText(/ECE987/)).toBeInTheDocument(); // ECE987 is not in the mockCourses list
-        // expect(screen.getByText(/\(F\)/)).toBeInTheDocument();
+        
+        // click the new course card to see the prerequisites
+        expect(screen.queryByText(/ECE987/)).not.toBeInTheDocument();
+        const newCard = within(bucket).getByText(/ECE456/);
+        fireEvent.click(newCard);
+        expect(within(bucket).getByText(/Preq: ECE987/)).toBeInTheDocument();
     });
     
     it('parses multiple prerequisites', () => {
@@ -69,30 +74,32 @@ describe('Maker', () => {
         // Submit the form
         const formSubmit = screen.getByText('Add/Update Course');
         fireEvent.click(formSubmit);
-        
-        expect(screen.getByText(/ECE999/)).toBeInTheDocument();
+
+        // Form has been cleared so the text should not remain in the input
         expect(screen.queryByText(/ECE123|ECE234|ECE345,ECE321,ECE231/)).not.toBeInTheDocument();
+
+        const newCard = within(bucket).getByText(/ECE999/);
+        expect(newCard).toBeInTheDocument();
+        fireEvent.click(newCard);
+        expect(within(bucket).getByText(/Preq: ECE123 or ECE234 or ECE345, ECE321, ECE231/)).toBeInTheDocument();
     });
 
     // implicitly tests that string input is parsed correctly
     it('evaluates computer engineering based on streams', () => {
         fireEvent.change(stringInput, { target: { value: mockLayouts.CE } });
         fireEvent.click(loadLayout);
-
         expect(screen.getByText(/CE 🖥/)).toBeInTheDocument();
     });
     
     it('evaluates electrical engineering based on streams', () => {
         fireEvent.change(stringInput, { target: { value: mockLayouts.EE } });
         fireEvent.click(loadLayout);
-        
         expect(screen.getByText(/EE 🔌/)).toBeInTheDocument();
     });
 
     it('evaluates computer or electrical engineering based on streams', () => {
         fireEvent.change(stringInput, { target: { value: mockLayouts.ECE } });
         fireEvent.click(loadLayout);
-        
         expect(screen.getByText(/CE or EE/)).toBeInTheDocument();
     });
 
