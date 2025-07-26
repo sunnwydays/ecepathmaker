@@ -48,8 +48,8 @@ describe('Maker', () => {
         fireEvent.click(csSelect);
 
         // Submit the form
-        const form = screen.getByTestId('course-form');
-        fireEvent.submit(form);
+        const formSubmit = screen.getByText('Add/Update Course');
+        fireEvent.click(formSubmit);
 
         expect(screen.getByText(/ECE456/)).toBeInTheDocument();
         expect(screen.getByText(/Test Course/)).toBeInTheDocument();
@@ -67,8 +67,8 @@ describe('Maker', () => {
         fireEvent.change(preqInput, { target: { value: "ECE123|ECE234|ECE345,ECE321,ECE231" } });
         
         // Submit the form
-        const form = screen.getByTestId('course-form');
-        fireEvent.submit(form);
+        const formSubmit = screen.getByText('Add/Update Course');
+        fireEvent.click(formSubmit);
         
         expect(screen.getByText(/ECE999/)).toBeInTheDocument();
         expect(screen.queryByText(/ECE123|ECE234|ECE345,ECE321,ECE231/)).not.toBeInTheDocument();
