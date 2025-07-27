@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, prettyDOM, within } from '@testing-library/react';
+import { render, screen, fireEvent, prettyDOM, within, cleanup } from '@testing-library/react';
 import { Maker } from '../../utils/pageImports';
 
 const mockCourse = {
@@ -331,5 +331,41 @@ describe('Maker', () => {
         expect(screen.getByText(/Layout 4/)).toBeInTheDocument();
         expect(screen.queryByTestId('load-slot-4')).toBeInTheDocument();
         expect(screen.queryByText(/Layout 1/)).not.toBeInTheDocument();
+    });
+
+    it('uses localStorage to save layouts on refresh', () => {
+        const grid = screen.getByTestId('grid');
+        const layoutNameInput = screen.getByPlaceholderText('Layout name');
+        const saveLayout = screen.getByTestId('save-layout');
+
+        // Have a saved layout and a layout in the grid
+        fireEvent.change(stringInput, { target: { value: mockLayouts.ECE } });
+        fireEvent.click(loadLayout);
+        fireEvent.change(layoutNameInput, { target: { value: 'This exist??' } });
+        fireEvent.click(saveLayout);
+        fireEvent.change(stringInput, { target: { value: mockLayouts.CE } });
+        fireEvent.click(loadLayout);
+
+        expect(screen.getByText(/This exist\?\?/)).toBeInTheDocument();
+        expect(within(grid).getByText(/ECE345/)).toBeInTheDocument();
+
+        const layouts = JSON.parse(localStorage.getItem('savedLayouts') || '[]');
+        expect(layouts).toHaveLength(1);
+
+        // Make sure refresh works by expecting filter to be reset on refresh
+        const filterSearch = screen.getByTestId('filter-search');
+        fireEvent.change(filterSearch, { target: { value: 'uuuuuuuu' } });
+        expect(within(bucket).queryByText(/ECE463/)).not.toBeInTheDocument();
+
+        // Simulate rerender
+        cleanup();
+        render(<Maker />);
+
+        const newBucket = screen.getByTestId('bucket');
+        const newGrid = screen.getByTestId('grid');
+        expect(within(newBucket).getByText(/ECE463/)).toBeInTheDocument();
+
+        expect(screen.getByText(/This exist\?\?/)).toBeInTheDocument();
+        expect(within(newGrid).getByText(/ECE345/)).toBeInTheDocument();
     });
 });
