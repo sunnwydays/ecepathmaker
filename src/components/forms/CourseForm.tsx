@@ -125,6 +125,7 @@ const CourseForm: FC<CourseFormProps> = ({
   };
 
   const handleColorChange = (color: string) => {
+    if (color.startsWith("#")) color = color.slice(1);
     setCustomInfo((prev) => ({ ...prev, color }));
   };
 
