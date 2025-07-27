@@ -14,9 +14,9 @@ const Draggable:FC<DraggableProps> = (props) => {
   });
   const style = transform ? {
     transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
-    touchAction: "none",
+    touchAction: isDragging ? "none" : "auto",
   } : {
-    touchAction: "none",
+    touchAction: isDragging ? "none" : "auto",
   };
 
   const styleClasses = `
