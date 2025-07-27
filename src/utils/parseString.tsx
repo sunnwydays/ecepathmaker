@@ -159,6 +159,7 @@ export const parseString = (str: string): ParseString => {
                 course.isArtSci = true;
                 break;
               case "#": {
+                if (options[i + 1] === "#") i++;
                 course.color = options.substring(i + 1, i + 7);
                 i += 6;
                 break;
