@@ -2,6 +2,7 @@ import { IoIosMenu, IoIosClose } from "react-icons/io";
 import { FC, useState, useEffect, useRef } from 'react';
 import { logo } from '../../utils/assetImports';
 import ThemeToggle from "../ThemeToggle";
+import SignIn from "../SignIn";
 
 const Navbar:FC = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -107,6 +108,9 @@ const Navbar:FC = () => {
                             >
                                 FAQs
                             </a>
+                        </li>
+                        <li>
+                            <SignIn />
                         </li>
                         <li>
                             <ThemeToggle />

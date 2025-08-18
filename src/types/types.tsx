@@ -1,4 +1,5 @@
 import { UniqueIdentifier } from "@dnd-kit/core";
+import { User } from "firebase/auth";
 
 interface CourseIdentifier {
     code: string;
@@ -190,3 +191,9 @@ export interface FilterState {
     isArtSci: boolean;
     isEng: boolean;
 };
+
+export interface AuthContextType {
+  user: User | null;
+  signedIn: boolean;
+  loading: boolean;
+}
