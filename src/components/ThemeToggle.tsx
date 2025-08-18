@@ -16,7 +16,7 @@ const ThemeToggle = () => {
   return (
     <button
       onClick={toggleDarkMode}
-      className="px-2 py-2 text-black dark:text-white"
+      className="px-1 py-2 text-black dark:text-white text-2xl flex items-center"
     >
       {isDarkMode ? <CiDark /> : <CiLight />}
     </button>
