@@ -1,4 +1,4 @@
-import { FC, useState, useEffect, useMemo, useRef, createRef } from "react";
+import { FC, useState, useEffect, useMemo, useRef } from "react";
 import {
   CourseGridProps,
   FilterState,
@@ -7,11 +7,7 @@ import {
   GridPosition,
   CoursesUsed,
 } from "../../types/types";
-import {
-    Droppable,
-    MakerCard,
-} from "../../utils/componentImports";
-import { toPng } from 'html-to-image';
+import { Droppable, MakerCard } from "../../utils/componentImports";
 
 import {
   DndContext,
@@ -25,8 +21,6 @@ import {
   useSensors,
 } from "@dnd-kit/core";
 import { createPortal } from "react-dom";
-import Filter from "../forms/Filter";
-import WillYouGraduate from "../info/WillYouGraduate";
 import { getValidYearTerms } from "../../utils/getValidYearTerms";
 import { getYearTerm } from "../../utils/getYearTerm";
 import Announcement from "../info/Announcement";
@@ -65,37 +59,6 @@ const CourseGrid: FC<CourseGridProps> = ({
     isEng: false,
   });
 
-  const filterCourses = (courseCode: string): boolean => {
-    const course = courses[courseCode];
-    if (!course) return false;
-
-    if (
-      filters.searchTerm &&
-      !courseCode.toLowerCase().includes(filters.searchTerm.toLowerCase()) &&
-      !course.name.toLowerCase().includes(filters.searchTerm.toLowerCase())
-    ) {
-      return false;
-    }
-
-    if (
-      filters.streams.length > 0 &&
-      !course.streams?.some((stream) => filters.streams.includes(stream))
-    ) {
-      return false;
-    }
-
-    if (!filters.availableF && course.onlyF) return false;
-    if (!filters.availableS && course.onlyS) return false;
-
-    if (filters.isCS && !course.isCS) return false;
-    if (filters.isHSS && !course.isHSS) return false;
-    if (filters.isSciMath && !course.isSciMath) return false;
-    if (filters.isArtSci && !course.isArtSci) return false;
-    if (filters.isEng && course.isArtSci) return false;
-
-    return true;
-  };
-
   const initialValidYearTerms = useMemo<ValidYearTerms>(
     () =>
       ({
@@ -108,8 +71,12 @@ const CourseGrid: FC<CourseGridProps> = ({
     []
   );
 
-  const [validYearTerms, setValidYearTerms] = useState<ValidYearTerms>(initialValidYearTerms);
-  const [activeCourse, setActiveCourse] = useState<UniqueIdentifier | null>(null);
+  const [validYearTerms, setValidYearTerms] = useState<ValidYearTerms>(
+    initialValidYearTerms
+  );
+  const [activeCourse, setActiveCourse] = useState<UniqueIdentifier | null>(
+    null
+  );
 
   const conditions = useMemo(() => {
     const gridCourses = Object.values(coursesOnGrid).filter(
@@ -245,7 +212,7 @@ const CourseGrid: FC<CourseGridProps> = ({
   const removeCourseFromSlot = (code: UniqueIdentifier, slot: GridPosition) => {
     setCoursesOnGrid((prev) => {
       if (!slot) return prev;
-      return { ...prev, [slot]: "" }
+      return { ...prev, [slot]: "" };
     });
     setCoursesUsed((prev) => ({
       ...prev,
@@ -253,14 +220,17 @@ const CourseGrid: FC<CourseGridProps> = ({
     }));
     setCurrDeps(new Set());
     setDropError(DropError.NONE);
-  }
+  };
 
   const [courseToRemove, setCourseToRemove] = useState<UniqueIdentifier>();
   const [currDeps, setCurrDeps] = useState<Set<UniqueIdentifier>>(new Set());
 
   // Remove a course from the grid safely by checking dependencies
   // Returns true if no dependency on grid, false otherwise
-  const checkPreqRemove = (course: UniqueIdentifier, slot: GridPosition): boolean => {
+  const checkPreqRemove = (
+    course: UniqueIdentifier,
+    slot: GridPosition
+  ): boolean => {
     const deps = dependencies.get(course);
     if (deps) {
       // check if any dependencies are on the grid
@@ -333,7 +303,7 @@ const CourseGrid: FC<CourseGridProps> = ({
 
     removeCourseFromSlot(course, slot);
     return true;
-  }
+  };
 
   const handleDragStart = (e: DragStartEvent) => {
     setActiveCourse(e.active.id);
@@ -356,7 +326,7 @@ const CourseGrid: FC<CourseGridProps> = ({
     // console logging very useful for debugging here along with dev tools
     // also looking online for documentation, videos, and examples
     const sourceContainer = coursesUsed[code];
-      
+
     if (!over) {
       checkPreqRemove(code, sourceContainer);
       return;
@@ -389,14 +359,16 @@ const CourseGrid: FC<CourseGridProps> = ({
     // same slot
     if (sourceContainer === over.id) return;
 
-    addDependencies({code, courses, dependencies, setDependencies});
+    addDependencies({ code, courses, dependencies, setDependencies });
 
     const courseAtDestination =
       coursesOnGrid[over.id as keyof typeof coursesOnGrid];
 
     // Remove the course at destination if it doesn't have dependencies on grid
-    if (courseAtDestination && 
-        !checkPreqRemove(courseAtDestination, over.id as GridPosition)) {
+    if (
+      courseAtDestination &&
+      !checkPreqRemove(courseAtDestination, over.id as GridPosition)
+    ) {
       return;
     }
 
@@ -423,7 +395,7 @@ const CourseGrid: FC<CourseGridProps> = ({
       [code]: over.id as GridPosition,
     }));
     setCoursesOnGrid((prev) => {
-      if (!over.id) return prev
+      if (!over.id) return prev;
       return { ...prev, [over.id]: code };
     });
   };
@@ -460,7 +432,11 @@ const CourseGrid: FC<CourseGridProps> = ({
     `; // specify default text- color, hover:bg- color, and ring- color
 
   const clearGrid = () => {
-    if (!window.confirm("Are you sure you want to clear your layout? This will remove all courses from the grid."))
+    if (
+      !window.confirm(
+        "Are you sure you want to clear your layout? This will remove all courses from the grid."
+      )
+    )
       return;
 
     setCoursesUsed(() => {
@@ -469,23 +445,6 @@ const CourseGrid: FC<CourseGridProps> = ({
       return posMap;
     });
     setCoursesOnGrid(emptyGrid);
-  };
-
-  const screenshotRef = createRef<HTMLDivElement>();
-
-  const handleCapture = async () => {
-    if (!screenshotRef.current) return;
-
-    try {
-      const dataUrl = await toPng(screenshotRef.current, { cacheBust: true });
-
-      const link = document.createElement('a');
-      link.download = 'pathmaker.png';
-      link.href = dataUrl;
-      link.click();
-    } catch (error) {
-      console.error('Could not generate layout screenshot', error);
-    }
   };
 
   return (
@@ -497,7 +456,6 @@ const CourseGrid: FC<CourseGridProps> = ({
       <section className="flex lg:flex-row flex-col gap-x-6 gap-y-4">
         <div
           className="grid grid-cols-5 gap-2 size-max flex-shrink-0"
-          ref={screenshotRef}
           data-testid="grid"
         >
           {Object.entries(coursesOnGrid).map(([slot, courseCode]) => (
@@ -530,32 +488,6 @@ const CourseGrid: FC<CourseGridProps> = ({
           <h2 className="lg:block hidden text-center mb-1 dark:text-gray-50">
             🔍 Click a course to view more details
           </h2>
-          <div className="lg:mt-4 flex xl:gap-8 lg:gap-4 gap-8">
-            <button
-              onClick={handleCapture}
-              // onClick={downloadScreenshot}
-              className={`
-                                ${buttonStyle}
-                                ring-green3 dark:ring-green2
-                                text-green3 dark:text-green2
-                                hover:bg-green2 dark:hover:bg-green4
-                            `}
-            >
-              Screenshot
-            </button>
-            <button
-              onClick={clearGrid}
-              data-testid="clear-grid"
-              className={`
-                                ${buttonStyle}
-                                ring-comp3 dark:ring-comp2
-                                text-comp3 dark:text-comp2
-                                hover:bg-comp2 dark:hover:bg-comp4
-                            `}
-            >
-              Clear
-            </button>
-          </div>
           <h2 className="lg:hidden block my-2 text-lg text-center dark:text-gray-50">
             ☝️ Hold and drag courses into the grid,
             <br />
@@ -573,10 +505,12 @@ const CourseGrid: FC<CourseGridProps> = ({
             data-testid="bucket"
           >
             {(() => {
-              const filteredCourses = Object.entries(coursesUsed)
-                .filter(([courseCode]) => filterCourses(courseCode));
-              const unusedFilteredCourses = filteredCourses
-                .filter(([, isUsed]) => !isUsed);
+              const filteredCourses = Object.entries(coursesUsed).filter(
+                ([courseCode]) => courseCode
+              );
+              const unusedFilteredCourses = Object.entries(coursesUsed).filter(
+                ([, isUsed]) => !isUsed
+              );
 
               return unusedFilteredCourses.length ? (
                 unusedFilteredCourses.map(([courseCode]) => (
@@ -591,29 +525,28 @@ const CourseGrid: FC<CourseGridProps> = ({
                     {...courses[courseCode]}
                   />
                 ))
-              ) : (
-                filteredCourses.length ? (
-                  // print the courses that match
-                  <ul className="
+              ) : filteredCourses.length ? (
+                // print the courses that match
+                <ul
+                  className="
                                     text-neutral3 italic select-none
                                     list-disc list-inside"
-                  >
-                    Courses on grid that match the filter: {
-                      filteredCourses.map(([courseCode, pos]) => (
-                        <li className="not-italic" key={courseCode}>
-                          {pos}: {courseCode} - {courses[courseCode].name}
-                        </li>
-                      ))
-                    }
-                  </ul>
-                ) : (
-                <div className="
+                >
+                  Courses on grid that match the filter:{" "}
+                  {filteredCourses.map(([courseCode, pos]) => (
+                    <li className="not-italic" key={courseCode}>
+                      {pos}: {courseCode} - {courses[courseCode].name}
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <div
+                  className="
                                   w-full text-center 
                                   text-neutral3 italic select-none"
                 >
                   No courses match the current filter
                 </div>
-                )
               );
             })()}
           </div>
@@ -635,29 +568,30 @@ const CourseGrid: FC<CourseGridProps> = ({
         </DragOverlay>,
         document.body
       )}
-      {dropError !== DropError.NONE && (() => {
-        let message = "Error";
+      {dropError !== DropError.NONE &&
+        (() => {
+          let message = "Error";
 
-        switch (dropError) {
-          case DropError.TERM:
-            message = courseToRemove 
-              ? `${courseToRemove} is ${courses[courseToRemove].onlyF ? 
-                "fall" : "winter"} only!`
-              : `Invalid term for this course!`;
-            break;
-          case DropError.PREREQ:
-            message = "Missing co/prerequisites!";
-            break;
-          case DropError.DEPEND:
-            message = `${[...currDeps].join(', ')} depend${currDeps.size == 1 ? 
-              's' : ''} on ${courseToRemove}!`;
-            break;
-        }
+          switch (dropError) {
+            case DropError.TERM:
+              message = courseToRemove
+                ? `${courseToRemove} is ${
+                    courses[courseToRemove].onlyF ? "fall" : "winter"
+                  } only!`
+                : `Invalid term for this course!`;
+              break;
+            case DropError.PREREQ:
+              message = "Missing co/prerequisites!";
+              break;
+            case DropError.DEPEND:
+              message = `${[...currDeps].join(", ")} depend${
+                currDeps.size == 1 ? "s" : ""
+              } on ${courseToRemove}!`;
+              break;
+          }
 
-        return <Announcement>{message}</Announcement>;
-      })()}
-      <Filter filters={filters} setFilters={setFilters} />
-      <WillYouGraduate conditions={conditions} />
+          return <Announcement>{message}</Announcement>;
+        })()}
     </DndContext>
   );
 };

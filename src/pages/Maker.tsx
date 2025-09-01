@@ -1,12 +1,12 @@
 import { useMemo, useState, useEffect } from "react";
-import { CourseCardProps, CoursesOnGrid, CoursesUsed, savedLayout } from "../types/types";
-import { mockCourses } from "../utils/dataImports";
 import {
-  CourseForm,
-  CourseGrid,
-  LoadLayout,
-  SaveLayout,
-} from "../utils/componentImports";
+  CourseCardProps,
+  CoursesOnGrid,
+  CoursesUsed,
+  savedLayout,
+} from "../types/types";
+import { mockCourses } from "../utils/dataImports";
+import { CourseGrid } from "../utils/componentImports";
 import { UniqueIdentifier } from "@dnd-kit/core";
 import { emptyGrid } from "../utils/utilImports";
 
@@ -67,10 +67,12 @@ const Maker = () => {
   }, [coursesOnGrid]);
 
   // Map of co/prerequisites to their dependencies
-  const initialDependencies = useMemo<Map<UniqueIdentifier, Set<UniqueIdentifier>>>(() => {
+  const initialDependencies = useMemo<
+    Map<UniqueIdentifier, Set<UniqueIdentifier>>
+  >(() => {
     const saved = localStorage.getItem("dependencies");
     if (!saved) {
-      return new Map(); 
+      return new Map();
     }
 
     try {
@@ -83,12 +85,11 @@ const Maker = () => {
   const [dependencies, setDependencies] =
     useState<Map<UniqueIdentifier, Set<UniqueIdentifier>>>(initialDependencies);
   useEffect(() => {
-    const obj: [UniqueIdentifier, UniqueIdentifier[]][] = Array.from(dependencies.entries()).map(
-      ([key, valueSet]) => [key, Array.from(valueSet)]
-    );
+    const obj: [UniqueIdentifier, UniqueIdentifier[]][] = Array.from(
+      dependencies.entries()
+    ).map(([key, valueSet]) => [key, Array.from(valueSet)]);
     localStorage.setItem("dependencies", JSON.stringify(obj));
   }, [dependencies]);
-
 
   // Saved layouts
   const [savedLayouts, setSavedLayouts] = useState<savedLayout[]>(() => {
@@ -114,48 +115,21 @@ const Maker = () => {
         setCoreqString={setCoreqString}
         setDependencies={setDependencies}
       />
-      <hr className="mt-8 stroke-2" />
-      <div className="grid md:grid-cols-2 grid-cols-1 gap-x-16 dark:text-gray-50">
-        <div>
-          <h2 className="mt-10 mb-4 text-2xl font-semibold">
-            Load layout
-          </h2>
-          <p className=" mb-2 max-w-xl">
-            Paste your previously copied string or load from cache
-          </p>
-          <LoadLayout
-            courses={courses}
-            coursesUsed={coursesUsed}
-            setCourses={setCourses}
-            setCoursesUsed={setCoursesUsed}
-            setCoursesOnGrid={setCoursesOnGrid}
-            setDependencies={setDependencies}
-            savedLayouts={savedLayouts}
-          />
-          <h2 className="mt-8 mb-4 text-2xl font-semibold">
-            Save layout
-          </h2>
-          <p className="mb-2 max-w-xl">
-            Copy this string and save it for later or store layout in cache
-          </p>
-          <SaveLayout 
-            courses={courses}
-            coursesOnGrid={coursesOnGrid}
-            savedLayouts={savedLayouts}
-            setSavedLayouts={setSavedLayouts}
-          />
-        </div>
-        <CourseForm
-          setCourses={setCourses}
-          setCoursesUsed={setCoursesUsed}
-          customInfo={customInfo}
-          setCustomInfo={setCustomInfo}
-          preqString={preqString}
-          setPreqString={setPreqString}
-          coreqString={coreqString}
-          setCoreqString={setCoreqString}
-        />
-      </div>
+      <div>blank space so you can try scrolling down</div>
+      <div>blank space so you can try scrolling down</div>
+      <div>blank space so you can try scrolling down</div>
+      <div>blank space so you can try scrolling down</div>
+      <div>blank space so you can try scrolling down</div>
+      <div>blank space so you can try scrolling down</div>
+      <div>blank space so you can try scrolling down</div>
+      <div>blank space so you can try scrolling down</div>
+      <div>blank space so you can try scrolling down</div>
+      <div>blank space so you can try scrolling down</div>
+      <div>blank space so you can try scrolling down</div>
+      <div>blank space so you can try scrolling down</div>
+      <div>blank space so you can try scrolling down</div>
+      <div>blank space so you can try scrolling down</div>
+      <div>blank space so you can try scrolling down</div>
     </div>
   );
 };

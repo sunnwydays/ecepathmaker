@@ -15,7 +15,7 @@ import { createPortal } from "react-dom";
 
 import { FilterState } from "../types/types";
 import { mockCourses } from "../utils/dataImports";
-import { CourseCard, Filter } from "../utils/componentImports";
+import { CourseCard } from "../utils/componentImports";
 
 const Courses = () => {
   const sensors = useSensors(
