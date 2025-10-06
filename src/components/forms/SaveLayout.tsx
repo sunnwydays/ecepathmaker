@@ -81,7 +81,14 @@ const SaveLayout: FC<SaveLayoutProps> = ({
 
     setSavedLayouts((prev) => {
       const newLayouts = [...prev];
+
+      // Fill any missing indices with default objects, important for firestore
+      for (let i = 0; i <= saveIndex; i++) {
+        if (!newLayouts[i]?.name) newLayouts[i] = { name: "", str: "" };
+      }
+
       newLayouts[saveIndex] = newLayout;
+
       return newLayouts;
     });
 

@@ -1,5 +1,5 @@
 import { useMemo, useState, useEffect } from "react";
-import { CourseCardProps, CoursesOnGrid, CoursesUsed, savedLayout } from "../types/types";
+import { CourseCardProps, CoursesOnGrid, CoursesUsed } from "../types/types";
 import { mockCourses } from "../utils/dataImports";
 import {
   CourseForm,
@@ -9,8 +9,13 @@ import {
 } from "../utils/componentImports";
 import { UniqueIdentifier } from "@dnd-kit/core";
 import { emptyGrid } from "../utils/utilImports";
+import { auth } from "../firebase/firebase";
+import { saveLayouts } from "../firebase/firestore";
+import { useLayoutContext } from "../components/layout/Layout";
 
 const Maker = () => {
+  const { savedLayouts, setSavedLayouts } = useLayoutContext();
+
   // Course info for custom course
   const [customInfo, setCustomInfo] = useState<CourseCardProps>({
     code: "",
@@ -67,10 +72,12 @@ const Maker = () => {
   }, [coursesOnGrid]);
 
   // Map of co/prerequisites to their dependencies
-  const initialDependencies = useMemo<Map<UniqueIdentifier, Set<UniqueIdentifier>>>(() => {
+  const initialDependencies = useMemo<
+    Map<UniqueIdentifier, Set<UniqueIdentifier>>
+  >(() => {
     const saved = localStorage.getItem("dependencies");
     if (!saved) {
-      return new Map(); 
+      return new Map();
     }
 
     try {
@@ -83,21 +90,16 @@ const Maker = () => {
   const [dependencies, setDependencies] =
     useState<Map<UniqueIdentifier, Set<UniqueIdentifier>>>(initialDependencies);
   useEffect(() => {
-    const obj: [UniqueIdentifier, UniqueIdentifier[]][] = Array.from(dependencies.entries()).map(
-      ([key, valueSet]) => [key, Array.from(valueSet)]
-    );
+    const obj: [UniqueIdentifier, UniqueIdentifier[]][] = Array.from(
+      dependencies.entries()
+    ).map(([key, valueSet]) => [key, Array.from(valueSet)]);
     localStorage.setItem("dependencies", JSON.stringify(obj));
   }, [dependencies]);
 
-
-  // Saved layouts
-  const [savedLayouts, setSavedLayouts] = useState<savedLayout[]>(() => {
-    const saved = localStorage.getItem("savedLayouts");
-    if (saved) return JSON.parse(saved);
-    return [];
-  });
   useEffect(() => {
     localStorage.setItem("savedLayouts", JSON.stringify(savedLayouts));
+    const user = auth.currentUser;
+    if (user) saveLayouts(user.uid, savedLayouts);
   }, [savedLayouts]);
 
   return (
@@ -117,9 +119,7 @@ const Maker = () => {
       <hr className="mt-8 stroke-2" />
       <div className="grid md:grid-cols-2 grid-cols-1 gap-x-16 dark:text-gray-50">
         <div>
-          <h2 className="mt-10 mb-4 text-2xl font-semibold">
-            Load layout
-          </h2>
+          <h2 className="mt-10 mb-4 text-2xl font-semibold">Load layout</h2>
           <p className=" mb-2 max-w-xl">
             Paste your previously copied string or load from cache
           </p>
@@ -132,13 +132,11 @@ const Maker = () => {
             setDependencies={setDependencies}
             savedLayouts={savedLayouts}
           />
-          <h2 className="mt-8 mb-4 text-2xl font-semibold">
-            Save layout
-          </h2>
+          <h2 className="mt-8 mb-4 text-2xl font-semibold">Save layout</h2>
           <p className="mb-2 max-w-xl">
             Copy this string and save it for later or store layout in cache
           </p>
-          <SaveLayout 
+          <SaveLayout
             courses={courses}
             coursesOnGrid={coursesOnGrid}
             savedLayouts={savedLayouts}

@@ -96,7 +96,7 @@ const LoadLayout: FC<LoadLayoutProps> = ({
       <div className="lg:grid grid-cols-2 flex flex-col gap-2 mt-4">
         {savedLayouts.map(
           (layout, index) =>
-            layout && (
+            layout?.name && (
               <Preset
                 key={index}
                 name={layout.name}
