@@ -34,7 +34,7 @@ const Navbar:FC = () => {
     return (
         <nav className={`
             fixed z-40 top-0 w-full 
-            transition-all ${isScrolled ? 'h-12' : 'h-24'} 
+            transition-all ${isScrolled ? 'h-14' : 'h-24'} 
             bg-white bg-opacity-95 shadow border-b-1 
             dark:bg-gray-800 dark:bg-opacity-95 dark:text-white
         `}>
