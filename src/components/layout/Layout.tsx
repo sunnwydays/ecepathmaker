@@ -3,6 +3,7 @@ import {
   ReactNode,
   createContext,
   useContext,
+  useEffect,
   useMemo,
   useState,
 } from "react";
@@ -12,6 +13,8 @@ import { CoursesOnGrid, CoursesUsed, LayoutContextType, savedLayout } from "../.
 import { UniqueIdentifier } from "@dnd-kit/core";
 import { emptyGrid } from "../../utils/emptyGrid";
 import mockCourses from "../../data/mockCourses";
+import { saveCourses, saveCoursesOnGrid, saveCoursesUsed, saveDependencies, saveLayouts } from "../../firebase/firestore";
+import { auth } from "../../firebase/firebase";
 
 interface LayoutProps {
   children: ReactNode;
@@ -23,11 +26,18 @@ export const LayoutContext = createContext<LayoutContextType | undefined>(
 );
 
 const Layout: FC<LayoutProps> = ({ children }) => {
+  
+  // courses
   const [courses, setCourses] = useState(() => {
   const savedCourses = localStorage.getItem("courses");
     if (savedCourses) return JSON.parse(savedCourses);
     return mockCourses;
   });
+  useEffect(() => {
+    localStorage.setItem("courses", JSON.stringify(courses));
+    const user = auth.currentUser;
+    if (user) saveCourses(user.uid, courses);
+  }, [courses]);
 
   // coursesUsed
   const initialCoursesUsed = useMemo<CoursesUsed>(() => {
@@ -40,6 +50,11 @@ const Layout: FC<LayoutProps> = ({ children }) => {
   }, [courses]);
   const [coursesUsed, setCoursesUsed] =
     useState<CoursesUsed>(initialCoursesUsed);
+    useEffect(() => {
+    localStorage.setItem("coursesUsed", JSON.stringify(coursesUsed));
+    const user = auth.currentUser;
+    if (user) saveCoursesUsed(user.uid, coursesUsed);
+  }, [coursesUsed]);
 
   // coursesOnGrid
   const initialCoursesOnGrid = useMemo<CoursesOnGrid>(() => {
@@ -49,6 +64,11 @@ const Layout: FC<LayoutProps> = ({ children }) => {
   }, []);
   const [coursesOnGrid, setCoursesOnGrid] =
     useState<CoursesOnGrid>(initialCoursesOnGrid);
+  useEffect(() => {
+    localStorage.setItem("coursesOnGrid", JSON.stringify(coursesOnGrid));
+    const user = auth.currentUser;
+    if (user) saveCoursesOnGrid(user.uid, coursesOnGrid);
+  }, [coursesOnGrid]);
   
   // Map of co/prerequisites to their dependencies
   const initialDependencies = useMemo<
@@ -66,11 +86,25 @@ const Layout: FC<LayoutProps> = ({ children }) => {
   }, []);
   const [dependencies, setDependencies] =
     useState<Map<UniqueIdentifier, Set<UniqueIdentifier>>>(initialDependencies);
+  useEffect(() => {
+    const obj: [UniqueIdentifier, UniqueIdentifier[]][] = Array.from(
+      dependencies.entries()
+    ).map(([key, valueSet]) => [key, Array.from(valueSet)]);
+    localStorage.setItem("dependencies", JSON.stringify(obj));
+    const user = auth.currentUser;
+    if (user) saveDependencies(user.uid, dependencies);
+  }, [dependencies]);
+
   const [savedLayouts, setSavedLayouts] = useState<savedLayout[]>(() => {
     const saved = localStorage.getItem("savedLayouts");
     return saved ? JSON.parse(saved) : [];
   });
-
+  useEffect(() => {
+    localStorage.setItem("savedLayouts", JSON.stringify(savedLayouts));
+    const user = auth.currentUser;
+    if (user) saveLayouts(user.uid, savedLayouts);
+  }, [savedLayouts]);
+  
   return (
     <LayoutContext.Provider
       value={{

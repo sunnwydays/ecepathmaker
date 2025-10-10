@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { CourseCardProps } from "../types/types";
 import {
   CourseForm,
@@ -6,19 +6,8 @@ import {
   LoadLayout,
   SaveLayout,
 } from "../utils/componentImports";
-import { UniqueIdentifier } from "@dnd-kit/core";
-import { auth } from "../firebase/firebase";
-import { saveCourses, saveCoursesOnGrid, saveCoursesUsed, saveDependencies, saveLayouts } from "../firebase/firestore";
-import { useLayoutContext } from "../components/layout/Layout";
 
 const Maker = () => {
-  const {
-    courses,
-    coursesUsed,
-    coursesOnGrid,
-    dependencies,
-    savedLayouts,
-  } = useLayoutContext();
 
   // Course info for custom course
   const [customInfo, setCustomInfo] = useState<CourseCardProps>({
@@ -36,39 +25,6 @@ const Maker = () => {
   });
   const [preqString, setPreqString] = useState("");
   const [coreqString, setCoreqString] = useState("");
-
-  useEffect(() => {
-    localStorage.setItem("courses", JSON.stringify(courses));
-    const user = auth.currentUser;
-    if (user) saveCourses(user.uid, courses);
-  }, [courses]);
-
-  useEffect(() => {
-    localStorage.setItem("coursesUsed", JSON.stringify(coursesUsed));
-    const user = auth.currentUser;
-    if (user) saveCoursesUsed(user.uid, coursesUsed);
-  }, [coursesUsed]);
-
-  useEffect(() => {
-    localStorage.setItem("coursesOnGrid", JSON.stringify(coursesOnGrid));
-    const user = auth.currentUser;
-    if (user) saveCoursesOnGrid(user.uid, coursesOnGrid);
-  }, [coursesOnGrid]);
-
-  useEffect(() => {
-    const obj: [UniqueIdentifier, UniqueIdentifier[]][] = Array.from(
-      dependencies.entries()
-    ).map(([key, valueSet]) => [key, Array.from(valueSet)]);
-    localStorage.setItem("dependencies", JSON.stringify(obj));
-    const user = auth.currentUser;
-    if (user) saveDependencies(user.uid, dependencies);
-  }, [dependencies]);
-
-  useEffect(() => {
-    localStorage.setItem("savedLayouts", JSON.stringify(savedLayouts));
-    const user = auth.currentUser;
-    if (user) saveLayouts(user.uid, savedLayouts);
-  }, [savedLayouts]);
 
   return (
     <div>
