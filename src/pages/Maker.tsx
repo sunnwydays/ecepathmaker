@@ -1,6 +1,5 @@
-import { useMemo, useState, useEffect } from "react";
-import { CourseCardProps, CoursesOnGrid, CoursesUsed } from "../types/types";
-import { mockCourses } from "../utils/dataImports";
+import { useState, useEffect } from "react";
+import { CourseCardProps } from "../types/types";
 import {
   CourseForm,
   CourseGrid,
@@ -8,13 +7,25 @@ import {
   SaveLayout,
 } from "../utils/componentImports";
 import { UniqueIdentifier } from "@dnd-kit/core";
-import { emptyGrid } from "../utils/utilImports";
 import { auth } from "../firebase/firebase";
-import { saveLayouts } from "../firebase/firestore";
+import { saveCourses, saveCoursesOnGrid, saveCoursesUsed, saveDependencies, saveLayouts } from "../firebase/firestore";
 import { useLayoutContext } from "../components/layout/Layout";
 
 const Maker = () => {
-  const { savedLayouts, setSavedLayouts } = useLayoutContext();
+  const {
+    savedLayouts,
+    setSavedLayouts,
+    courses,
+    setCourses,
+    coursesUsed,
+    setCoursesUsed,
+    coursesOnGrid,
+    setCoursesOnGrid,
+    dependencies,
+    setDependencies,
+  } = useLayoutContext();
+  // TODO: CHANGE THE ABOVE, probably don't need most of it because it's prop driling
+
 
   // Course info for custom course
   const [customInfo, setCustomInfo] = useState<CourseCardProps>({
@@ -33,67 +44,31 @@ const Maker = () => {
   const [preqString, setPreqString] = useState("");
   const [coreqString, setCoreqString] = useState("");
 
-  // Load courses from localStorage or use default values
-  const [courses, setCourses] = useState(() => {
-    const savedCourses = localStorage.getItem("courses");
-    if (savedCourses) return JSON.parse(savedCourses);
-    return mockCourses;
-  });
-  // Save courses to localStorage
   useEffect(() => {
     localStorage.setItem("courses", JSON.stringify(courses));
+    const user = auth.currentUser;
+    if (user) saveCourses(user.uid, courses);
   }, [courses]);
 
-  // coursesUsed
-  const initialCoursesUsed = useMemo<CoursesUsed>(() => {
-    const savedCoursesUsed = localStorage.getItem("coursesUsed");
-    if (savedCoursesUsed) return JSON.parse(savedCoursesUsed);
-
-    const posMap: CoursesUsed = {};
-    Object.keys(courses).forEach((courseCode) => (posMap[courseCode] = ""));
-    return posMap;
-  }, [courses]);
-  const [coursesUsed, setCoursesUsed] =
-    useState<CoursesUsed>(initialCoursesUsed);
   useEffect(() => {
     localStorage.setItem("coursesUsed", JSON.stringify(coursesUsed));
+    const user = auth.currentUser;
+    if (user) saveCoursesUsed(user.uid, coursesUsed);
   }, [coursesUsed]);
 
-  // coursesOnGrid
-  const initialCoursesOnGrid = useMemo<CoursesOnGrid>(() => {
-    const savedCoursesOnGrid = localStorage.getItem("coursesOnGrid");
-    if (savedCoursesOnGrid) return JSON.parse(savedCoursesOnGrid);
-    return emptyGrid;
-  }, []);
-  const [coursesOnGrid, setCoursesOnGrid] =
-    useState<CoursesOnGrid>(initialCoursesOnGrid);
   useEffect(() => {
     localStorage.setItem("coursesOnGrid", JSON.stringify(coursesOnGrid));
+    const user = auth.currentUser;
+    if (user) saveCoursesOnGrid(user.uid, coursesOnGrid);
   }, [coursesOnGrid]);
 
-  // Map of co/prerequisites to their dependencies
-  const initialDependencies = useMemo<
-    Map<UniqueIdentifier, Set<UniqueIdentifier>>
-  >(() => {
-    const saved = localStorage.getItem("dependencies");
-    if (!saved) {
-      return new Map();
-    }
-
-    try {
-      const parsed: [string, string[]][] = JSON.parse(saved);
-      return new Map(parsed.map(([key, values]) => [key, new Set(values)]));
-    } catch {
-      return new Map();
-    }
-  }, []);
-  const [dependencies, setDependencies] =
-    useState<Map<UniqueIdentifier, Set<UniqueIdentifier>>>(initialDependencies);
   useEffect(() => {
     const obj: [UniqueIdentifier, UniqueIdentifier[]][] = Array.from(
       dependencies.entries()
     ).map(([key, valueSet]) => [key, Array.from(valueSet)]);
     localStorage.setItem("dependencies", JSON.stringify(obj));
+    const user = auth.currentUser;
+    if (user) saveDependencies(user.uid, dependencies);
   }, [dependencies]);
 
   useEffect(() => {

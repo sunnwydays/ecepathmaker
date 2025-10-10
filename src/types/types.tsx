@@ -39,6 +39,25 @@ export interface MakerCardProps extends DraggableCardProps {
     setCoreqString: React.Dispatch<React.SetStateAction<string>>;
 };
 
+export interface LayoutContextType {
+  courses: CourseList;
+  setCourses: React.Dispatch<React.SetStateAction<CourseList>>;
+
+  coursesUsed: CoursesUsed;
+  setCoursesUsed: React.Dispatch<React.SetStateAction<CoursesUsed>>;
+
+  coursesOnGrid: CoursesOnGrid;
+  setCoursesOnGrid: React.Dispatch<React.SetStateAction<CoursesOnGrid>>;
+
+  dependencies: Map<UniqueIdentifier, Set<UniqueIdentifier>>;
+  setDependencies: React.Dispatch<
+    React.SetStateAction<Map<UniqueIdentifier, Set<UniqueIdentifier>>>
+  >;
+
+  savedLayouts: savedLayout[];
+  setSavedLayouts: React.Dispatch<React.SetStateAction<savedLayout[]>>;
+}
+
 interface CourseIdentifierWithoutCode {
     name: string;
     preq?: (string | string[])[];

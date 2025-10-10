@@ -50,6 +50,10 @@ export const siteFaqData: FAQ = [
         answer: "The fifth row is for extra courses taken in the first two years or from overloading. A course there will be considered as an early prerequisite, and any course on XX slots have their prerequisites waived."
     },
     {
+        question: "What does signing in do?",
+        answer: "When you sign in using your Google account, your grid, saved layouts, custom courses, and light/dark theme preference are saved so you can access your changes on any device."
+    },
+    {
         question: "How do I update a course (e.g. change the colour)?",
         answer: "Click on a Maker course card, click on the pencil in the top right, then update its details in the form."
     },

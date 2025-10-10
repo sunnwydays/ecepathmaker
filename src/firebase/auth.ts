@@ -5,8 +5,6 @@ import { signOut as firebaseSignOut } from "firebase/auth";
 const signInGoogle = async () => {
     const provider = new GoogleAuthProvider;
     const result = await signInWithPopup(auth, provider);
-    // do something with result.user in firestore
-    console.log(result.user)
     return result;
 }
 

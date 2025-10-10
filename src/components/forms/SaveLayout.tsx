@@ -171,7 +171,7 @@ const SaveLayout: FC<SaveLayoutProps> = ({
       </form>
 
       {save === Save.SUCCESS && (<Announcement success>
-        Layout saved in cache!
+        Layout saved!
       </Announcement>)}
     </section>
   );

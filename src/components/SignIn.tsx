@@ -3,24 +3,49 @@ import { CiLogin, CiLogout } from "react-icons/ci";
 import { signInGoogle, signOut } from "../firebase/auth";
 import { useAuth } from "../contexts/AuthContext";
 import { useLayoutContext } from "./layout/Layout";
-import { loadLayouts } from "../firebase/firestore";
+import { loadCourses, loadCoursesOnGrid, loadCoursesUsed, loadDependencies, loadLayouts } from "../firebase/firestore";
 
 const SignIn: FC = () => {
   const { signedIn } = useAuth();
 
-  const { setSavedLayouts } = useLayoutContext();
+  const { 
+    setSavedLayouts,
+    setCourses,
+    setCoursesUsed,
+    setCoursesOnGrid,
+    setDependencies
+  } = useLayoutContext();
 
   const signIn = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     const result = await signInGoogle();
     const user = result.user;
+    
     try {
-      const remoteSavedLayouts = await loadLayouts(user.uid);
-      if (remoteSavedLayouts.length > 0) {
-        setSavedLayouts(remoteSavedLayouts);
-      }
+      // Fetch everything in parallel
+      const [
+        remoteSavedLayouts,
+        remoteCourses,
+        remoteCoursesUsed,
+        remoteCoursesOnGrid,
+        remoteDependencies,
+      ] = await Promise.all([
+        loadLayouts(user.uid),
+        loadCourses(user.uid),
+        loadCoursesUsed(user.uid),
+        loadCoursesOnGrid(user.uid),
+        loadDependencies(user.uid),
+      ]);
+
+      // Apply loaded data only if available
+      if (remoteSavedLayouts?.length) setSavedLayouts(remoteSavedLayouts);
+      if (Object.keys(remoteCourses ?? {}).length) setCourses(remoteCourses);
+      if (Object.keys(remoteCoursesUsed ?? {}).length) setCoursesUsed(remoteCoursesUsed);
+      if (Object.keys(remoteCoursesOnGrid ?? {}).length) setCoursesOnGrid(remoteCoursesOnGrid);
+      if (remoteDependencies?.size) setDependencies(remoteDependencies);
+
     } catch (err) {
-      console.error("Failed to load layouts:", err);
+      console.error("Failed to load user data:", err);
     }
   };
 
