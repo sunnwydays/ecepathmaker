@@ -33,6 +33,7 @@ import { getYearTerm } from "../../utils/getYearTerm";
 import Announcement from "../info/Announcement";
 import { addDependencies } from "../../utils/utilImports";
 import { emptyGrid } from "../../utils/utilImports";
+import { useLayoutContext } from "../layout/Layout";
 
 enum DropError {
   NONE = "NONE",
@@ -43,17 +44,20 @@ enum DropError {
 }
 
 const CourseGrid: FC<CourseGridProps> = ({
-  courses,
-  coursesOnGrid,
-  coursesUsed,
-  dependencies,
-  setCoursesOnGrid,
-  setCoursesUsed,
   setCustomInfo,
   setPreqString,
   setCoreqString,
-  setDependencies,
 }) => {
+  const {
+    courses,
+    coursesUsed,
+    setCoursesUsed,
+    coursesOnGrid,
+    setCoursesOnGrid,
+    dependencies,
+    setDependencies,
+  } = useLayoutContext();
+
   const [filters, setFilters] = useState<FilterState>({
     searchTerm: "",
     streams: [],

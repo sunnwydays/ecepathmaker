@@ -1,19 +1,21 @@
 import { FC, useEffect, useRef, useState } from "react";
-import { SaveLayoutProps } from "../../types/types";
 import { Announcement } from "../../utils/componentImports";
 import TextInput from "./TextInput";
 import SubmitButton from "../SubmitButton";
+import { useLayoutContext } from "../layout/Layout";
 
 enum Save {
   NONE,
   SUCCESS,
 }
 
-const SaveLayout: FC<SaveLayoutProps> = ({
-  courses,
-  coursesOnGrid,
-  setSavedLayouts,
-}) => {
+const SaveLayout: FC = () => {
+  const {
+    courses,
+    coursesOnGrid,
+    setSavedLayouts,
+  } = useLayoutContext();
+
   const [str, setStr] = useState("");
   const [copied, setCopied] = useState(false);
 

@@ -13,19 +13,12 @@ import { useLayoutContext } from "../components/layout/Layout";
 
 const Maker = () => {
   const {
-    savedLayouts,
-    setSavedLayouts,
     courses,
-    setCourses,
     coursesUsed,
-    setCoursesUsed,
     coursesOnGrid,
-    setCoursesOnGrid,
     dependencies,
-    setDependencies,
+    savedLayouts,
   } = useLayoutContext();
-  // TODO: CHANGE THE ABOVE, probably don't need most of it because it's prop driling
-
 
   // Course info for custom course
   const [customInfo, setCustomInfo] = useState<CourseCardProps>({
@@ -80,16 +73,9 @@ const Maker = () => {
   return (
     <div>
       <CourseGrid
-        courses={courses}
-        coursesUsed={coursesUsed}
-        coursesOnGrid={coursesOnGrid}
-        dependencies={dependencies}
-        setCoursesUsed={setCoursesUsed}
-        setCoursesOnGrid={setCoursesOnGrid}
         setCustomInfo={setCustomInfo}
         setPreqString={setPreqString}
         setCoreqString={setCoreqString}
-        setDependencies={setDependencies}
       />
       <hr className="mt-8 stroke-2" />
       <div className="grid md:grid-cols-2 grid-cols-1 gap-x-16 dark:text-gray-50">
@@ -98,29 +84,14 @@ const Maker = () => {
           <p className=" mb-2 max-w-xl">
             Paste your previously copied string or load from cache
           </p>
-          <LoadLayout
-            courses={courses}
-            coursesUsed={coursesUsed}
-            setCourses={setCourses}
-            setCoursesUsed={setCoursesUsed}
-            setCoursesOnGrid={setCoursesOnGrid}
-            setDependencies={setDependencies}
-            savedLayouts={savedLayouts}
-          />
+          <LoadLayout />
           <h2 className="mt-8 mb-4 text-2xl font-semibold">Save layout</h2>
           <p className="mb-2 max-w-xl">
             Copy this string and save it for later or store layout in cache
           </p>
-          <SaveLayout
-            courses={courses}
-            coursesOnGrid={coursesOnGrid}
-            savedLayouts={savedLayouts}
-            setSavedLayouts={setSavedLayouts}
-          />
+          <SaveLayout />
         </div>
         <CourseForm
-          setCourses={setCourses}
-          setCoursesUsed={setCoursesUsed}
           customInfo={customInfo}
           setCustomInfo={setCustomInfo}
           preqString={preqString}

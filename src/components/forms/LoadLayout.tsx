@@ -1,10 +1,10 @@
 import { FC, useEffect, useRef, useState } from "react";
-import { LoadLayoutProps } from "../../types/types";
 import { Announcement } from "../../utils/componentImports";
 import { isValidString, parseString } from "../../utils/utilImports";
 import Preset from "./Preset";
 import TextInput from "./TextInput";
 import SubmitButton from "../SubmitButton";
+import { useLayoutContext } from "../layout/Layout";
 
 enum Load {
   NONE,
@@ -12,15 +12,17 @@ enum Load {
   ERROR,
 }
 
-const LoadLayout: FC<LoadLayoutProps> = ({
-  courses,
-  coursesUsed,
-  setCourses,
-  setCoursesOnGrid,
-  setCoursesUsed,
-  setDependencies,
-  savedLayouts,
-}) => {
+const LoadLayout: FC = () => {
+  const {
+    courses,
+    setCourses,
+    coursesUsed,
+    setCoursesUsed,
+    setCoursesOnGrid,
+    setDependencies,
+    savedLayouts,
+  } = useLayoutContext();
+
   const [str, setStr] = useState("");
   const [load, setLoad] = useState(Load.NONE);
   const timeoutRef = useRef<NodeJS.Timeout>();
