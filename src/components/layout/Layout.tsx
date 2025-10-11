@@ -95,6 +95,7 @@ const Layout: FC<LayoutProps> = ({ children }) => {
     if (user) saveDependencies(user.uid, dependencies);
   }, [dependencies]);
 
+  // savedLayouts
   const [savedLayouts, setSavedLayouts] = useState<savedLayout[]>(() => {
     const saved = localStorage.getItem("savedLayouts");
     return saved ? JSON.parse(saved) : [];
