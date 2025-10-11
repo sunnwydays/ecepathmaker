@@ -54,6 +54,10 @@ export const siteFaqData: FAQ = [
         answer: "When you sign in using your Google account, your grid, saved layouts, custom courses, and light/dark theme preference are saved so you can access your changes on any device."
     },
     {
+        question: "What should I do if my prerequisites aren't working or some info isn't consistent?",
+        answer: "To regenerate the dependencies of your courses on grid, you can save your current layout to one of the four saved layout slots, then immediately load that layout again. For inconsistent info or for trying to get updates, you may need to use the 'Reset all changes' button in the footer because the locally saved info is out of date (make sure to have a backup screenshot of your layout)."
+    },
+    {
         question: "How do I update a course (e.g. change the colour)?",
         answer: "Click on a Maker course card, click on the pencil in the top right, then update its details in the form."
     },
