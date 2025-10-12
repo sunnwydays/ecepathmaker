@@ -1,3 +1,5 @@
+import { saveTheme } from "../firebase/firestore";
+import { auth } from "../firebase/firebase";
 import { useDarkMode } from "../utils/utilImports";
 import { CiLight, CiDark } from "react-icons/ci";
 
@@ -11,6 +13,8 @@ const ThemeToggle = () => {
 
     html.classList.toggle('dark');
     localStorage.setItem('theme', isNowDark ? 'dark' : 'light');
+    const user = auth.currentUser;
+    if (user) saveTheme(user.uid, isNowDark ? 'dark' : 'light');
   };
 
   return (

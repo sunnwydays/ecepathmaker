@@ -134,3 +134,10 @@ export async function saveLayouts(uid: string, layouts: savedLayout[]) {
 export async function loadLayouts(uid: string) {
   return loadUserData<savedLayout[]>(uid, "savedLayouts", []);
 }
+
+export async function saveTheme(uid: string, theme: string) {
+  return saveUserData(uid, "theme", theme);
+}
+export async function loadTheme(uid: string) {
+  return loadUserData(uid, "theme", "");
+}
