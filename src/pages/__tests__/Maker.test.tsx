@@ -124,7 +124,7 @@ describe('Maker', () => {
         fireEvent.change(stringInput, { target: { value: mockLayouts.sampleGrad } });
         fireEvent.click(loadLayout);
         expect(screen.getByText(/You graduate/)).toBeInTheDocument();
-        expect(screen.getByText(/CE /)).toBeInTheDocument();
+        expect(screen.getByText(/CE 🖥/)).toBeInTheDocument();
         expect(stringInput).toHaveValue('');
     });
     
