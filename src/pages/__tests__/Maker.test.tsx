@@ -1,5 +1,6 @@
 import { render, screen, fireEvent, prettyDOM, within, cleanup } from '@testing-library/react';
 import { Maker } from '../../utils/pageImports';
+import { Layout } from '../../utils/componentImports';
 
 const mockCourse = {
     code: 'ECe456',
@@ -24,7 +25,11 @@ describe('Maker', () => {
 
     beforeEach(() => {
         localStorage.clear();
-        render(<Maker />);
+        render(
+            <Layout>
+                <Maker />
+            </Layout>
+        );
         stringInput = screen.getByPlaceholderText('Layout string');
         loadLayout = screen.getByTestId('load-layout');
         bucket = screen.getByTestId('bucket');
@@ -359,7 +364,11 @@ describe('Maker', () => {
 
         // Simulate rerender
         cleanup();
-        render(<Maker />);
+        render(
+            <Layout>
+                <Maker />
+            </Layout>
+        );
 
         const newBucket = screen.getByTestId('bucket');
         const newGrid = screen.getByTestId('grid');
