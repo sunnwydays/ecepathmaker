@@ -3,6 +3,8 @@ import { Announcement } from "../../utils/componentImports";
 import TextInput from "./TextInput";
 import SubmitButton from "../SubmitButton";
 import { useLayoutContext } from "../layout/Layout";
+import { emptyGrid } from "../../utils/emptyGrid";
+import { GridPositionBase } from "../../types/types";
 
 enum Save {
   NONE,
@@ -37,8 +39,9 @@ const SaveLayout: FC = () => {
 
   useEffect(() => {
     let newStr = "";
-    Object.entries(coursesOnGrid).forEach(([pos, courseCode]) => {
-      if (pos !== "3F.1" && pos.includes(".1")) newStr += "@@";
+    Object.keys(emptyGrid).map((slot) => {
+      const courseCode: string = coursesOnGrid[slot as GridPositionBase];
+      if (slot !== "3F.1" && slot.includes(".1")) newStr += "@@";
       if (!courseCode) return;
       const course = courses[courseCode];
       newStr += courseCode + course.name + "%%";
@@ -57,7 +60,7 @@ const SaveLayout: FC = () => {
       if (hasPreq) newStr += serializeReqs("p", course.preq);
       if (hasCoreq) newStr += serializeReqs(hasPreq ? "o" : "po", course.coreq);
 
-      if (pos[3] != "5") newStr += "$$";
+      if (slot[3] != "5") newStr += "$$";
     });
     setStr(newStr);
   }, [coursesOnGrid, courses]);
