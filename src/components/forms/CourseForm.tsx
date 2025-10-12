@@ -9,10 +9,9 @@ import {
 import Announcement from "../info/Announcement";
 import TextInput from "./TextInput";
 import SubmitButton from "../SubmitButton";
+import { useLayoutContext } from "../layout/Layout";
 
 const CourseForm: FC<CourseFormProps> = ({
-  setCourses,
-  setCoursesUsed,
   customInfo,
   setCustomInfo,
   preqString,
@@ -20,6 +19,11 @@ const CourseForm: FC<CourseFormProps> = ({
   coreqString,
   setCoreqString,
 }) => {
+  const {
+    setCourses,
+    setCoursesUsed,
+  } = useLayoutContext();
+
   const [errors, setErrors] = useState({
     code: false,
     name: false,

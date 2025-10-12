@@ -1,4 +1,5 @@
 import { UniqueIdentifier } from "@dnd-kit/core";
+import { User } from "firebase/auth";
 
 interface CourseIdentifier {
     code: string;
@@ -37,6 +38,25 @@ export interface MakerCardProps extends DraggableCardProps {
     setPreqString: React.Dispatch<React.SetStateAction<string>>;
     setCoreqString: React.Dispatch<React.SetStateAction<string>>;
 };
+
+export interface LayoutContextType {
+  courses: CourseList;
+  setCourses: React.Dispatch<React.SetStateAction<CourseList>>;
+
+  coursesUsed: CoursesUsed;
+  setCoursesUsed: React.Dispatch<React.SetStateAction<CoursesUsed>>;
+
+  coursesOnGrid: CoursesOnGrid;
+  setCoursesOnGrid: React.Dispatch<React.SetStateAction<CoursesOnGrid>>;
+
+  dependencies: Map<UniqueIdentifier, Set<UniqueIdentifier>>;
+  setDependencies: React.Dispatch<
+    React.SetStateAction<Map<UniqueIdentifier, Set<UniqueIdentifier>>>
+  >;
+
+  savedLayouts: savedLayout[];
+  setSavedLayouts: React.Dispatch<React.SetStateAction<savedLayout[]>>;
+}
 
 interface CourseIdentifierWithoutCode {
     name: string;
@@ -109,16 +129,9 @@ export interface fulfillsCoreqProps {
 }
 
 export interface CourseGridProps {
-    courses: CourseList;
-    coursesUsed: CoursesUsed;
-    coursesOnGrid: CoursesOnGrid;
-    dependencies: Map<UniqueIdentifier, Set<UniqueIdentifier>>;
-    setCoursesUsed: React.Dispatch<React.SetStateAction<CoursesUsed>>;
-    setCoursesOnGrid: React.Dispatch<React.SetStateAction<CoursesOnGrid>>;
     setCustomInfo: React.Dispatch<React.SetStateAction<CourseCardProps>>;
     setPreqString: React.Dispatch<React.SetStateAction<string>>;
     setCoreqString: React.Dispatch<React.SetStateAction<string>>;
-    setDependencies: React.Dispatch<React.SetStateAction<Map<UniqueIdentifier, Set<UniqueIdentifier>>>>;
 }
 
 export interface ParseString {
@@ -126,23 +139,6 @@ export interface ParseString {
     coursesOnGrid: CoursesOnGrid;
     coursesUsed: CoursesUsed;
     dependencies: Map<UniqueIdentifier, Set<UniqueIdentifier>>;
-}
-
-export interface LoadLayoutProps {
-    courses: CourseList;
-    coursesUsed: CoursesUsed;
-    setCourses: React.Dispatch<React.SetStateAction<CourseList>>;
-    setCoursesUsed: React.Dispatch<React.SetStateAction<CoursesUsed>>;
-    setCoursesOnGrid: React.Dispatch<React.SetStateAction<CoursesOnGrid>>;
-    setDependencies: React.Dispatch<React.SetStateAction<Map<UniqueIdentifier, Set<UniqueIdentifier>>>>;
-    savedLayouts: savedLayout[];
-}
-
-export interface SaveLayoutProps {
-    courses: CourseList;
-    coursesOnGrid: CoursesOnGrid;
-    savedLayouts: savedLayout[];
-    setSavedLayouts: React.Dispatch<React.SetStateAction<savedLayout[]>>;
 }
 
 export interface PresetProps {
@@ -169,8 +165,6 @@ export interface TextInputProps {
 }
 
 export interface CourseFormProps {
-    setCourses: React.Dispatch<React.SetStateAction<CourseList>>;
-    setCoursesUsed: React.Dispatch<React.SetStateAction<CoursesUsed>>;
     customInfo: CourseCardProps;
     setCustomInfo: React.Dispatch<React.SetStateAction<CourseCardProps>>;
     preqString: string;
@@ -190,3 +184,9 @@ export interface FilterState {
     isArtSci: boolean;
     isEng: boolean;
 };
+
+export interface AuthContextType {
+  user: User | null;
+  signedIn: boolean;
+  loading: boolean;
+}

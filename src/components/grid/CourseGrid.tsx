@@ -6,6 +6,7 @@ import {
   StreamRequirements,
   GridPosition,
   CoursesUsed,
+  GridPositionBase,
 } from "../../types/types";
 import {
     Droppable,
@@ -32,6 +33,7 @@ import { getYearTerm } from "../../utils/getYearTerm";
 import Announcement from "../info/Announcement";
 import { addDependencies } from "../../utils/utilImports";
 import { emptyGrid } from "../../utils/utilImports";
+import { useLayoutContext } from "../layout/Layout";
 
 enum DropError {
   NONE = "NONE",
@@ -42,17 +44,20 @@ enum DropError {
 }
 
 const CourseGrid: FC<CourseGridProps> = ({
-  courses,
-  coursesOnGrid,
-  coursesUsed,
-  dependencies,
-  setCoursesOnGrid,
-  setCoursesUsed,
   setCustomInfo,
   setPreqString,
   setCoreqString,
-  setDependencies,
 }) => {
+  const {
+    courses,
+    coursesUsed,
+    setCoursesUsed,
+    coursesOnGrid,
+    setCoursesOnGrid,
+    dependencies,
+    setDependencies,
+  } = useLayoutContext();
+
   const [filters, setFilters] = useState<FilterState>({
     searchTerm: "",
     streams: [],
@@ -500,27 +505,32 @@ const CourseGrid: FC<CourseGridProps> = ({
           ref={screenshotRef}
           data-testid="grid"
         >
-          {Object.entries(coursesOnGrid).map(([slot, courseCode]) => (
-            <Droppable
-              key={slot}
-              id={slot}
-              valid={validYearTerms[getYearTerm(slot as GridPosition)]}
-            >
-              {courseCode ? (
-                <MakerCard
+          {Object.keys(emptyGrid).map((slot) => {
+              const courseCode: string = coursesOnGrid[slot as GridPositionBase];
+              return (
+                <Droppable
+                  key={slot}
+                  id={slot}
                   valid={validYearTerms[getYearTerm(slot as GridPosition)]}
-                  id={courseCode}
-                  code={courseCode}
-                  setCustomInfo={setCustomInfo}
-                  setPreqString={setPreqString}
-                  setCoreqString={setCoreqString}
-                  {...courses[courseCode]}
-                />
-              ) : (
-                slot
-              )}
-            </Droppable>
-          ))}
+                >
+                  {courseCode ? (
+                    <MakerCard
+                      valid={validYearTerms[getYearTerm(slot as GridPosition)]}
+                      id={courseCode}
+                      code={courseCode}
+                      setCustomInfo={setCustomInfo}
+                      setPreqString={setPreqString}
+                      setCoreqString={setCoreqString}
+                      {...courses[courseCode]}
+                    />
+                  ) : (
+                    slot
+                  )}
+                </Droppable>
+              )
+          })}
+
+          
         </div>
         <div>
           {/* Courses to choose from */}
