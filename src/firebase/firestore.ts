@@ -23,6 +23,8 @@ async function loadUserData<T>(uid: string, key: string, fallback: T): Promise<T
   return fallback;
 }
 
+// ========== SERIALIZE FOR FIRESTORE ==========
+
 // Encode preq/coreq so nested arrays become strings (Firestore-safe)
 function encodeCourseRequirements(req?: (string | string[])[]): string[] {
   if (!req) return [];
@@ -44,7 +46,7 @@ function decodeCourseRequirements(req?: string[]): (string | string[])[] {
 }
 
 // Serialize CourseList for Firestore
-export function serializeCoursesForFirestore(courses: CourseList) {
+function serializeCourses(courses: CourseList) {
   const serialized: Record<string, CourseCardPropsWithoutCode> = {};
   for (const [code, course] of Object.entries(courses)) {
     serialized[code] = {
@@ -63,7 +65,7 @@ type SerializedCourseCard = Omit<CourseCardPropsWithoutCode, "preq" | "coreq"> &
 
 type SerializedCourseList = Record<string, SerializedCourseCard>;
 
-export function deserializeCoursesFromFirestore(data: SerializedCourseList): CourseList {
+function deserializeCourses(data: SerializedCourseList): CourseList {
   const courses: CourseList = {};
   for (const [code, course] of Object.entries(data)) {
     courses[code] = {
@@ -75,54 +77,31 @@ export function deserializeCoursesFromFirestore(data: SerializedCourseList): Cou
   return courses;
 }
 
-// for maps and sets since Firestore doesn't support saving them
-function serializeForFirestore(data: unknown): unknown {
-  if (data instanceof Map) {
-    // Convert Map to a plain object
-    return Object.fromEntries(
-      Array.from(data.entries(), ([key, value]) => [key, serializeForFirestore(value)])
-    );
-  } else if (Array.isArray(data)) {
-    // Recursively handle nested arrays
-    return data.map(serializeForFirestore);
-  } else if (typeof data === "object" && data !== null) {
-    // Recursively handle nested objects
-    const result: Record<string, unknown> = {};
-    for (const [key, value] of Object.entries(data)) {
-      result[key] = serializeForFirestore(value);
-    }
-    return result;
-  }
-  return data;
+function serializeDependencies(
+  data: Map<UniqueIdentifier, Set<UniqueIdentifier>>
+): Record<UniqueIdentifier, UniqueIdentifier[]> {
+  return Object.fromEntries(
+    Array.from(data.entries(), ([key, set]) => [key, Array.from(set.values())])
+  );
 }
 
-function deserializeFromFirestore(data: unknown): unknown {
-  if (typeof data === "object" && data !== null) {
-    if (!Array.isArray(data)) {
-      // Optionally, turn certain objects back into Maps
-      if (Object.values(data).every(v => typeof v === "object")) {
-        return new Map(
-          Object.entries(data).map(([k, v]) => [k, deserializeFromFirestore(v)])
-        );
-      }
-      const result: Record<string, unknown> = {};
-      for (const [key, value] of Object.entries(data)) {
-        result[key] = deserializeFromFirestore(value);
-      }
-      return result;
-    } else {
-      return data.map(deserializeFromFirestore);
-    }
-  }
-  return data;
+async function deserializeDependencies(
+  dataPromise: Promise<Record<UniqueIdentifier, UniqueIdentifier[]>>
+): Promise<Map<UniqueIdentifier, Set<UniqueIdentifier>>> {
+  const data = await dataPromise;
+  return new Map(
+    Object.entries(data).map(([key, arr]) => [key, new Set(arr)])
+  );
 }
+
+// ========== DATA SAVE AND LOAD ==========
 
 export async function saveCourses(uid: string, courses: CourseList) {
-  return saveUserData(uid, "courses", serializeCoursesForFirestore(courses));
+  return saveUserData(uid, "courses", serializeCourses(courses));
 }
 export async function loadCourses(uid: string): Promise<CourseList> {
   const raw = await loadUserData<Record<string, SerializedCourseCard>>(uid, "courses", {});
-  return deserializeCoursesFromFirestore(raw);
+  return deserializeCourses(raw);
 }
 
 export async function saveCoursesUsed(uid: string, coursesUsed: CoursesUsed) {
@@ -143,10 +122,10 @@ export async function saveDependencies(
   uid: string,
   deps: Map<UniqueIdentifier, Set<UniqueIdentifier>>
 ) {
-  return saveUserData(uid, "dependencies", serializeForFirestore(deps));
+  return saveUserData(uid, "dependencies", serializeDependencies(deps));
 }
-export async function loadDependencies(uid: string): Promise<Map<UniqueIdentifier, Set<UniqueIdentifier>>> {
-  return deserializeFromFirestore(loadUserData<Map<UniqueIdentifier, Set<UniqueIdentifier>>>(uid, "dependencies", {} as Map<UniqueIdentifier, Set<UniqueIdentifier>>)) as Map<UniqueIdentifier, Set<UniqueIdentifier>>;
+export async function loadDependencies(uid: string) {
+  return deserializeDependencies(loadUserData(uid, "dependencies", {}));
 }
 
 export async function saveLayouts(uid: string, layouts: savedLayout[]) {

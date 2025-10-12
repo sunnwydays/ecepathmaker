@@ -70,7 +70,7 @@ const Layout: FC<LayoutProps> = ({ children }) => {
     if (user) saveCoursesOnGrid(user.uid, coursesOnGrid);
   }, [coursesOnGrid]);
   
-  // Map of co/prerequisites to their dependencies
+  // Map of co/prerequisites to their dependencies (note, dependants would have probably be more accurate)
   const initialDependencies = useMemo<
     Map<UniqueIdentifier, Set<UniqueIdentifier>>
   >(() => {
