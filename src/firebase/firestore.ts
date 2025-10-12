@@ -85,10 +85,9 @@ function serializeDependencies(
   );
 }
 
-async function deserializeDependencies(
-  dataPromise: Promise<Record<UniqueIdentifier, UniqueIdentifier[]>>
-): Promise<Map<UniqueIdentifier, Set<UniqueIdentifier>>> {
-  const data = await dataPromise;
+function deserializeDependencies(
+  data: Record<UniqueIdentifier, UniqueIdentifier[]>
+): Map<UniqueIdentifier, Set<UniqueIdentifier>> {
   return new Map(
     Object.entries(data).map(([key, arr]) => [key, new Set(arr)])
   );
@@ -125,7 +124,8 @@ export async function saveDependencies(
   return saveUserData(uid, "dependencies", serializeDependencies(deps));
 }
 export async function loadDependencies(uid: string) {
-  return deserializeDependencies(loadUserData(uid, "dependencies", {}));
+  const raw = await loadUserData(uid, "dependencies", {});
+  return deserializeDependencies(raw);
 }
 
 export async function saveLayouts(uid: string, layouts: savedLayout[]) {
