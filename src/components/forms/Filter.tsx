@@ -26,6 +26,10 @@ const Filter: FC<{
     });
   };
 
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+  };
+
   const resetFilters = () => {
     setFilters({
       searchTerm: "",
@@ -48,7 +52,10 @@ const Filter: FC<{
       "
       data-testid="filter"
     >
-      <form className="flex gap-x-8 gap-y-4 justify-center items-center flex-wrap">
+      <form 
+        className="flex gap-x-8 gap-y-4 justify-center items-center flex-wrap"
+        onSubmit={handleSubmit}
+      >
         <h2 className="font-semibold text-xl">Filter</h2>
         <button
           type="button"
