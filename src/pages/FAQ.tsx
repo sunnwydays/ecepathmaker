@@ -54,7 +54,7 @@ const FAQ: FC = () => {
             <h2 className="mb-8 pt-8 text-2xl font-medium" id="site-faqs">
                 FAQs on using Pathmaker
             </h2>
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-8">
                 {siteFaqData.map((faq, index) => (
                     <FAQCard 
                         key={index}
@@ -72,7 +72,7 @@ const FAQ: FC = () => {
                 I asked the ECE undergrad office in SF basement (SFB540)
                 about the following questions. Here are the answers.
             </p>
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-8">
                 {courseFaqData.map((faq, index) => (
                     <FAQCard 
                         key={index}
