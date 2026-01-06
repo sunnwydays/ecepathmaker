@@ -1,6 +1,10 @@
-import { FC } from "react";
-import { FilterState } from "../../types/types";
+import { FC, useEffect, useRef, useState } from "react";
+import { FilterState, GridPosition, YearTerm } from "../../types/types";
 import TextInput from "./TextInput";
+import { useLayoutContext } from "../layout/Layout";
+import { addDependencies, filterCourses, getValidYearTerms } from "../../utils/utilImports";
+import { UniqueIdentifier } from "@dnd-kit/core";
+import Announcement from "../info/Announcement";
 
 const Filter: FC<{
   filters: FilterState;
@@ -25,9 +29,109 @@ const Filter: FC<{
       }
     });
   };
+  
+  const [isSubmitSuccess, setIsSubmitSuccess] = useState(false);
+  const [submitMessage, setSubmitMessage] = useState('');
+  const timeoutRef = useRef<NodeJS.Timeout>();
 
+  useEffect(() => {
+    if (submitMessage) {
+      timeoutRef.current = setTimeout(() => {
+        setSubmitMessage('');
+      }, 2000);
+    }
+
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, [submitMessage]);
+
+  const {
+    courses,
+    coursesUsed,
+    setCoursesUsed,
+    coursesOnGrid,
+    setCoursesOnGrid,
+    dependencies,
+    setDependencies,
+  } = useLayoutContext();
+
+  // Puts the course on the earliest available slot
+  const putCourseOnAvailable = (code: UniqueIdentifier): GridPosition => {
+    const course = courses[code];
+
+    const ValidYearTermsProps = {
+      coursesOnGrid,
+      coursesUsed,
+      course
+    };
+    const validYearTerms = getValidYearTerms(ValidYearTermsProps);
+
+    let targetPos: GridPosition = '';
+    for (const [pos, course] of Object.entries(coursesOnGrid)) {
+      if (!course && validYearTerms[(pos.slice(0, 2) as YearTerm)]) {
+        targetPos = pos as GridPosition;
+        break;
+      }
+    }
+
+    if (!targetPos) return '';
+
+    addDependencies({code, courses, dependencies, setDependencies});
+    setCoursesUsed((prev) => ({
+      ...prev,
+      [code]: targetPos as GridPosition,
+    }));
+    setCoursesOnGrid((prev) => ({
+      ...prev,
+      [targetPos]: code,
+    }));
+
+    return targetPos;
+  }
+
+  // If only 1 course in search result, then add that to the earliest empty slot
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    let code: UniqueIdentifier = '';
+    let found = false;
+
+    for (const [potentialCode, potentialPos] of Object.entries(coursesUsed)) {
+      if (filterCourses(filters, potentialCode, courses[potentialCode])) {
+        // Check position before found in case another course matching filter is already on grid
+        if (potentialPos) continue;
+
+        if (found) {
+          setIsSubmitSuccess(true);
+          setSubmitMessage(`Filter for one course and press enter to add it to the earliest available slot!`);
+          return;
+        }
+
+        code = potentialCode;
+        found = true;
+      }
+    }
+
+    if (!found) {
+      setIsSubmitSuccess(false);
+      setSubmitMessage(`No unused courses match: ${filters.searchTerm}!`);
+      return;
+    }
+
+    const pos = putCourseOnAvailable(code);
+
+    if (!pos) {
+      setIsSubmitSuccess(false);
+      setSubmitMessage(`No valid slots for ${code}!`);
+      return;
+    }
+
+    setIsSubmitSuccess(true);
+    setSubmitMessage(`Added ${code} to ${pos}!`);
+    setFilters(prev => ({ ...prev, searchTerm: "" }));
   };
 
   const resetFilters = () => {
@@ -181,6 +285,9 @@ const Filter: FC<{
           </div>
         </div>
       </form>
+      {submitMessage && (
+        <Announcement success={isSubmitSuccess}>{submitMessage}</Announcement>
+      )}
     </div>
   );
 };

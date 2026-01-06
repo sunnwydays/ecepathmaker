@@ -7,3 +7,4 @@ export { validateCourseCode, validateCourseName, validatePrerequisites } from ".
 export { useDarkMode } from "./useDarkMode";
 export { addDependencies } from "./addDependencies";
 export { emptyGrid } from "./emptyGrid";
+export { filterCourses } from "./filterCourses";

@@ -1,10 +1,15 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Courses } from '../../utils/pageImports';
+import { Layout } from '../../utils/componentImports';
 
 describe('Courses page', () => {
     beforeEach(() => {
-        render(<Courses/>);
+        render(
+            <Layout>
+                <Courses/>
+            </Layout>
+        );
     });
 
     it('filters by category correctly', () => {

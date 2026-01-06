@@ -32,7 +32,7 @@ import { getValidYearTerms } from "../../utils/getValidYearTerms";
 import { getYearTerm } from "../../utils/getYearTerm";
 import Announcement from "../info/Announcement";
 import { addDependencies } from "../../utils/utilImports";
-import { emptyGrid } from "../../utils/utilImports";
+import { emptyGrid, filterCourses } from "../../utils/utilImports";
 import { useLayoutContext } from "../layout/Layout";
 
 enum DropError {
@@ -69,37 +69,6 @@ const CourseGrid: FC<CourseGridProps> = ({
     isArtSci: false,
     isEng: false,
   });
-
-  const filterCourses = (courseCode: string): boolean => {
-    const course = courses[courseCode];
-    if (!course) return false;
-
-    if (
-      filters.searchTerm &&
-      !courseCode.toLowerCase().includes(filters.searchTerm.toLowerCase()) &&
-      !course.name.toLowerCase().includes(filters.searchTerm.toLowerCase())
-    ) {
-      return false;
-    }
-
-    if (
-      filters.streams.length > 0 &&
-      !course.streams?.some((stream) => filters.streams.includes(stream))
-    ) {
-      return false;
-    }
-
-    if (!filters.availableF && course.onlyF) return false;
-    if (!filters.availableS && course.onlyS) return false;
-
-    if (filters.isCS && !course.isCS) return false;
-    if (filters.isHSS && !course.isHSS) return false;
-    if (filters.isSciMath && !course.isSciMath) return false;
-    if (filters.isArtSci && !course.isArtSci) return false;
-    if (filters.isEng && course.isArtSci) return false;
-
-    return true;
-  };
 
   const initialValidYearTerms = useMemo<ValidYearTerms>(
     () =>
@@ -570,7 +539,7 @@ const CourseGrid: FC<CourseGridProps> = ({
           >
             {(() => {
               const filteredCourses = Object.entries(coursesUsed)
-                .filter(([courseCode]) => filterCourses(courseCode));
+                .filter(([courseCode]) => filterCourses(filters, courseCode, courses[courseCode]));
               const unusedFilteredCourses = filteredCourses
                 .filter(([, isUsed]) => !isUsed);
 

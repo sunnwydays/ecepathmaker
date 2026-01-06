@@ -58,6 +58,10 @@ export const siteFaqData: FAQ = [
         answer: "To regenerate the dependencies of your courses on grid, you can save your current layout to one of the four saved layout slots, then immediately load that layout again. For inconsistent info or for trying to get updates, you may need to use the 'Reset all changes' button in the footer because the locally saved info is out of date (make sure to have a backup screenshot of your layout)."
     },
     {
+        question: "Can I add courses using the keyboard? / How can I quickly add courses copying another format (e.g. Magellan)?",
+        answer: "Type the course code into the filter search and press enter! For example, typing 'ECE344' and pressing enter when you have a blank grid will put ECE344 onto the first slot. Also works for non-text filters, such as stream."
+    },
+    {
         question: "How do I update a course (e.g. change the colour)?",
         answer: "Click on a Maker course card, click on the pencil in the top right, then update its details in the form."
     },
