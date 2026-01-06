@@ -405,32 +405,18 @@ const CourseGrid: FC<CourseGridProps> = ({
       return;
     }
 
+    // Functional updater form (with prev) to use most up-to-date state, no batch
     setCoursesOnGrid((prev) => ({
       ...prev,
       [over.id]: code,
       ...(sourceContainer && { [sourceContainer]: "" }),
     }));
 
-    setCoursesOnGrid((prev) => {
-      if (!over.id) return prev;
-
-      return {
-        ...prev,
-        [over.id]: code,
-        ...(sourceContainer && { [sourceContainer]: "" }),
-      };
-    });
-
     // put active course at the destination
-    // Functional updater form (with prev) to use most up-to-date state, no batch
     setCoursesUsed((prev) => ({
       ...prev,
       [code]: over.id as GridPosition,
     }));
-    setCoursesOnGrid((prev) => {
-      if (!over.id) return prev
-      return { ...prev, [over.id]: code };
-    });
   };
 
   const [dropError, setDropError] = useState<DropError>(DropError.NONE);
