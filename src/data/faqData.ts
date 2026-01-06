@@ -7,8 +7,8 @@ type FAQ = FAQItem[];
 
 export const courseFaqData: FAQ = [
     {
-        question: "If I take a gap year after my second year to do an internship, should I put my courses on Magellan as next year or the year after?",
-        answer: "Put your courses in Magellan as if you were going to take a usual PEY after third year. This is in case your internship falls through - you will still be able to shift your courses for preregistration before January 30 of your work year."
+        question: "If I take a gap year after second year to do an internship, should I put my courses on Magellan as next year or the year after?",
+        answer: "Put your courses in Magellan as if you were going to take a usual PEY after third year. In case your internship falls through, you can still to shift your courses for preregistration before January 30 of your work year."
     },
     {
         question: "Can I change my courses on Magellan after January 30?",
@@ -16,7 +16,7 @@ export const courseFaqData: FAQ = [
     },
     {
         question: "What does it mean when a course can only count towards 2 things?",
-        answer: "For a course, it can only count towards 1 minor and your stream requirement, or 2 minors. For example, if you want ECE345 to count to both AI and Robotics, it will not be considered as your stream 6 kernel."
+        answer: "A course can only count towards 1 minor and your stream requirement, or 2 minors. For example, if you want ECE345 to count to both AI and Robotics, it will not be considered as your stream 6 kernel."
     },
     {
         question: "Do courses marked as EXT count towards minor requirements?",
@@ -24,7 +24,7 @@ export const courseFaqData: FAQ = [
     },
     {
         question: "For MIE509, what does 'or an Introductory Machine Learning, or equivalent' in the prerequisites mean?",
-        answer: "It means any introductory ML or AI course is an appropriate prereq, such as APS360 or ECE421."
+        answer: "Any introductory ML or AI course is an appropriate prereq, such as APS360 or ECE421."
     },
 ]
 
@@ -35,11 +35,11 @@ export const siteFaqData: FAQ = [
     },
     {
         question: "How do I use this?",
-        answer: "On the Maker page, drag courses onto the grid, which contains slots for your third and fourth years. All the courses from Magellan are available, and you can also add custom courses using the custom courses form. Save your progress by copying the layout string generated and pasting in the loading area at a later time."
+        answer: "On the Maker page, drag courses onto the grid, which contains slots for your third and fourth years. All the courses from Magellan are available as well as custom courses. Save your progress by: logging in / using one of the 4 layout slots / copying the layout string."
     },
     {
         question: "Why did you make this?",
-        answer: "The current course planning tool for UofT ECE students is Magellan, which is useful but makes it difficult to visualize and organize your courses, is slow to evaluate graduation conditions, and has errors. ECE Pathmaker improves upon these with a modern UI. That being said, you will still have to use Magellan to 'lock in' your courses for pre-registration."
+        answer: "The current course planning tool for UofT ECE students is Magellan, which is useful but makes it difficult to visualize and organize your courses, is slow to evaluate graduation conditions, and has errors. ECE Pathmaker improves upon these with a modern UI. However, you will still have to use Magellan to 'lock in' your courses for pre-registration."
     },
     {
         question: "Who is this for?",
@@ -47,7 +47,7 @@ export const siteFaqData: FAQ = [
     },
     {
         question: "What are the XX slots for?",
-        answer: "The fifth row is for extra courses taken in the first two years or from overloading. A course there will be considered as an early prerequisite, and any course on XX slots have their prerequisites waived."
+        answer: "The fifth row is for extra courses taken in the first two years or for overloading. XX courses will be considered as early prerequisites, and also have their prerequisites waived."
     },
     {
         question: "What does signing in do?",
@@ -67,15 +67,15 @@ export const siteFaqData: FAQ = [
     },
     {
         question: "Why is the grid red when I try to drag a course onto it?",
-        answer: "Invalid slots are red, and you will know why (invalid term (i.e. only offered in the fall but you are dragging it onto a winter term slot or vice versa) or missing prerequisites) when you try to drop onto the slot. An icon in the top right corner of each card appears if it is fall-only (leaf) or winter-only (snowflake). You can click on the course card to see prerequisites."
+        answer: "Invalid slots are red, and you will know why (invalid term (i.e. only offered in the fall but you are dragging it onto a winter term slot or vice versa) or missing prerequisites) when you try to drop onto the slot. An icon in the top right corner of each card appears if it is fall-only (leaf) or winter-only (snowflake). Click on the card to see prerequisites."
     },
     {
         question: "What does it mean by 'not a real course'?",
-        answer: "Capstone courses are full year courses, but the grid implements half term slots. To account for this, the capstone courses are split into two half-term courses. The 'not a real course' text is a reminder that the course is the second half of the capstone course."
+        answer: "Capstone courses are full year courses, but the grid implements half term slots, so the capstone courses are split into two half-term courses. The 'not a real course' text is a reminder that the course is the second half of the capstone course."
     },
     {
         question: "Does this check for minors or certificates?",
-        answer: "Minor/certificate check is not yet implemented, although I am considering adding it in the future."
+        answer: "No, minor/certificate check is not yet implemented, although I am considering adding it in the future."
     },
     {
         question: "Anything else that I should know when course planning?",
@@ -83,7 +83,7 @@ export const siteFaqData: FAQ = [
     },
     {
         question: "Does this tool work on mobile?",
-        answer: "Yes! The site is responsive and works on mobile devices. I suggest zooming out by pinching to be able to see the whole width of the grid, otherwise the site must be scrolled horizontally. To prevent unwanted movement, I designed it so that you must hold a tile momentarily before dragging."
+        answer: "Yes! The site is responsive and works on mobile devices. I suggest zooming out by pinching to see the whole width of the grid. To prevent unwanted movement, I designed it so that you must hold a tile momentarily before dragging."
     },
     {
         question: "How do I report a bug or suggest a feature?",
