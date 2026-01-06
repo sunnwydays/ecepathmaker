@@ -135,7 +135,7 @@ const CourseForm: FC<CourseFormProps> = ({
 
   const resetColor = () => {
     setCustomInfo((prev) => {
-      return { ...prev, color: "E0E0E0" };
+      return { ...prev, color: "" };
     });
   };
 
@@ -184,7 +184,7 @@ const CourseForm: FC<CourseFormProps> = ({
       preq: [],
       coreq: [],
       streams: [],
-      color: "E0E0E0",
+      color: "",
       isCS: false,
       isHSS: false,
       isSciMath: false,

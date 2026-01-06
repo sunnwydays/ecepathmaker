@@ -34,6 +34,6 @@ describe("CourseCard", () => {
 
     // Check background colour
     const cardContainer = screen.getByTestId("card-container");
-    expect(cardContainer).toHaveClass("bg-neutral2");
+    expect(cardContainer).toHaveStyle({ backgroundColor: "#fa7274" });
   });
 });

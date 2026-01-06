@@ -3,6 +3,7 @@ import { MakerCardProps } from "../../types/types";
 import { Draggable } from "../../utils/componentImports";
 import {
   getTextColor,
+  getBackgroundColor,
   getOtherLabels,
   getPreqLabels,
   getStreamLabels,
@@ -31,7 +32,7 @@ const MakerCard: FC<MakerCardProps> = (props) => {
       preq: props.preq,
       coreq: props.coreq,
       streams: props.streams,
-      color: props.color ?? "E0E0E0",
+      color: props.color ?? "",
       isCS: props.isCS,
       isHSS: props.isHSS,
       isSciMath: props.isSciMath,
@@ -64,15 +65,10 @@ const MakerCard: FC<MakerCardProps> = (props) => {
                     rounded-md
                     relative
                     ${props.valid ? textColor : "text-black text-opacity-40"}
-                    ${!props.color && "bg-neutral2"}
                 `}
           style={{
             backgroundColor: props.valid
-              ? props.color
-                ? props.color[0] === "#"
-                  ? props.color
-                  : `#${props.color}`
-                : undefined
+              ? getBackgroundColor(props.color, props.streams?.[0], props.isSciMath, props.isCS, props.isHSS)
               : "rgba(255, 111, 97, 0.7)",
           }}
         >

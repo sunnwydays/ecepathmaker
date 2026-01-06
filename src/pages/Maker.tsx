@@ -15,7 +15,7 @@ const Maker = () => {
     name: "",
     preq: [],
     streams: [],
-    color: "E0E0E0",
+    color: "",
     isCS: false,
     isHSS: false,
     isSciMath: false,

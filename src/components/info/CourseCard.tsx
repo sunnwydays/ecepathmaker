@@ -4,6 +4,7 @@ import { CSS } from "@dnd-kit/utilities";
 import { DraggableCardProps } from "../../types/types";
 import {
   getTextColor,
+  getBackgroundColor,
   getOtherLabels,
   getPreqLabels,
   getStreamLabels,
@@ -23,7 +24,7 @@ const CourseCard: FC<DraggableCardProps> = (props) => {
   const style = {
     transition,
     transform: CSS.Transform.toString(transform),
-    backgroundColor: props.color ? `#${props.color}` : undefined,
+    backgroundColor: getBackgroundColor(props.color, props.streams?.[0], props.isSciMath, props.isCS, props.isHSS),
   };
 
   if (isDragging) {
@@ -50,7 +51,6 @@ const CourseCard: FC<DraggableCardProps> = (props) => {
                 p-8
                 h-[11rem]
                 rounded-md
-                ${!props.color && "bg-neutral2"}
                 ${getTextColor(props.color)}
             `}
       ref={setNodeRef}

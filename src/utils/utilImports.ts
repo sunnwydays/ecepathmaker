@@ -1,5 +1,6 @@
 export { getStreamLabels, getOtherLabels, getPreqLabels } from "./getLabels";
 export { getTextColor } from "./getTextColor";
+export { getBackgroundColor } from "./getBackgroundColor";
 export { getValidYearTerms } from "./getValidYearTerms";
 export { getYearTerm } from "./getYearTerm";
 export { isValidString, parseString } from "./parseString";
