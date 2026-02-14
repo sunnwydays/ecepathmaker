@@ -250,7 +250,7 @@ const courses: CourseList = {
   ECE390: {
     name: "Embedded Systems and Applications",
     streams: [5],
-    onlyF: true,
+    onlyS: true,
     kernel: true,
   },
   ECE461: {
