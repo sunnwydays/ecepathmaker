@@ -1,4 +1,6 @@
 import { FC } from 'react';
+import { doc, deleteDoc } from "firebase/firestore";
+import { db, auth } from '../../firebase/firebase';
 
 const Footer:FC = () => {
     const scrollToTop = () => {
@@ -9,15 +11,33 @@ const Footer:FC = () => {
         }
     };
 
-    const resetLocalStorage = () => {
+    const resetChanges = async () => {
         if (window.confirm(`Are you sure you want to reset all saved data in local storage and cloud (if signed in)? 
 This will remove your custom courses, undo your edits, and clear your layout. This will also allow updates to take effect.`)) {
+            const user = auth.currentUser;
+
+            if (user) {
+            try {
+                // Nuke the cloud record entirely
+                await nukeCloudData(user.uid); 
+            } catch (error) {
+                console.error("Firebase nuke failed:", error);
+            }
+            }
+
             const savedTheme = localStorage.getItem('theme');
             localStorage.clear();
+
             if (savedTheme) localStorage.setItem('theme', savedTheme);
             window.location.reload();
+            
         }
     }
+
+    const nukeCloudData = async (uid: string) => {
+        const userDocRef = doc(db, "users", uid);
+        await deleteDoc(userDocRef);
+    };
 
 
     return (
@@ -63,7 +83,7 @@ This will remove your custom courses, undo your edits, and clear your layout. Th
                         </a>
                     </p>
                     <p className="leading-7">
-                        <button onClick={resetLocalStorage}>
+                        <button onClick={resetChanges}>
                             Reset all changes
                         </button>
                     </p>
