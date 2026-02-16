@@ -99,16 +99,22 @@ const MakerCard: FC<MakerCardProps> = (props) => {
               ✏️
             </div>
           )}
-          {props.onlyF && (
-            <span className="absolute top-0 right-0 text-xs bg-white bg-opacity-20 rounded-full p-1">
-              🍂
-            </span>
-          )}
-          {props.onlyS && (
-            <span className="absolute top-0 right-0 text-xs bg-white bg-opacity-20 rounded-full p-1">
-              ❄️
-            </span>
-          )}
+          {(() => {
+            if (props.onlyF && props.onlyS) {
+              console.warn(`WARNING: ${props.code} is marked as only fall and only winter`);
+              return null;
+            }
+
+            let icon = null;
+            if (props.onlyF) icon = "🍂";
+            else if (props.onlyS) icon = "❄️";
+
+            return icon && (
+              <span className="absolute top-0 right-0 text-xs bg-white bg-opacity-20 rounded-full p-1">
+                {icon}
+              </span>
+            );
+          })()}
         </article>
       )}
     </Draggable>
