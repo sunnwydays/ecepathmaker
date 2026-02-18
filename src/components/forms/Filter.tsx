@@ -3,7 +3,6 @@ import { FilterState, GridPosition, YearTerm } from "../../types/types";
 import TextInput from "./TextInput";
 import { useLayoutContext } from "../layout/Layout";
 import { addDependencies, filterCourses, getValidYearTerms } from "../../utils/utilImports";
-import { UniqueIdentifier } from "@dnd-kit/core";
 import Announcement from "../info/Announcement";
 
 const Filter: FC<{
@@ -59,7 +58,7 @@ const Filter: FC<{
   } = useLayoutContext();
 
   // Puts the course on the earliest available slot
-  const putCourseOnAvailable = (code: UniqueIdentifier): GridPosition => {
+  const putCourseOnAvailable = (code: string): GridPosition => {
     const course = courses[code];
 
     const ValidYearTermsProps = {
@@ -96,7 +95,7 @@ const Filter: FC<{
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    let code: UniqueIdentifier = '';
+    let code: string = '';
     let found = false;
 
     for (const [potentialCode, potentialPos] of Object.entries(coursesUsed)) {

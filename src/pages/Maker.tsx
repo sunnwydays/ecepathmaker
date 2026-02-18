@@ -22,6 +22,7 @@ const Maker = () => {
     isArtSci: false,
     onlyF: false,
     onlyS: false,
+    index: -1,
   });
   const [preqString, setPreqString] = useState("");
   const [coreqString, setCoreqString] = useState("");

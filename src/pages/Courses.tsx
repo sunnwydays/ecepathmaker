@@ -1,16 +1,13 @@
 import { useState } from "react";
+import {PointerActivationConstraints} from "@dnd-kit/dom"
 import {
-  DndContext,
-  DragEndEvent,
+  DragDropProvider,
   DragOverlay,
-  DragStartEvent,
-  MouseSensor,
-  TouchSensor,
-  UniqueIdentifier,
-  useSensor,
-  useSensors,
-} from "@dnd-kit/core";
-import { arrayMove, SortableContext } from "@dnd-kit/sortable";
+  PointerSensor,
+  KeyboardSensor,
+} from "@dnd-kit/react";
+
+import { move } from "@dnd-kit/helpers";
 import { createPortal } from "react-dom";
 
 import { FilterState } from "../types/types";
@@ -18,19 +15,15 @@ import { mockCourses } from "../utils/dataImports";
 import { CourseCard, Filter } from "../utils/componentImports";
 
 const Courses = () => {
-  const sensors = useSensors(
-    useSensor(MouseSensor, {
-      activationConstraint: {
-        distance: 2,
-      },
+  const sensors = [
+    PointerSensor.configure({
+      activationConstraints: [
+        new PointerActivationConstraints.Distance({ value: 2 }),
+        new PointerActivationConstraints.Delay({ value: 100, tolerance: 5 }),
+      ],
     }),
-    useSensor(TouchSensor, {
-      activationConstraint: {
-        delay: 100,
-        tolerance: 5,
-      },
-    })
-  );
+    KeyboardSensor,
+  ];
 
   const [filters, setFilters] = useState<FilterState>({
     searchTerm: "",
@@ -76,26 +69,8 @@ const Courses = () => {
   };
 
   const [coursesId, setCoursesId] = useState<string[]>(
-    Object.keys(mockCourses)
+    Object.keys(mockCourses),
   );
-  const [activeCourse, setActiveCourse] = useState<UniqueIdentifier | null>(
-    null
-  );
-
-  const handleDragStart = (e: DragStartEvent) => {
-    setActiveCourse(e.active.id);
-  };
-  const handleDragEnd = (e: DragEndEvent) => {
-    setActiveCourse(null);
-
-    const { over, active } = e;
-    if (!over) return;
-    setCoursesId((coursesId) => {
-      const overIndex = coursesId.findIndex((id) => id === over.id);
-      const activeIndex = coursesId.findIndex((id) => id === active.id);
-      return arrayMove(coursesId, activeIndex, overIndex);
-    });
-  };
 
   return (
     <div>
@@ -103,45 +78,45 @@ const Courses = () => {
         🗂️ Explore and rearrange courses (all the courses on Magellan and more)!
       </h2>
       <Filter filters={filters} setFilters={setFilters} />
-      <DndContext
-        onDragStart={handleDragStart}
-        onDragEnd={handleDragEnd}
+      <DragDropProvider 
+        onDragEnd={event => (setCoursesId((coursesId) => move(coursesId, event)))} 
         sensors={sensors}
       >
-        <SortableContext items={coursesId}>
-          {(() => {
-            const filteredCourses = coursesId.filter(filterCourses);
+        {(() => {
+          const filteredCourses = coursesId.filter(filterCourses);
 
-            return filteredCourses.length ? (
-              <div className="mt-6 grid xl:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4">
-                {filteredCourses.map((course) => (
-                  <CourseCard
-                    key={course}
-                    id={course}
-                    code={course}
-                    {...mockCourses[course]}
-                  />
-                ))}
-              </div>
-            ) : (
-              <div className="mt-6 w-full text-center text-neutral3 italic select-none">
-                No courses match the current filter
-              </div>
-            );
-          })()}
-        </SortableContext>
-        {activeCourse &&
-          createPortal(
-            <DragOverlay>
+          return filteredCourses.length ? (
+            <div className="mt-6 grid xl:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4">
+              {filteredCourses.map((course, index) => (
+                <CourseCard
+                  index={index}
+                  key={course}
+                  id={course}
+                  code={course}
+                  {...mockCourses[course]}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="mt-6 w-full text-center text-neutral3 italic select-none">
+              No courses match the current filter
+            </div>
+          );
+        })()}
+        {createPortal(
+          <DragOverlay>
+            {(source) => (
               <CourseCard
-                id={activeCourse as string}
-                code={activeCourse as string}
-                {...mockCourses[activeCourse]}
+                index={-1}
+                id={source.id as string}
+                code={source.id as string}
+                {...mockCourses[source.id]}
               />
-            </DragOverlay>,
-            document.body
-          )}
-      </DndContext>
+            )}
+          </DragOverlay>,
+          document.body,
+        )}
+      </DragDropProvider>
     </div>
   );
 };

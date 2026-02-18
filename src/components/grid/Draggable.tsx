@@ -1,5 +1,5 @@
-import {useDraggable} from '@dnd-kit/core';
-import { FC, ReactNode, useEffect, useState, useCallback } from 'react';
+import { useDraggable } from '@dnd-kit/react';
+import { FC, ReactNode, useEffect, useState } from 'react';
 
 interface DraggableProps {
     children: (isExpanded: boolean) => ReactNode;
@@ -9,15 +9,9 @@ interface DraggableProps {
 const Draggable:FC<DraggableProps> = (props) => {
     const [isExpanded, setIsExpanded] = useState(false);
   
-  const {attributes, listeners, setNodeRef, transform,isDragging} = useDraggable({
-    id: props.id,
-  });
-  const style = transform ? {
-    transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
-    touchAction: isDragging ? "none" : "auto",
-  } : {
-    touchAction: isDragging ? "none" : "auto",
-  };
+  const draggable = useDraggable({ id: props.id, });
+  const { isDragging } = draggable;
+  const style = { touchAction: isDragging ? "none" : "auto"  };
 
   const styleClasses = `
     ${
@@ -37,12 +31,6 @@ const Draggable:FC<DraggableProps> = (props) => {
     }
   }, [isDragging]);
 
-  const setRefs = useCallback(
-    (node: HTMLButtonElement | null) => {
-        setNodeRef(node);
-    }, [setNodeRef]
-  );
-
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
         const element = document.querySelector(`[data-draggable-id="${props.id}"]`);
@@ -58,11 +46,10 @@ const Draggable:FC<DraggableProps> = (props) => {
 
   return (
     <button 
-      ref={setRefs}
+      ref={draggable.ref}
       style={style} 
       className={styleClasses} 
-      {...listeners} 
-      {...attributes} 
+ 
       data-draggable-id={props.id}
       onClick={() => {setIsExpanded(!isExpanded)}}
     >

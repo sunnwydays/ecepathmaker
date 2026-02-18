@@ -191,6 +191,7 @@ const CourseForm: FC<CourseFormProps> = ({
       isArtSci: false,
       onlyF: false,
       onlyS: false,
+      index: -1,
     });
 
     setJustSubmitted(true);

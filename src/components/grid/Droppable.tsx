@@ -1,4 +1,4 @@
-import { useDroppable } from "@dnd-kit/core";
+import { useDroppable } from "@dnd-kit/react";
 import { FC, ReactNode } from "react";
 
 interface DroppableProps {
@@ -8,9 +8,7 @@ interface DroppableProps {
 }
 
 const Droppable: FC<DroppableProps> = (props) => {
-  const { isOver, setNodeRef } = useDroppable({
-    id: props.id,
-  });
+  const droppable = useDroppable({ id: props.id });
   const styleClasses = `
         absolute
         transition-all
@@ -19,7 +17,7 @@ const Droppable: FC<DroppableProps> = (props) => {
         rounded-md
         ${
           props.valid
-            ? isOver
+            ? droppable.isDropTarget
               ? "bg-green1 bg-opacity-70 size-36"
               : "bg-neutral1 dark:bg-gray-600 size-32"
             : "bg-comp3 bg-opacity-55 size-32 text-opacity-0"
@@ -28,7 +26,7 @@ const Droppable: FC<DroppableProps> = (props) => {
 
   return (
     <div className="relative size-32 flex items-center justify-center">
-      <div ref={setNodeRef} className={styleClasses}>
+      <div ref={droppable.ref} className={styleClasses}>
         {props.children}
       </div>
     </div>

@@ -1,7 +1,6 @@
 import { doc, setDoc, getDoc } from "firebase/firestore";
 import { db } from "./firebase";
 import { CourseCardPropsWithoutCode, CourseList, CoursesOnGrid, CoursesUsed, savedLayout } from "../types/types"
-import { UniqueIdentifier } from "@dnd-kit/core";
 
 // ========== HELPERS ==========
 
@@ -78,16 +77,16 @@ function deserializeCourses(data: SerializedCourseList): CourseList {
 }
 
 function serializeDependencies(
-  data: Map<UniqueIdentifier, Set<UniqueIdentifier>>
-): Record<UniqueIdentifier, UniqueIdentifier[]> {
+  data: Map<string, Set<string>>
+): Record<string, string[]> {
   return Object.fromEntries(
     Array.from(data.entries(), ([key, set]) => [key, Array.from(set.values())])
   );
 }
 
 function deserializeDependencies(
-  data: Record<UniqueIdentifier, UniqueIdentifier[]>
-): Map<UniqueIdentifier, Set<UniqueIdentifier>> {
+  data: Record<string, string[]>
+): Map<string, Set<string>> {
   return new Map(
     Object.entries(data).map(([key, arr]) => [key, new Set(arr)])
   );
@@ -119,7 +118,7 @@ export async function loadCoursesOnGrid(uid: string) {
 
 export async function saveDependencies(
   uid: string,
-  deps: Map<UniqueIdentifier, Set<UniqueIdentifier>>
+  deps: Map<string, Set<string>>
 ) {
   return saveUserData(uid, "dependencies", serializeDependencies(deps));
 }

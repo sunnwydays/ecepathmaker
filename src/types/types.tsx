@@ -1,4 +1,3 @@
-import { UniqueIdentifier } from "@dnd-kit/core";
 import { User } from "firebase/auth";
 
 interface CourseIdentifier {
@@ -26,7 +25,8 @@ interface ValidCourseTypeFlags {
 export type CourseCardProps = 
     CourseIdentifier & 
     ValidTermAvailability &
-    ValidCourseTypeFlags;
+    ValidCourseTypeFlags & 
+    {index: number};
 
 export interface DraggableCardProps extends CourseCardProps {
     id: string;
@@ -49,10 +49,8 @@ export interface LayoutContextType {
   coursesOnGrid: CoursesOnGrid;
   setCoursesOnGrid: React.Dispatch<React.SetStateAction<CoursesOnGrid>>;
 
-  dependencies: Map<UniqueIdentifier, Set<UniqueIdentifier>>;
-  setDependencies: React.Dispatch<
-    React.SetStateAction<Map<UniqueIdentifier, Set<UniqueIdentifier>>>
-  >;
+  dependencies: Map<string, Set<string>>;
+  setDependencies: React.Dispatch<React.SetStateAction<Map<string, Set<string>>>>;
 
   savedLayouts: savedLayout[];
   setSavedLayouts: React.Dispatch<React.SetStateAction<savedLayout[]>>;
@@ -106,10 +104,10 @@ export type CoursesOnGrid = Record<GridPositionBase, string>;
 export type CoursesUsed = Record<string, GridPosition>;
 export type ValidYearTerms = Record<YearTerm, boolean>
 export type addDependenciesProps = {
-    code: UniqueIdentifier;
+    code: string;
     courses: CourseList;
-    dependencies: Map<UniqueIdentifier, Set<UniqueIdentifier>>;
-    setDependencies?: React.Dispatch<React.SetStateAction<Map<UniqueIdentifier, Set<UniqueIdentifier>>>>;
+    dependencies: Map<string, Set<string>>;
+    setDependencies?: React.Dispatch<React.SetStateAction<Map<string, Set<string>>>>;
 }
 export type savedLayout = {
   name: string;
@@ -138,7 +136,7 @@ export interface ParseString {
     courses: CourseList;
     coursesOnGrid: CoursesOnGrid;
     coursesUsed: CoursesUsed;
-    dependencies: Map<UniqueIdentifier, Set<UniqueIdentifier>>;
+    dependencies: Map<string, Set<string>>;
 }
 
 export interface PresetProps {

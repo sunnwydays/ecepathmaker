@@ -11,6 +11,7 @@ describe("CourseCard", () => {
     streams: [1],
     onlyF: true,
     isCS: true,
+    index: -1
   };
 
   it("renders course details correctly", () => {

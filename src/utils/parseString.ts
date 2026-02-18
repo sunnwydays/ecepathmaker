@@ -9,7 +9,6 @@ import {
 import { addDependencies } from "./addDependencies";
 import { emptyGrid } from "./utilImports";
 import { validateCourseCode, validateCourseName } from "./validateCourse";
-import { UniqueIdentifier } from "@dnd-kit/core";
 
 export const isValidString = (str: string): boolean => {
   str = str.trim();
@@ -92,7 +91,7 @@ export const parseString = (str: string): ParseString => {
   const coursesOnGrid = { ...emptyGrid };
 
   const coursesUsed: CoursesUsed = {};
-  const dependencies: Map<UniqueIdentifier, Set<UniqueIdentifier>> = new Map();
+  const dependencies: Map<string, Set<string>> = new Map();
 
   const termMap: { [key: number]: string } = {
     0: "3F",

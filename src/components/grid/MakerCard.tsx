@@ -39,6 +39,7 @@ const MakerCard: FC<MakerCardProps> = (props) => {
       isArtSci: props.isArtSci,
       onlyF: props.onlyF,
       onlyS: props.onlyS,
+      index: props.index,
     });
     props.setPreqString(props.preq ? preqsToString(props.preq) : "");
     props.setCoreqString(props.coreq ? preqsToString(props.coreq) : "");

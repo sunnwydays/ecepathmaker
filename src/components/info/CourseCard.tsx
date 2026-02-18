@@ -1,6 +1,5 @@
 import { FC } from "react";
-import { useSortable } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
+import { useSortable } from "@dnd-kit/react/sortable";
 import { DraggableCardProps } from "../../types/types";
 import {
   getTextColor,
@@ -11,23 +10,12 @@ import {
 } from "../../utils/utilImports";
 
 const CourseCard: FC<DraggableCardProps> = (props) => {
-  const {
-    setNodeRef,
-    attributes,
-    listeners,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({
-    id: props.id,
-  });
+  const sortable = useSortable({ id: props.id, index: props.index });
   const style = {
-    transition,
-    transform: CSS.Transform.toString(transform),
     backgroundColor: getBackgroundColor(props.color, props.streams?.[0], props.isSciMath, props.isCS, props.isHSS),
   };
 
-  if (isDragging) {
+  if (sortable.isDragging) {
     return (
       <div
         className="
@@ -38,7 +26,7 @@ const CourseCard: FC<DraggableCardProps> = (props) => {
                     ring-2 ring-comp2
                 "
         style={style}
-        ref={setNodeRef}
+        ref={sortable.ref}
       />
     );
   }
@@ -53,10 +41,8 @@ const CourseCard: FC<DraggableCardProps> = (props) => {
                 rounded-md
                 ${getTextColor(props.color)}
             `}
-      ref={setNodeRef}
+      ref={sortable.ref}
       style={style}
-      {...attributes}
-      {...listeners}
     >
       <h1 className="text-lg font-medium">
         <span data-testid="course-code">{props.code}</span>

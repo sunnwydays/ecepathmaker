@@ -9,23 +9,15 @@ import {
   GridPositionBase,
   CourseCardPropsWithoutCode,
 } from "../../types/types";
-import {
-    Droppable,
-    MakerCard,
-} from "../../utils/componentImports";
-import { toPng } from 'html-to-image';
+import { Droppable, MakerCard } from "../../utils/componentImports";
+import { toPng } from "html-to-image";
 
 import {
-  DndContext,
-  DragEndEvent,
-  DragOverlay,
-  DragStartEvent,
-  MouseSensor,
-  TouchSensor,
-  UniqueIdentifier,
-  useSensor,
-  useSensors,
-} from "@dnd-kit/core";
+  KeyboardSensor,
+  PointerActivationConstraints,
+  PointerSensor,
+} from "@dnd-kit/dom";
+import { DragDropProvider, DragOverlay } from "@dnd-kit/react";
 import { createPortal } from "react-dom";
 import Filter from "../forms/Filter";
 import WillYouGraduate from "../info/WillYouGraduate";
@@ -79,39 +71,43 @@ const CourseGrid: FC<CourseGridProps> = ({
         "4F": true,
         "4S": true,
         XX: true,
-      } as ValidYearTerms),
-    []
+      }) as ValidYearTerms,
+    [],
   );
 
-  const [validYearTerms, setValidYearTerms] = useState<ValidYearTerms>(initialValidYearTerms);
-  const [activeCourse, setActiveCourse] = useState<UniqueIdentifier | null>(null);
+  const [validYearTerms, setValidYearTerms] = useState<ValidYearTerms>(
+    initialValidYearTerms,
+  );
 
   const conditions = useMemo(() => {
     const gridCourses = Object.values(coursesOnGrid).filter(
-      (code) => code !== ""
+      (code) => code !== "",
     );
 
     // Count courses per stream
-    const streamInfo = gridCourses.reduce((acc, code) => {
-      const courseStreams = courses[code]?.streams || [];
-      const isKernel = courses[code]?.kernel || false;
+    const streamInfo = gridCourses.reduce(
+      (acc, code) => {
+        const courseStreams = courses[code]?.streams || [];
+        const isKernel = courses[code]?.kernel || false;
 
-      courseStreams.forEach((stream) => {
-        if (!acc[stream]) {
-          acc[stream] = { count: 0, hasKernel: false };
-        }
-        acc[stream].count++;
-        if (isKernel) acc[stream].hasKernel = true;
-      });
-      return acc;
-    }, {} as Record<number, { count: number; hasKernel: boolean }>);
+        courseStreams.forEach((stream) => {
+          if (!acc[stream]) {
+            acc[stream] = { count: 0, hasKernel: false };
+          }
+          acc[stream].count++;
+          if (isKernel) acc[stream].hasKernel = true;
+        });
+        return acc;
+      },
+      {} as Record<number, { count: number; hasKernel: boolean }>,
+    );
 
     const streamCounts = Array.from({ length: 6 }, (_, i) => i + 1).reduce(
       (acc, stream) => {
         acc[stream] = streamInfo[stream]?.count || 0;
         return acc;
       },
-      {} as Record<number, number>
+      {} as Record<number, number>,
     );
 
     // Get streams meeting requirements
@@ -125,7 +121,7 @@ const CourseGrid: FC<CourseGridProps> = ({
           ([stream, info]) =>
             info.count >= 1 &&
             info.hasKernel &&
-            !depthStreams.includes(Number(stream))
+            !depthStreams.includes(Number(stream)),
         )
         .map(([stream]) => Number(stream)),
     ];
@@ -140,11 +136,11 @@ const CourseGrid: FC<CourseGridProps> = ({
     let ceOrEE = null; // null, 'CE', 'EE', or 'ECE'
     if (hasDepth && hasBreadth) {
       const numCEDepth = depthStreams.filter(
-        (stream) => stream === 5 || stream === 6
+        (stream) => stream === 5 || stream === 6,
       ).length;
       const numEEDepth = depthStreams.length - numCEDepth;
       const numCEBreadth = breadthStreams.filter(
-        (stream) => stream === 5 || stream === 6
+        (stream) => stream === 5 || stream === 6,
       ).length;
       const numEEBreadth = breadthStreams.length - numCEBreadth;
 
@@ -202,25 +198,21 @@ const CourseGrid: FC<CourseGridProps> = ({
     } as StreamRequirements;
   }, [coursesOnGrid, courses, coursesUsed]);
 
-  const sensors = useSensors(
-    useSensor(MouseSensor, {
-      activationConstraint: {
-        distance: 2,
-      },
+  const sensors = [
+    PointerSensor.configure({
+      activationConstraints: [
+        new PointerActivationConstraints.Distance({ value: 2 }),
+        new PointerActivationConstraints.Delay({ value: 100, tolerance: 5 }),
+      ],
     }),
-    useSensor(TouchSensor, {
-      activationConstraint: {
-        delay: 100,
-        tolerance: 5,
-      },
-    })
-  );
+    KeyboardSensor,
+  ];
 
   // Does not check prerequisites
-  const removeCourseFromSlot = (code: UniqueIdentifier, slot: GridPosition) => {
+  const removeCourseFromSlot = (code: string, slot: GridPosition) => {
     setCoursesOnGrid((prev) => {
       if (!slot) return prev;
-      return { ...prev, [slot]: "" }
+      return { ...prev, [slot]: "" };
     });
     setCoursesUsed((prev) => ({
       ...prev,
@@ -228,14 +220,14 @@ const CourseGrid: FC<CourseGridProps> = ({
     }));
     setCurrDeps(new Set());
     setDropError(DropError.NONE);
-  }
+  };
 
-  const [courseToRemove, setCourseToRemove] = useState<UniqueIdentifier>();
-  const [currDeps, setCurrDeps] = useState<Set<UniqueIdentifier>>(new Set());
+  const [courseToRemove, setCourseToRemove] = useState<string>();
+  const [currDeps, setCurrDeps] = useState<Set<string>>(new Set());
 
   // Remove a course from the grid safely by checking dependencies
   // Returns true if no dependency on grid, false otherwise
-  const checkPreqRemove = (course: UniqueIdentifier, slot: GridPosition): boolean => {
+  const checkPreqRemove = (course: string, slot: GridPosition): boolean => {
     const deps = dependencies.get(course);
     if (deps) {
       // check if any dependencies are on the grid
@@ -308,38 +300,46 @@ const CourseGrid: FC<CourseGridProps> = ({
 
     removeCourseFromSlot(course, slot);
     return true;
-  }
+  };
 
-  const handleDragStart = (e: DragStartEvent) => {
-    setActiveCourse(e.active.id);
+  const handleDragStart: React.ComponentProps<
+    typeof DragDropProvider
+  >["onDragStart"] = (event) => {
+    const { operation } = event;
+    if (!operation.source) return;
+    const course = operation.source.id;
     const ValidYearTermsProps = {
       coursesOnGrid,
       coursesUsed,
-      course: courses[e.active.id],
+      course: courses[course],
     };
     const validYearTerms = getValidYearTerms(ValidYearTermsProps);
     setValidYearTerms(validYearTerms);
   };
 
-  const handleDragEnd = (e: DragEndEvent) => {
-    setActiveCourse(null);
+  const handleDragEnd: React.ComponentProps<
+    typeof DragDropProvider
+  >["onDragEnd"] = (event) => {
+    if (event.canceled) return;
     setValidYearTerms(initialValidYearTerms);
-    const { over, active } = e;
-    const code = active.id;
+    const { operation } = event;
+    const { source, target } = operation;
 
-    // jest testing good for setting objectives
-    // console logging very useful for debugging here along with dev tools
-    // also looking online for documentation, videos, and examples
+    if (!source) return;
+    const code = source.id as string;
+
     const sourceContainer = coursesUsed[code];
-      
-    if (!over) {
+
+    if (!target) {
       checkPreqRemove(code, sourceContainer);
       return;
     }
 
+    const slot = target.id as GridPosition;
+
     // term offering restrictions
-    const targetTerm = (over.id as string)[1];
-    const course = courses[active.id as string];
+    const targetTerm = slot[1];
+    const course = courses[code];
 
     if (
       (course.onlyF && targetTerm === "S") ||
@@ -350,7 +350,7 @@ const CourseGrid: FC<CourseGridProps> = ({
       return;
     }
 
-    const yearTerm = getYearTerm(over.id as GridPosition);
+    const yearTerm = getYearTerm(slot);
 
     if (!validYearTerms[yearTerm]) {
       // somewhat accounting for moving prereq after moving the course
@@ -362,30 +362,32 @@ const CourseGrid: FC<CourseGridProps> = ({
     }
 
     // same slot
-    if (sourceContainer === over.id) return;
+    if (sourceContainer === slot) return;
 
-    addDependencies({code, courses, dependencies, setDependencies});
+    addDependencies({ code, courses, dependencies, setDependencies });
 
     const courseAtDestination =
-      coursesOnGrid[over.id as keyof typeof coursesOnGrid];
+      coursesOnGrid[slot as keyof typeof coursesOnGrid];
 
     // Remove the course at destination if it doesn't have dependencies on grid
-    if (courseAtDestination && 
-        !checkPreqRemove(courseAtDestination, over.id as GridPosition)) {
+    if (
+      courseAtDestination &&
+      !checkPreqRemove(courseAtDestination, slot)
+    ) {
       return;
     }
 
     // Functional updater form (with prev) to use most up-to-date state, no batch
     setCoursesOnGrid((prev) => ({
       ...prev,
-      [over.id]: code,
+      [slot]: code,
       ...(sourceContainer && { [sourceContainer]: "" }),
     }));
 
     // put active course at the destination
     setCoursesUsed((prev) => ({
       ...prev,
-      [code]: over.id as GridPosition,
+      [code]: slot,
     }));
   };
 
@@ -421,7 +423,11 @@ const CourseGrid: FC<CourseGridProps> = ({
     `; // specify default text- color, hover:bg- color, and ring- color
 
   const clearGrid = () => {
-    if (!window.confirm("Are you sure you want to clear your layout? This will remove all courses from the grid."))
+    if (
+      !window.confirm(
+        "Are you sure you want to clear your layout? This will remove all courses from the grid.",
+      )
+    )
       return;
 
     setCoursesUsed(() => {
@@ -440,12 +446,12 @@ const CourseGrid: FC<CourseGridProps> = ({
     try {
       const dataUrl = await toPng(screenshotRef.current, { cacheBust: true });
 
-      const link = document.createElement('a');
-      link.download = 'pathmaker.png';
+      const link = document.createElement("a");
+      link.download = "pathmaker.png";
       link.href = dataUrl;
       link.click();
     } catch (error) {
-      console.error('Could not generate layout screenshot', error);
+      console.error("Could not generate layout screenshot", error);
     }
   };
 
@@ -484,9 +490,9 @@ const CourseGrid: FC<CourseGridProps> = ({
   };
 
   return (
-    <DndContext
-      onDragEnd={handleDragEnd}
+    <DragDropProvider
       onDragStart={handleDragStart}
+      onDragEnd={handleDragEnd}
       sensors={sensors}
     >
       <section className="flex lg:flex-row flex-col gap-x-6 gap-y-4">
@@ -496,31 +502,30 @@ const CourseGrid: FC<CourseGridProps> = ({
           data-testid="grid"
         >
           {Object.keys(emptyGrid).map((slot) => {
-              const courseCode: string = coursesOnGrid[slot as GridPositionBase];
-              return (
-                <Droppable
-                  key={slot}
-                  id={slot}
-                  valid={validYearTerms[getYearTerm(slot as GridPosition)]}
-                >
-                  {courseCode ? (
-                    <MakerCard
-                      valid={validYearTerms[getYearTerm(slot as GridPosition)]}
-                      id={courseCode}
-                      code={courseCode}
-                      setCustomInfo={setCustomInfo}
-                      setPreqString={setPreqString}
-                      setCoreqString={setCoreqString}
-                      {...courses[courseCode]}
-                    />
-                  ) : (
-                    slot
-                  )}
-                </Droppable>
-              )
+            const courseCode: string = coursesOnGrid[slot as GridPositionBase];
+            return (
+              <Droppable
+                key={slot}
+                id={slot}
+                valid={validYearTerms[getYearTerm(slot as GridPosition)]}
+              >
+                {courseCode ? (
+                  <MakerCard
+                    index={-1}
+                    valid={validYearTerms[getYearTerm(slot as GridPosition)]}
+                    id={courseCode}
+                    code={courseCode}
+                    setCustomInfo={setCustomInfo}
+                    setPreqString={setPreqString}
+                    setCoreqString={setCoreqString}
+                    {...courses[courseCode]}
+                  />
+                ) : (
+                  slot
+                )}
+              </Droppable>
+            );
           })}
-
-          
         </div>
         <div>
           {/* Courses to choose from */}
@@ -573,16 +578,20 @@ const CourseGrid: FC<CourseGridProps> = ({
             data-testid="bucket"
           >
             {(() => {
-              const filteredCourses = Object.entries(coursesUsed)
-                .filter(([courseCode]) => filterCourses(filters, courseCode, courses[courseCode]));
-              const unusedFilteredCourses = filteredCourses
-                .filter(([, isUsed]) => !isUsed);
+              const filteredCourses = Object.entries(coursesUsed).filter(
+                ([courseCode]) =>
+                  filterCourses(filters, courseCode, courses[courseCode]),
+              );
+              const unusedFilteredCourses = filteredCourses.filter(
+                ([, isUsed]) => !isUsed,
+              );
 
               const sortedUnused = [...unusedFilteredCourses].sort(sortCourses);
 
               return sortedUnused.length ? (
-                sortedUnused.map(([courseCode]) => (
+                sortedUnused.map(([courseCode], index) => (
                   <MakerCard
+                    index={index}
                     valid={true}
                     key={courseCode}
                     id={courseCode}
@@ -593,29 +602,28 @@ const CourseGrid: FC<CourseGridProps> = ({
                     {...courses[courseCode]}
                   />
                 ))
-              ) : (
-                filteredCourses.length ? (
-                  // print the courses that match
-                  <ul className="
+              ) : filteredCourses.length ? (
+                // print the courses that match
+                <ul
+                  className="
                                     text-neutral3 italic select-none
                                     list-disc list-inside"
-                  >
-                    Courses on grid that match the filter: {
-                      filteredCourses.map(([courseCode, pos]) => (
-                        <li className="not-italic" key={courseCode}>
-                          {pos}: {courseCode} - {courses[courseCode].name}
-                        </li>
-                      ))
-                    }
-                  </ul>
-                ) : (
-                <div className="
+                >
+                  Courses on grid that match the filter:{" "}
+                  {filteredCourses.map(([courseCode, pos]) => (
+                    <li className="not-italic" key={courseCode}>
+                      {pos}: {courseCode} - {courses[courseCode].name}
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <div
+                  className="
                                   w-full text-center 
                                   text-neutral3 italic select-none"
                 >
                   No courses match the current filter
                 </div>
-                )
               );
             })()}
           </div>
@@ -623,44 +631,48 @@ const CourseGrid: FC<CourseGridProps> = ({
       </section>
       {createPortal(
         <DragOverlay>
-          {activeCourse && (
+          {(source) => (
             <MakerCard
+              index={-1}
               valid={true}
-              id={activeCourse as string}
-              code={activeCourse as string}
+              id={source.id as string}
+              code={source.id as string}
               setCustomInfo={setCustomInfo}
               setPreqString={setPreqString}
               setCoreqString={setCoreqString}
-              {...courses[activeCourse]}
+              {...courses[source.id]}
             />
           )}
         </DragOverlay>,
-        document.body
+        document.body,
       )}
-      {dropError !== DropError.NONE && (() => {
-        let message = "Error";
+      {dropError !== DropError.NONE &&
+        (() => {
+          let message = "Error";
 
-        switch (dropError) {
-          case DropError.TERM:
-            message = courseToRemove 
-              ? `${courseToRemove} is ${courses[courseToRemove].onlyF ? 
-                "fall" : "winter"} only!`
-              : `Invalid term for this course!`;
-            break;
-          case DropError.PREREQ:
-            message = "Missing co/prerequisites!";
-            break;
-          case DropError.DEPEND:
-            message = `${[...currDeps].join(', ')} depend${currDeps.size == 1 ? 
-              's' : ''} on ${courseToRemove}!`;
-            break;
-        }
+          switch (dropError) {
+            case DropError.TERM:
+              message = courseToRemove
+                ? `${courseToRemove} is ${
+                    courses[courseToRemove].onlyF ? "fall" : "winter"
+                  } only!`
+                : `Invalid term for this course!`;
+              break;
+            case DropError.PREREQ:
+              message = "Missing co/prerequisites!";
+              break;
+            case DropError.DEPEND:
+              message = `${[...currDeps].join(", ")} depend${
+                currDeps.size == 1 ? "s" : ""
+              } on ${courseToRemove}!`;
+              break;
+          }
 
-        return <Announcement>{message}</Announcement>;
-      })()}
+          return <Announcement>{message}</Announcement>;
+        })()}
       <Filter filters={filters} setFilters={setFilters} />
       <WillYouGraduate conditions={conditions} />
-    </DndContext>
+    </DragDropProvider>
   );
 };
 

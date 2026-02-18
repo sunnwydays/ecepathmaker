@@ -9,11 +9,21 @@ import {
 } from "react";
 import { Analytics } from "@vercel/analytics/react";
 import { Footer, Navbar } from "../../utils/componentImports";
-import { CoursesOnGrid, CoursesUsed, LayoutContextType, savedLayout } from "../../types/types";
-import { UniqueIdentifier } from "@dnd-kit/core";
+import {
+  CoursesOnGrid,
+  CoursesUsed,
+  LayoutContextType,
+  savedLayout,
+} from "../../types/types";
 import { emptyGrid } from "../../utils/emptyGrid";
 import mockCourses from "../../data/mockCourses";
-import { saveCourses, saveCoursesOnGrid, saveCoursesUsed, saveDependencies, saveLayouts } from "../../firebase/firestore";
+import {
+  saveCourses,
+  saveCoursesOnGrid,
+  saveCoursesUsed,
+  saveDependencies,
+  saveLayouts,
+} from "../../firebase/firestore";
 import { auth } from "../../firebase/firebase";
 
 interface LayoutProps {
@@ -22,14 +32,13 @@ interface LayoutProps {
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const LayoutContext = createContext<LayoutContextType | undefined>(
-  undefined
+  undefined,
 );
 
 const Layout: FC<LayoutProps> = ({ children }) => {
-  
   // courses
   const [courses, setCourses] = useState(() => {
-  const savedCourses = localStorage.getItem("courses");
+    const savedCourses = localStorage.getItem("courses");
     if (savedCourses) return JSON.parse(savedCourses);
     return mockCourses;
   });
@@ -50,7 +59,7 @@ const Layout: FC<LayoutProps> = ({ children }) => {
   }, [courses]);
   const [coursesUsed, setCoursesUsed] =
     useState<CoursesUsed>(initialCoursesUsed);
-    useEffect(() => {
+  useEffect(() => {
     localStorage.setItem("coursesUsed", JSON.stringify(coursesUsed));
     const user = auth.currentUser;
     if (user) saveCoursesUsed(user.uid, coursesUsed);
@@ -69,11 +78,9 @@ const Layout: FC<LayoutProps> = ({ children }) => {
     const user = auth.currentUser;
     if (user) saveCoursesOnGrid(user.uid, coursesOnGrid);
   }, [coursesOnGrid]);
-  
+
   // Map of co/prerequisites to their dependencies (note, dependants would have probably be more accurate)
-  const initialDependencies = useMemo<
-    Map<UniqueIdentifier, Set<UniqueIdentifier>>
-  >(() => {
+  const initialDependencies = useMemo<Map<string, Set<string>>>(() => {
     const saved = localStorage.getItem("dependencies");
     if (!saved) return new Map();
 
@@ -85,11 +92,11 @@ const Layout: FC<LayoutProps> = ({ children }) => {
     }
   }, []);
   const [dependencies, setDependencies] =
-    useState<Map<UniqueIdentifier, Set<UniqueIdentifier>>>(initialDependencies);
+    useState<Map<string, Set<string>>>(initialDependencies);
   useEffect(() => {
-    const obj: [UniqueIdentifier, UniqueIdentifier[]][] = Array.from(
-      dependencies.entries()
-    ).map(([key, valueSet]) => [key, Array.from(valueSet)]);
+    const obj: [string, string[]][] = Array.from(dependencies.entries()).map(
+      ([key, valueSet]) => [key, Array.from(valueSet)],
+    );
     localStorage.setItem("dependencies", JSON.stringify(obj));
     const user = auth.currentUser;
     if (user) saveDependencies(user.uid, dependencies);
@@ -105,7 +112,7 @@ const Layout: FC<LayoutProps> = ({ children }) => {
     const user = auth.currentUser;
     if (user) saveLayouts(user.uid, savedLayouts);
   }, [savedLayouts]);
-  
+
   return (
     <LayoutContext.Provider
       value={{
