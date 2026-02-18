@@ -7,6 +7,7 @@ import {
   GridPosition,
   CoursesUsed,
   GridPositionBase,
+  CourseCardPropsWithoutCode,
 } from "../../types/types";
 import {
     Droppable,
@@ -448,6 +449,40 @@ const CourseGrid: FC<CourseGridProps> = ({
     }
   };
 
+  const sortCourses = (a: [string, GridPosition], b: [string, GridPosition]) => {
+    const codeA = a[0];
+    const codeB = b[0];
+    const courseA = courses[codeA];
+    const courseB = courses[codeB];
+
+    // Stream Number (ascending)
+    const streamA = courseA.streams && courseA.streams.length > 0 ? Math.min(...courseA.streams) : Infinity;
+    const streamB = courseB.streams && courseB.streams.length > 0 ? Math.min(...courseB.streams) : Infinity;
+
+    if (streamA !== streamB) {
+      return streamA - streamB;
+    }
+
+    // Rank: SciMath > CS non-HSS > HSS > Has prereqs > Others
+    const getPriority = (c: CourseCardPropsWithoutCode) => {
+      if (c.isSciMath) return 1;
+      if (c.isHSS) return 3;
+      if (c.isCS) return 2;
+      if (c.preq && c.preq.length > 0) return 4;
+      return 5;
+    };
+
+    const priorityA = getPriority(courseA);
+    const priorityB = getPriority(courseB);
+
+    if (priorityA !== priorityB) {
+      return priorityA - priorityB;
+    }
+
+    // Alphabetical
+    return codeA.localeCompare(codeB);
+  };
+
   return (
     <DndContext
       onDragEnd={handleDragEnd}
@@ -543,8 +578,10 @@ const CourseGrid: FC<CourseGridProps> = ({
               const unusedFilteredCourses = filteredCourses
                 .filter(([, isUsed]) => !isUsed);
 
-              return unusedFilteredCourses.length ? (
-                unusedFilteredCourses.map(([courseCode]) => (
+              const sortedUnused = [...unusedFilteredCourses].sort(sortCourses);
+
+              return sortedUnused.length ? (
+                sortedUnused.map(([courseCode]) => (
                   <MakerCard
                     valid={true}
                     key={courseCode}
