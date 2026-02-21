@@ -377,4 +377,17 @@ describe('Maker', () => {
         expect(screen.getByText(/This exist\?\?/)).toBeInTheDocument();
         expect(within(newGrid).getByText(/ECE345/)).toBeInTheDocument();
     });
+
+    it('deletes courses', () => {
+        const codeInput = screen.getByTestId('code-delete-input')
+        fireEvent.change(codeInput, { target: { value: 'ECE334' } });
+
+        expect(screen.getByText(/ECE334/)).toBeInTheDocument();
+
+        const formSubmit = screen.getByText('Delete Course');
+        fireEvent.click(formSubmit);
+
+        expect(screen.queryByText(/ECE334/)).not.toBeInTheDocument();
+        expect(screen.queryByText(/Digital Electronics/)).not.toBeInTheDocument();
+    });
 });

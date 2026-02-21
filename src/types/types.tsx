@@ -153,6 +153,7 @@ export interface SubmitButtonProps {
     additionalStyles?: string;
     disabled?: boolean;
     testId?: string;
+    variant?: 'primary' | 'danger';
 }
 
 export interface TextInputProps {

@@ -22,17 +22,69 @@ const CourseForm: FC<CourseFormProps> = ({
   const {
     setCourses,
     setCoursesUsed,
+    coursesUsed,
+    courses,
+    setCoursesOnGrid,
+    setDependencies,
   } = useLayoutContext();
 
   const [errors, setErrors] = useState({
     code: false,
     name: false,
     preq: false,
+    deleteCode: false,
+    courseNotFound: false,
   });
   const errorMessages = {
     code: "Must be 3 letters followed by 3 numbers",
     name: 'Course name cannot contain "**"',
     preq: "Must be comma (and)- or pipe (or)-separated course codes",
+    courseNotFound: "The course to delete does not exist",
+  };
+
+  const [deleteCourseCode, setDeleteCourse] = useState("");
+
+  const handleDeleteInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    setErrors((prev) => ({ ...prev, deleteCode: false, courseNotFound: false }));
+    setDeleteCourse(value.toUpperCase());
+  }
+
+  const handleDelete = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!validateCourseCode(deleteCourseCode)) {
+      setErrors((prev) => ({ ...prev, deleteCode: true, courseNotFound: false }));
+      return;
+    }
+    if (!(deleteCourseCode in courses)) {
+      setErrors((prev) => ({ ...prev, deleteCode: false, courseNotFound: true }));
+      return;
+    }
+
+    const positionToDelete = coursesUsed[deleteCourseCode];
+    if (positionToDelete) {
+      setCoursesOnGrid((prev) => ({ ...prev, [positionToDelete]: "" }));
+    }
+
+    setCourses((prev) => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { [deleteCourseCode]: _, ...remainingCourses } = prev;
+      return remainingCourses;
+    });
+    setCoursesUsed((prev) => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { [deleteCourseCode]: _, ...rest } = prev;
+      return rest;
+    });
+    setDependencies((prev) => {
+      const newMap = new Map(prev); // Use new Map to trigger useEffect
+      newMap.delete(deleteCourseCode);
+      return newMap;
+    });
+
+    setJustSubmitted(true);
+    setDeleteCourse("");
+    setErrors((prev) => ({ ...prev, deleteCode: false, courseNotFound: false }));
   };
 
   const parsePrerequisites = (preqString: string): (string | string[])[] => {
@@ -384,6 +436,32 @@ const CourseForm: FC<CourseFormProps> = ({
 
         <SubmitButton>Add/Update Course</SubmitButton>
       </form>
+
+      <hr className="my-4 stroke-2" />
+
+      <form
+        onSubmit={handleDelete}
+        className="flex flex-row items-start gap-2"
+        data-testid="course-delete-form"
+      >
+        <div className="flex-1">
+          <TextInput
+            name="code"
+            value={deleteCourseCode}
+            placeholder="Course Code"
+            onChange={handleDeleteInputChange}
+            testId="code-delete-input"
+          />
+        </div>
+        
+        <SubmitButton variant="danger">Delete Course</SubmitButton>
+      </form>
+      {errors.deleteCode && (
+        <p className="text-comp3 text-sm">{errorMessages.code}</p>
+      )}
+      {errors.courseNotFound && (
+        <p className="text-comp3 text-sm">{errorMessages.courseNotFound}</p>
+      )}
 
       {justSubmitted && (
         <Announcement success={true}>Course updated!</Announcement>

@@ -44,6 +44,7 @@ const SaveLayout: FC = () => {
       if (slot !== "3F.1" && slot.includes(".1")) newStr += "@@";
       if (!courseCode) return;
       const course = courses[courseCode];
+      if (!course) return;
       newStr += courseCode + course.name + "%%";
       if (course.streams) newStr += course.streams.join("");
       if (course.kernel) newStr += "k";
