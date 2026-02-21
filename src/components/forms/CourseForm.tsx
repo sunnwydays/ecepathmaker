@@ -308,7 +308,7 @@ const CourseForm: FC<CourseFormProps> = ({
               onChange={handleColorChange}
               placeholder="Colour (e.g. E0E0E0)"
               className="
-                w-full p-2 border rounded min-w-72
+                w-full p-2 border rounded min-w-36
               dark:bg-gray-500 dark:border-gray-400 dark:placeholder-gray-300"
             />
             <button
@@ -441,16 +441,17 @@ const CourseForm: FC<CourseFormProps> = ({
 
       <form
         onSubmit={handleDelete}
-        className="flex flex-row items-start gap-2"
+        className="flex flex-col lg:flex-row items-stretch lg:items-start gap-2"
         data-testid="course-delete-form"
       >
         <div className="flex-1">
           <TextInput
             name="code"
             value={deleteCourseCode}
-            placeholder="Course Code"
+            placeholder="Course Code (e.g. ECE444)*"
             onChange={handleDeleteInputChange}
             testId="code-delete-input"
+            minWidth="36"
           />
         </div>
         
