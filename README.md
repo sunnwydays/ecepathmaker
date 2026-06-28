@@ -2,6 +2,10 @@
 
 ECE Pathmaker is a visual drag-and-drop course planner for UofT electrical and computer engineering students. As an unofficial companion tool to UofT ECE's Magellan, it simplifies the planning process before finalizing your pre-registration.
 
+🌐 View the site! [**ecepathmaker.com**](https://ecepathmaker.com)
+
+🎥 Video explanation & demo: [**sunnywu.dev**](https://sunnywu.dev) / [**67s YouTube video**](https://www.youtube.com/shorts/0KyNmwPmiMw)
+
 ![Project Screenshot](./public/project_screenshot.png)
 
 ## Tech Stack
