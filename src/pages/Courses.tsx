@@ -118,7 +118,7 @@ const Courses = () => {
       <Seo
         title="Courses"
         path="/courses"
-        description="Browse and filter University of Toronto ECE courses by stream, term, and category to find the right ones for your degree."
+        description="Browse and filter UofT ECE courses by stream, term, and category"
         jsonLd={coursesJsonLd}
       />
       <h2 className="mb-8 text-2xl font-medium dark:text-gray-50">

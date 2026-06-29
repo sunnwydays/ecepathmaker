@@ -31,7 +31,7 @@ const Maker = () => {
     <div>
       <Seo
         path="/"
-        description="Build your University of Toronto ECE schedule with a free drag and drop grid that tracks prerequisites and corequisites as you plan."
+        description="UofT Magellan move over, plan your upper-year ECE courses on a drag-and-drop grid that tracks requirements without wait"
       />
       <CourseGrid
         setCustomInfo={setCustomInfo}

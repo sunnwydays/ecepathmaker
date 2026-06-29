@@ -43,7 +43,7 @@ const FAQ: FC = () => {
             <Seo
                 title="FAQ"
                 path="/faq"
-                description="Answers to common questions about using ECE Pathmaker and selecting University of Toronto ECE courses."
+                description="FAQs about course selection (I asked the registrar) and how to use ECE Pathmaker"
                 jsonLd={faqJsonLd}
             />
             <div className="bg-neutral2 dark:bg-slate-600 p-8 rounded-md text-center shadow-sm">

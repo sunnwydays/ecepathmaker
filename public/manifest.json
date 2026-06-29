@@ -1,7 +1,7 @@
 {
   "name": "ECE Pathmaker",
   "short_name": "Pathmaker",
-  "description": "Plan your University of Toronto ECE degree by mapping out courses and prerequisites with a free drag and drop course grid.",
+  "description": "ECEs, plan your courses with drag-and-drop - no loading and no fuss",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
