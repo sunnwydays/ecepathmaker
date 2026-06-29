@@ -192,7 +192,7 @@ const CourseForm: FC<CourseFormProps> = ({
   };
 
   const [justSubmitted, setJustSubmitted] = useState(false);
-  const timeoutRef = useRef<NodeJS.Timeout>();
+  const timeoutRef = useRef<ReturnType<typeof setTimeout>>();
 
   useEffect(() => {
     if (justSubmitted) {

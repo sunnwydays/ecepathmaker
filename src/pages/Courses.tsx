@@ -16,6 +16,22 @@ import { createPortal } from "react-dom";
 import { FilterState } from "../types/types";
 import { mockCourses } from "../utils/dataImports";
 import { CourseCard, Filter } from "../utils/componentImports";
+import Seo from "../components/seo/Seo";
+import { SITE_URL } from "../lib/site";
+
+const coursesJsonLd: Record<string, unknown> = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Home", item: SITE_URL },
+    {
+      "@type": "ListItem",
+      position: 2,
+      name: "Courses",
+      item: `${SITE_URL}/courses`,
+    },
+  ],
+};
 
 const Courses = () => {
   const sensors = useSensors(
@@ -99,6 +115,12 @@ const Courses = () => {
 
   return (
     <div>
+      <Seo
+        title="Courses"
+        path="/courses"
+        description="Browse and filter UofT ECE courses by stream, term, and category"
+        jsonLd={coursesJsonLd}
+      />
       <h2 className="mb-8 text-2xl font-medium dark:text-gray-50">
         🗂️ Explore and rearrange courses (all the courses on Magellan and more)!
       </h2>

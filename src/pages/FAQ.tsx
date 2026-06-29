@@ -1,6 +1,17 @@
 import { FC, useEffect, useState } from 'react';
 import { siteFaqData, courseFaqData } from "../data/faqData";
 import { FAQCard } from "../utils/componentImports";
+import Seo from "../components/seo/Seo";
+import { SITE_URL } from "../lib/site";
+
+const faqJsonLd: Record<string, unknown> = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Home", item: SITE_URL },
+        { "@type": "ListItem", position: 2, name: "FAQ", item: `${SITE_URL}/faq` },
+    ],
+};
 
 const FAQ: FC = () => {
     const [showButton, setShowButton] = useState(false);
@@ -29,6 +40,12 @@ const FAQ: FC = () => {
 
     return (
         <div className="dark:text-gray-50">
+            <Seo
+                title="FAQ"
+                path="/faq"
+                description="FAQs about course selection (I asked the registrar) and how to use ECE Pathmaker"
+                jsonLd={faqJsonLd}
+            />
             <div className="bg-neutral2 dark:bg-slate-600 p-8 rounded-md text-center shadow-sm">
                 <h2 className="text-2xl font-bold dark:text-gray-50">FAQs</h2>
                 <ul className="space-y-2 mt-4">

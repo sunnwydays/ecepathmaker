@@ -6,6 +6,7 @@ import {
   LoadLayout,
   SaveLayout,
 } from "../utils/componentImports";
+import Seo from "../components/seo/Seo";
 
 const Maker = () => {
 
@@ -28,6 +29,10 @@ const Maker = () => {
 
   return (
     <div>
+      <Seo
+        path="/"
+        description="UofT Magellan move over, plan your upper-year ECE courses on a drag-and-drop grid that tracks requirements without wait"
+      />
       <CourseGrid
         setCustomInfo={setCustomInfo}
         setPreqString={setPreqString}
