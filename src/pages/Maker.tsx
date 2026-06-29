@@ -6,6 +6,7 @@ import {
   LoadLayout,
   SaveLayout,
 } from "../utils/componentImports";
+import Seo from "../components/seo/Seo";
 
 const Maker = () => {
 
@@ -28,6 +29,10 @@ const Maker = () => {
 
   return (
     <div>
+      <Seo
+        path="/"
+        description="Build your University of Toronto ECE schedule with a free drag and drop grid that tracks prerequisites and corequisites as you plan."
+      />
       <CourseGrid
         setCustomInfo={setCustomInfo}
         setPreqString={setPreqString}

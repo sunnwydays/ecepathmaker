@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.tsx'
 import { AuthProvider } from './contexts/AuthContext.tsx';
+import { HelmetProvider } from 'react-helmet-async';
 
 const storedTheme = localStorage.getItem('theme');
 if (storedTheme === 'dark') {
@@ -13,8 +14,10 @@ if (storedTheme === 'dark') {
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-      <AuthProvider>
-            <App />
-      </AuthProvider>
+      <HelmetProvider>
+          <AuthProvider>
+                <App />
+          </AuthProvider>
+      </HelmetProvider>
   </StrictMode>,
 )

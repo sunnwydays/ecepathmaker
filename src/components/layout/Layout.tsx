@@ -15,6 +15,27 @@ import { emptyGrid } from "../../utils/emptyGrid";
 import mockCourses from "../../data/mockCourses";
 import { saveCourses, saveCoursesOnGrid, saveCoursesUsed, saveDependencies, saveLayouts } from "../../firebase/firestore";
 import { auth } from "../../firebase/firebase";
+import Seo from "../seo/Seo";
+import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "../../lib/site";
+
+const siteJsonLd: Record<string, unknown>[] = [
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    name: SITE_NAME,
+    url: SITE_URL,
+    description: SITE_DESCRIPTION,
+    applicationCategory: "EducationalApplication",
+    operatingSystem: "Web",
+    offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: SITE_NAME,
+    url: SITE_URL,
+  },
+];
 
 interface LayoutProps {
   children: ReactNode;
@@ -121,6 +142,7 @@ const Layout: FC<LayoutProps> = ({ children }) => {
         setSavedLayouts,
       }}
     >
+      <Seo jsonLd={siteJsonLd} />
       <div className="min-h-screen flex flex-col w-max md:w-full dark:bg-gray-700">
         <div className="h-24" />
         <Navbar />
