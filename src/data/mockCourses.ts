@@ -422,6 +422,11 @@ const courses: CourseList = {
     isCS: true,
     isHSS: true,
   },
+  ECO101: {
+    name: "Principles of Microeconomics",
+    isCS: true,
+    isArtSci: true,
+  },
   ENT200: {
     name: "Introduction to Entrepreneurship",
     isCS: true,
