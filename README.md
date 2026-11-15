@@ -34,6 +34,8 @@ To get started with the project, follow these steps:
 
 Contributions are welcome! Please fork the repository and submit a pull request.
 
+When you change `mockCourses.ts`, add an entry to `src/data/courseUpdates.ts` so existing users receive it.
+
 ## Future Work
 
 - [x] Proper mobile experience

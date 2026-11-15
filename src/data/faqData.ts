@@ -59,7 +59,7 @@ export const siteFaqData: FAQ = [
     },
     {
         question: "What should I do if my prerequisites aren't working or some info isn't consistent?",
-        answer: "To regenerate the dependencies of your courses on grid, you can save your current layout to one of the four saved layout slots, then immediately load that layout again. For inconsistent info or for trying to get updates, you may need to use the 'Reset all changes' button in the footer because the locally saved info is out of date (make sure to have a backup screenshot of your layout)."
+        answer: "To regenerate the dependencies of your courses on grid, you can save your current layout to one of the four saved layout slots, then immediately load that layout again. New and corrected courses now arrive automatically, so you shouldn't need to reset for updates. If the info is still inconsistent because of your own edits, the 'Reset all changes' button in the footer undoes them (make sure to have a backup screenshot of your layout)."
     },
     {
         question: "Can I add courses using the keyboard? / How can I quickly add courses copying another format (e.g. Magellan)?",
