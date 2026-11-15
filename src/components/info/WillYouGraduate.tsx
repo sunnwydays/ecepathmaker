@@ -67,10 +67,10 @@ const WillYouGraduate: FC<WillYouGraduateProps> = ({ result, curriculum }) => {
               <Fragment key={r.id}>
                 {renderResult(r)}
                 {r.id === "depth" && result.depthGroups.length > 0 && (
-                  <li>Depth streams: {result.depthGroups.join(", ")}</li>
+                  <li>Possible depth streams:{result.depthGroups.join(", ")}</li>
                 )}
                 {r.id === "breadth" && result.breadthGroups.length > 0 && (
-                  <li>Breadth streams: {result.breadthGroups.join(", ")}</li>
+                  <li>Other kernel streams:{result.breadthGroups.join(", ")}</li>
                 )}
               </Fragment>
             ))}
@@ -161,12 +161,16 @@ const WillYouGraduate: FC<WillYouGraduateProps> = ({ result, curriculum }) => {
           <p>Check on your own: {curriculum.manualChecks}</p>
           <p>
             Known concerns:{" "}
-            <b className="font-medium">
-              {curriculum.membership
-                ? "Custom courses placed in a group are not checked against the calendar's lists"
-                : "A course in multiple streams will in all of those streams which may affect your depth and breadth calculation"}
-            </b>
-            , dragging a course with prereq then removing prereq, no minor/cert
+            {curriculum.membership && (
+              <>
+                <b className="font-medium">
+                  Custom courses placed in a group are not checked against the
+                  calendar's lists
+                </b>
+                ,{" "}
+              </>
+            )}
+            dragging a course with prereq then removing prereq, no minor/cert
             check.
           </p>
         </div>
