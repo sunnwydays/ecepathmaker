@@ -22,6 +22,7 @@ interface ValidCourseTypeFlags {
     isHSS?: boolean;
     isArtSci?: boolean;
     isSciMath?: boolean;
+    isExtra?: boolean; // extra course: on the grid but not for degree credit
 };
 
 export type CourseCardProps = 
@@ -35,6 +36,10 @@ export interface DraggableCardProps extends CourseCardProps {
 
 export interface MakerCardProps extends DraggableCardProps {
     valid: boolean;
+    // Only for cards on the grid: switches the extra (EXT) flag
+    onToggleExtra?: () => void;
+    // Smaller card for a grid cell while the sixth column is visible
+    compact?: boolean;
     setCustomInfo: React.Dispatch<React.SetStateAction<CourseCardProps>>;
     setPreqString: React.Dispatch<React.SetStateAction<string>>;
     setCoreqString: React.Dispatch<React.SetStateAction<string>>;
@@ -60,6 +65,9 @@ export interface LayoutContextType {
 
   curriculumId: string;
   setCurriculumId: React.Dispatch<React.SetStateAction<string>>;
+
+  showSixth: boolean;
+  setShowSixth: React.Dispatch<React.SetStateAction<boolean>>;
 
   coursesVersion: number;
   setCoursesVersion: React.Dispatch<React.SetStateAction<number>>;
@@ -102,11 +110,11 @@ export type YearTerm =
     | '3F' | '3S' | '4F' | '4S' | 'XX';
 
 export type GridPositionBase = 
-| '3F.1' | '3F.2' | '3F.3' | '3F.4' | '3F.5'
-| '3S.1' | '3S.2' | '3S.3' | '3S.4' | '3S.5'
-| '4F.1' | '4F.2' | '4F.3' | '4F.4' | '4F.5'
-| '4S.1' | '4S.2' | '4S.3' | '4S.4' | '4S.5'
-| 'XX.1' | 'XX.2' | 'XX.3' | 'XX.4' | 'XX.5';
+| '3F.1' | '3F.2' | '3F.3' | '3F.4' | '3F.5' | '3F.6'
+| '3S.1' | '3S.2' | '3S.3' | '3S.4' | '3S.5' | '3S.6'
+| '4F.1' | '4F.2' | '4F.3' | '4F.4' | '4F.5' | '4F.6'
+| '4S.1' | '4S.2' | '4S.3' | '4S.4' | '4S.5' | '4S.6'
+| 'XX.1' | 'XX.2' | 'XX.3' | 'XX.4' | 'XX.5' | 'XX.6';
 
 export type GridPosition = GridPositionBase | '';
 

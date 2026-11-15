@@ -149,6 +149,13 @@ export async function loadCurriculum(uid: string) {
   return loadUserData(uid, "curriculum", "");
 }
 
+export async function saveShowSixth(uid: string, showSixth: boolean) {
+  return saveUserData(uid, "showSixth", showSixth);
+}
+export async function loadShowSixth(uid: string) {
+  return loadUserData<boolean>(uid, "showSixth", false);
+}
+
 export async function saveCoursesVersion(uid: string, version: number) {
   return saveUserData(uid, "coursesVersion", version);
 }

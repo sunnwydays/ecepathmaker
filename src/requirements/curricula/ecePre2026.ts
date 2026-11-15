@@ -41,6 +41,16 @@ export const commonRules: Rule[] = [
     ],
     year: "4",
   },
+  {
+    id: "courseLimit",
+    showProgress: true,
+    label: "Course limit",
+    tooltip:
+      "At most 20 courses count toward the degree. Mark any others as extra (EXT) on the card. EXT courses only count toward minors and certificates",
+    section: "basics",
+    type: "maxCourses",
+    max: 20,
+  },
 ];
 
 // Students admitted before Fall 2026: six areas, with CE/EE worked out from

@@ -5,6 +5,7 @@ import Preset from "./Preset";
 import TextInput from "./TextInput";
 import SubmitButton from "../SubmitButton";
 import { useLayoutContext } from "../layout/Layout";
+import { clearExtra } from "../../utils/extraCourses";
 
 enum Load {
   NONE,
@@ -35,7 +36,11 @@ const LoadLayout: FC = () => {
     const result = parseString(str);
 
     setCoursesOnGrid(result.coursesOnGrid);
-    setCourses({ ...courses, ...result.courses });
+    // A course that is not on the loaded grid must not keep its extra flag
+    setCourses({
+      ...clearExtra(courses, Object.keys(courses)),
+      ...result.courses,
+    });
     Object.keys(coursesUsed).forEach((key) => {
       coursesUsed[key] = "";
     });

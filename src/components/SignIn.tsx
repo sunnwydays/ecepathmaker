@@ -5,7 +5,8 @@ import { useAuth } from "../contexts/AuthContext";
 import { useLayoutContext } from "./layout/Layout";
 import { getCurriculum } from "../requirements/curricula";
 import { applyCourseUpdates, refreshDependencies } from "../utils/applyCourseUpdates";
-import { loadCourses, loadCoursesOnGrid, loadCoursesVersion, loadCurriculum, loadCoursesUsed, loadDependencies, loadLayouts, loadTheme } from "../firebase/firestore";
+import { emptyGrid } from "../utils/emptyGrid";
+import { loadCourses, loadCoursesOnGrid, loadCoursesVersion, loadCurriculum, loadShowSixth, loadCoursesUsed, loadDependencies, loadLayouts, loadTheme } from "../firebase/firestore";
 
 const SignIn: FC = () => {
   const { signedIn } = useAuth();
@@ -17,6 +18,7 @@ const SignIn: FC = () => {
     setCoursesOnGrid,
     setDependencies,
     setCurriculumId,
+    setShowSixth,
     setCoursesVersion,
   } = useLayoutContext();
 
@@ -35,6 +37,7 @@ const SignIn: FC = () => {
         remoteDependencies,
         remoteTheme,
         remoteCurriculum,
+        remoteShowSixth,
         remoteCoursesVersion,
       ] = await Promise.all([
         loadLayouts(user.uid),
@@ -44,6 +47,7 @@ const SignIn: FC = () => {
         loadDependencies(user.uid),
         loadTheme(user.uid),
         loadCurriculum(user.uid),
+        loadShowSixth(user.uid),
         loadCoursesVersion(user.uid),
       ]);
 
@@ -67,9 +71,10 @@ const SignIn: FC = () => {
           remoteDependencies ?? new Map()
         );
       }
-      if (Object.keys(remoteCoursesOnGrid ?? {}).length) setCoursesOnGrid(remoteCoursesOnGrid);
+      if (Object.keys(remoteCoursesOnGrid ?? {}).length) setCoursesOnGrid({ ...emptyGrid, ...remoteCoursesOnGrid });
       if (dependencies?.size) setDependencies(dependencies);
       if (remoteCurriculum) setCurriculumId(getCurriculum(remoteCurriculum).id);
+      if (remoteShowSixth) setShowSixth(true);
       if (remoteTheme) {
         if (remoteTheme == 'dark') {
           document.documentElement.classList.add('dark');

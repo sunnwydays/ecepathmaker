@@ -15,7 +15,7 @@ import { emptyGrid } from "../../utils/emptyGrid";
 import mockCourses from "../../data/mockCourses";
 import { COURSE_DATA_VERSION } from "../../data/courseUpdates";
 import { applyCourseUpdates, refreshDependencies } from "../../utils/applyCourseUpdates";
-import { saveCourses, saveCoursesOnGrid, saveCoursesVersion, saveCoursesUsed, saveCurriculum, saveDependencies, saveLayouts } from "../../firebase/firestore";
+import { saveCourses, saveCoursesOnGrid, saveCoursesVersion, saveCoursesUsed, saveCurriculum, saveDependencies, saveShowSixth, saveLayouts } from "../../firebase/firestore";
 import { auth } from "../../firebase/firebase";
 import Seo from "../seo/Seo";
 import { getCurriculum } from "../../requirements/curricula";
@@ -115,7 +115,8 @@ const Layout: FC<LayoutProps> = ({ children }) => {
   // coursesOnGrid
   const initialCoursesOnGrid = useMemo<CoursesOnGrid>(() => {
     const savedCoursesOnGrid = localStorage.getItem("coursesOnGrid");
-    if (savedCoursesOnGrid) return JSON.parse(savedCoursesOnGrid);
+    // Grids saved before the sixth column have no .6 keys
+    if (savedCoursesOnGrid) return { ...emptyGrid, ...JSON.parse(savedCoursesOnGrid) };
     return emptyGrid;
   }, []);
   const [coursesOnGrid, setCoursesOnGrid] =
@@ -180,6 +181,16 @@ const Layout: FC<LayoutProps> = ({ children }) => {
     if (user) saveCurriculum(user.uid, curriculumId);
   }, [curriculumId]);
 
+  // showSixth (whether the sixth column is shown even when it is empty)
+  const [showSixth, setShowSixth] = useState<boolean>(
+    () => localStorage.getItem("showSixth") === "true"
+  );
+  useEffect(() => {
+    localStorage.setItem("showSixth", String(showSixth));
+    const user = auth.currentUser;
+    if (user) saveShowSixth(user.uid, showSixth);
+  }, [showSixth]);
+
   return (
     <LayoutContext.Provider
       value={{
@@ -195,6 +206,8 @@ const Layout: FC<LayoutProps> = ({ children }) => {
         setSavedLayouts,
         curriculumId,
         setCurriculumId,
+        showSixth,
+        setShowSixth,
         coursesVersion,
         setCoursesVersion,
       }}

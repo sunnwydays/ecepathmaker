@@ -35,6 +35,13 @@ import { addDependencies } from "../../utils/utilImports";
 import { emptyGrid, filterCourses } from "../../utils/utilImports";
 import { evaluate, getMembership, hasFlag } from "../../requirements/evaluate";
 import { useCurriculum, useLayoutContext } from "../layout/Layout";
+import { clearExtra, toggleExtra } from "../../utils/extraCourses";
+
+// Display order of the grid only: XX (courses taken before third year) is
+// first. The layout string and the grid's key order still end with XX.
+const ROWS = ["XX", "3F", "3S", "4F", "4S"] as const;
+const FIVE_COLUMNS = [1, 2, 3, 4, 5];
+const SIX_COLUMNS = [1, 2, 3, 4, 5, 6];
 
 enum DropError {
   NONE = "NONE",
@@ -51,13 +58,21 @@ const CourseGrid: FC<CourseGridProps> = ({
 }) => {
   const {
     courses,
+    setCourses,
     coursesUsed,
     setCoursesUsed,
     coursesOnGrid,
     setCoursesOnGrid,
     dependencies,
     setDependencies,
+    showSixth,
   } = useLayoutContext();
+
+  // A filled sixth slot keeps the column visible (a loaded layout, a saved
+  // slot or a signed-in account can have one)
+  const sixthFilled = ROWS.some((term) => coursesOnGrid[`${term}.6`]);
+  const sixthVisible = showSixth || sixthFilled;
+  const columns = sixthVisible ? SIX_COLUMNS : FIVE_COLUMNS;
 
   const [filters, setFilters] = useState<FilterState>({
     searchTerm: "",
@@ -123,6 +138,7 @@ const CourseGrid: FC<CourseGridProps> = ({
       ...prev,
       [code]: "" as GridPosition,
     }));
+    setCourses((prev) => clearExtra(prev, [String(code)]));
     setCurrDeps(new Set());
     setDropError(DropError.NONE);
   }
@@ -327,6 +343,7 @@ const CourseGrid: FC<CourseGridProps> = ({
       return posMap;
     });
     setCoursesOnGrid(emptyGrid);
+    setCourses((prev) => clearExtra(prev, Object.keys(prev)));
   };
 
   const screenshotRef = createRef<HTMLDivElement>();
@@ -394,23 +411,34 @@ const CourseGrid: FC<CourseGridProps> = ({
     >
       <section className="flex lg:flex-row flex-col gap-x-6 gap-y-4">
         <div
-          className="grid grid-cols-5 gap-2 size-max flex-shrink-0"
+          className={`grid ${
+            sixthVisible ? "grid-cols-6" : "grid-cols-5"
+          } gap-2 size-max flex-shrink-0`}
           ref={screenshotRef}
           data-testid="grid"
         >
-          {Object.keys(emptyGrid).map((slot) => {
-              const courseCode: string = coursesOnGrid[slot as GridPositionBase];
+          {ROWS.flatMap((term) =>
+            columns.map((column) => {
+              const slot = `${term}.${column}` as GridPositionBase;
+              const courseCode: string = coursesOnGrid[slot];
+              const valid = validYearTerms[term];
               return (
                 <Droppable
                   key={slot}
                   id={slot}
-                  valid={validYearTerms[getYearTerm(slot as GridPosition)]}
+                  valid={valid}
+                  compact={sixthVisible}
+                  sixth={column === 6}
                 >
                   {courseCode ? (
                     <MakerCard
-                      valid={validYearTerms[getYearTerm(slot as GridPosition)]}
+                      valid={valid}
                       id={courseCode}
                       code={courseCode}
+                      compact={sixthVisible}
+                      onToggleExtra={() =>
+                        setCourses((prev) => toggleExtra(prev, courseCode))
+                      }
                       setCustomInfo={setCustomInfo}
                       setPreqString={setPreqString}
                       setCoreqString={setCoreqString}
@@ -420,10 +448,9 @@ const CourseGrid: FC<CourseGridProps> = ({
                     slot
                   )}
                 </Droppable>
-              )
-          })}
-
-          
+              );
+            })
+          )}
         </div>
         <div>
           {/* Courses to choose from */}

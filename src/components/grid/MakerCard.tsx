@@ -1,4 +1,5 @@
 import { FC } from "react";
+import { cellSize } from "./cellSize";
 import { MakerCardProps } from "../../types/types";
 import { Draggable } from "../../utils/componentImports";
 import { useCurriculum } from "../layout/Layout";
@@ -40,6 +41,7 @@ const MakerCard: FC<MakerCardProps> = (props) => {
       streams: props.streams,
       ...(props.group && { group: props.group }),
       ...(props.kernel && { kernel: props.kernel }),
+      ...(props.isExtra && { isExtra: true }),
       color: props.color ?? "",
       isCS: props.isCS,
       isHSS: props.isHSS,
@@ -58,15 +60,18 @@ const MakerCard: FC<MakerCardProps> = (props) => {
   };
 
   return (
-    <Draggable id={props.id}>
-      {(isExpanded) => (
+    <Draggable id={props.id} compact={props.compact}>
+      {(isExpanded) => {
+        // Compact only applies to the collapsed card; the expanded one is full size
+        const compact = props.compact && !isExpanded;
+        return (
         <article
           className={`
                     text-xs
                     ${
                       isExpanded
                         ? "size-[10rem] border-2 border-black border-opacity-20"
-                        : "size-32"
+                        : cellSize(compact).size
                     }
                     transition-[width,height]
                     flex flex-col items-center justify-center 
@@ -86,21 +91,64 @@ const MakerCard: FC<MakerCardProps> = (props) => {
               : "rgba(255, 111, 97, 0.7)",
           }}
         >
-          <h1 className="text-xl font-medium">{props.code}</h1>
+          <h1 className={`${compact ? "text-base" : "text-xl"} font-medium`}>
+            {props.code}
+          </h1>
           <p
             className={`${
-              isExpanded ? "w-36 line-clamp-3" : "w-28 line-clamp-2"
-            } text-center text-sm transition-width]`}
+              isExpanded
+                ? "w-36 line-clamp-3 text-sm"
+                : compact
+                  ? "w-[5.5rem] line-clamp-2 text-xs leading-tight"
+                  : "w-28 line-clamp-2 text-sm"
+            } text-center transition-width]`}
           >
             {props.name}
           </p>
-          {streamLabels && <p>Stream: {streamLabels}</p>}
-          {otherLabels && <p>{otherLabels}</p>}
+          {streamLabels && (
+            <p className={compact ? "text-[10px] leading-tight" : ""}>
+              Stream: {streamLabels}
+            </p>
+          )}
+          {otherLabels && (
+            <p
+              className={
+                compact
+                  ? "text-[10px] leading-tight w-[5.5rem] truncate text-center"
+                  : ""
+              }
+            >
+              {otherLabels}
+            </p>
+          )}
           {isExpanded && props.preq && props.preq.length > 0 && (
             <p>Preq: {getPreqLabels(props.preq)}</p>
           )}
           {isExpanded && props.coreq && props.coreq.length > 0 && (
             <p>Coreq: {getPreqLabels(props.coreq)}</p>
+          )}
+          {isExpanded && props.onToggleExtra && (
+            <div
+              className={`absolute top-0 right-10 text-[10px] font-medium leading-none rounded-full p-1 border border-black border-opacity-30 ${
+                props.isExtra ? "bg-black bg-opacity-30" : "bg-white bg-opacity-20"
+              }`}
+              onClick={(e) => {
+                e.stopPropagation();
+                props.onToggleExtra?.();
+              }}
+              onKeyDown={(e) => {
+                if (e.key !== "Enter" && e.key !== " ") return;
+                e.stopPropagation();
+                props.onToggleExtra?.();
+              }}
+              tabIndex={0}
+              role="button"
+              aria-pressed={Boolean(props.isExtra)}
+              title="Extra course: not for degree credit"
+              data-testid="toggle-ext"
+            >
+              EXT
+            </div>
           )}
           {isExpanded && (
             <div // because button cannot be a child of a button
@@ -112,6 +160,14 @@ const MakerCard: FC<MakerCardProps> = (props) => {
             >
               ✏️
             </div>
+          )}
+          {props.isExtra && (
+            <span
+              className="absolute top-0 left-0 text-xs bg-white bg-opacity-20 rounded-full p-1"
+              data-testid="ext-badge"
+            >
+              EXT
+            </span>
           )}
           {(() => {
             if (props.onlyF && props.onlyS) {
@@ -130,7 +186,8 @@ const MakerCard: FC<MakerCardProps> = (props) => {
             );
           })()}
         </article>
-      )}
+        );
+      }}
     </Draggable>
   );
 };

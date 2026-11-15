@@ -43,14 +43,14 @@ export const isValidString = (str: string): boolean => {
   const validOptionChars = new Set([
     "f", "s",
     "1", "2", "3", "4", "5", "6", "k",
-    "c", "h", "m", "a",
+    "c", "h", "m", "a", "x",
     "A", "B", "C",
   ]);
 
   return terms.every((term) => {
     // Check each term
     const courses = term.split("$$");
-    if (courses.length > 5) return false;
+    if (courses.length > 6) return false;
 
     return courses.every((course) => {
       if (!course) return true; // Empty slots are allowed
@@ -127,7 +127,7 @@ export const parseString = (str: string): ParseString => {
     if (termIndex > 4) return;
     const coursesInTerm = term.split("$$");
     coursesInTerm.forEach((courseStr, slotIndex) => {
-      if (!courseStr || slotIndex > 4) return;
+      if (!courseStr || slotIndex > 5) return;
 
       const [codeAndName, optionsWithPreq] = courseStr.split("%%");
       const code = codeAndName.substring(0, 6);
@@ -184,6 +184,9 @@ export const parseString = (str: string): ParseString => {
                 break;
               case "a":
                 course.isArtSci = true;
+                break;
+              case "x":
+                course.isExtra = true;
                 break;
               case "#": {
                 const { color, end } = readColor(options, i);
