@@ -259,3 +259,33 @@ describe("custom course groups", () => {
     expect(serializeLayout(g, c)).toBe("XYZ123Custom%%$$@@@@@@@@");
   });
 });
+
+describe("extra courses", () => {
+  test("x with a group, a colour and prerequisites together", () => {
+    const str = "XYZ123Custom%%Bx#aabbccpECE302";
+    expect(isValidString(str)).toBe(true);
+    expect(parseString(str).courses["XYZ123"]).toMatchObject({
+      group: "B",
+      isExtra: true,
+      color: "aabbcc",
+      preq: ["ECE302"],
+    });
+  });
+
+  test("x is written after a and before the colour, and round-trips", () => {
+    const g = grid({ "3F.1": "XYZ123" });
+    const c = {
+      XYZ123: course("Custom", { group: "B", isArtSci: true, isExtra: true, color: "aabbcc", preq: ["ECE302"] }),
+    };
+    const str = serializeLayout(g, c);
+    expect(str).toBe("XYZ123Custom%%Bax#aabbccpECE302$$@@@@@@@@");
+    expect(parseString(str).courses["XYZ123"]).toMatchObject({ isArtSci: true, isExtra: true, group: "B" });
+    expect(parseString(str).coursesOnGrid["3F.1"]).toBe("XYZ123");
+  });
+
+  test("a course without the flag has no isExtra key and writes no x", () => {
+    expect("isExtra" in parseString("XYZ123Custom%%k").courses["XYZ123"]).toBe(false);
+    const g = grid({ "3F.1": "AAA111" });
+    expect(serializeLayout(g, { AAA111: course("a", { isExtra: false }) })).toBe("AAA111a%%$$@@@@@@@@");
+  });
+});

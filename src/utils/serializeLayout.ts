@@ -21,6 +21,7 @@ const serializeCourse = (code: string, course: CourseList[string]): string => {
   else if (course.isCS) str += "c";
   if (course.isSciMath) str += "m";
   if (course.isArtSci) str += "a";
+  if (course.isExtra) str += "x";
   const color = normalizeColor(course.color);
   if (color) str += "#" + color;
 

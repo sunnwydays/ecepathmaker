@@ -43,7 +43,7 @@ export const isValidString = (str: string): boolean => {
   const validOptionChars = new Set([
     "f", "s",
     "1", "2", "3", "4", "5", "6", "k",
-    "c", "h", "m", "a",
+    "c", "h", "m", "a", "x",
     "A", "B", "C",
   ]);
 
@@ -184,6 +184,9 @@ export const parseString = (str: string): ParseString => {
                 break;
               case "a":
                 course.isArtSci = true;
+                break;
+              case "x":
+                course.isExtra = true;
                 break;
               case "#": {
                 const { color, end } = readColor(options, i);
