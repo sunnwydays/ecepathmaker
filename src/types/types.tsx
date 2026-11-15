@@ -9,6 +9,7 @@ interface CourseIdentifier {
     color?: string;
     streams?: number[];
     kernel?: boolean;
+    group?: string; // 2026 curricula group id (A, B or C)
 };
 
 interface ValidTermAvailability {
@@ -71,6 +72,7 @@ interface CourseIdentifierWithoutCode {
     color?: string;
     streams?: number[];
     kernel?: boolean;
+    group?: string; // 2026 curricula group id (A, B or C)
 };
 
 export type CourseCardPropsWithoutCode = 

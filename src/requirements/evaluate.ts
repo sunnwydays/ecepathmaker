@@ -23,9 +23,12 @@ export function getMembership(
 ): { groups: string[]; kernel: boolean } {
   if (curriculum.membership) {
     const entry = curriculum.membership[code];
-    return entry
-      ? { groups: [entry.group], kernel: entry.kernel === true }
-      : { groups: [], kernel: false };
+    if (entry) return { groups: [entry.group], kernel: entry.kernel === true };
+    // The official list wins; a custom course may carry its own group
+    if (course?.group && curriculum.groups.some((g) => g.id === course.group)) {
+      return { groups: [course.group], kernel: false };
+    }
+    return { groups: [], kernel: false };
   }
   if (!course) return { groups: [], kernel: false };
   return {

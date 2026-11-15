@@ -201,6 +201,22 @@ describe('2026 curricula: technical electives', () => {
   });
 });
 
+describe('2026 curricula: custom courses with a group', () => {
+  const custom = (group: string): CourseList => ({ XYZ123: { name: 'Custom', group } });
+
+  it.each([ele2026, cpe2026])('a custom Group B course counts as a technical elective and for depth', (curriculum) => {
+    const base = without(EE_PLAN, 'ECE427');
+    const r = run(curriculum, [...base, 'XYZ123'], custom('B'));
+    expect(result(r, 'techElectives')).toMatchObject({ met: true, have: 3, need: 3 });
+    expect(r.groupCounts.B).toBe(run(curriculum, base).groupCounts.B + 1);
+  });
+
+  it('a custom course never fills a kernel slot of breadth', () => {
+    const r = run(ele2026, without([...EE_PLAN, 'XYZ123'], 'ECE311'), custom('B'));
+    expect(result(r, 'breadth').met).toBe(false);
+  });
+});
+
 describe('2026 curricula: science/math is counted once (strict)', () => {
   // Only sci/math course is ECE302, which is also the only Group B kernel.
   const base = without(swap(EE_PLAN, 'ECE311', 'ECE302'), 'ECE357');
@@ -352,6 +368,27 @@ describe('getMembership and hasFlag', () => {
       kernel: true,
     });
     expect(getMembership(ecePre2026, 'ANY', { name: 'x' })).toEqual({ groups: [], kernel: false });
+  });
+
+  it("uses a custom course's group under 2026, never as a kernel", () => {
+    expect(getMembership(ele2026, 'XYZ123', { name: 'x', group: 'B' })).toEqual({ groups: ['B'], kernel: false });
+    expect(getMembership(cpe2026, 'XYZ123', { name: 'x', group: 'B', kernel: true })).toEqual({
+      groups: ['B'],
+      kernel: false,
+    });
+  });
+
+  it("ignores a group on an official course or an unknown group", () => {
+    expect(getMembership(ele2026, 'ECE335', { name: 'x', group: 'C' })).toEqual({ groups: ['A'], kernel: true });
+    expect(getMembership(ele2026, 'XYZ123', { name: 'x', group: 'Z' })).toEqual({ groups: [], kernel: false });
+  });
+
+  it('ignores group under ece-pre2026 and uses streams', () => {
+    expect(getMembership(ecePre2026, 'XYZ123', { name: 'x', group: 'B', streams: [2] })).toEqual({
+      groups: ['2'],
+      kernel: false,
+    });
+    expect(getMembership(ecePre2026, 'XYZ123', { name: 'x', group: 'B' })).toEqual({ groups: [], kernel: false });
   });
 
   it('a missing course means no groups', () => {
