@@ -10,7 +10,7 @@ ECE Pathmaker is a visual drag-and-drop course planner for UofT electrical and c
 
 ## What's New
 
-### ✨ AI Planner (new tab)
+### ✨ AI Planner
 
 Not sure where to start? The new **AI Planner** tab (`/plan`) builds a plan with any AI chat (ChatGPT, Claude, Gemini, ...), no account or API key needed:
 
@@ -19,16 +19,31 @@ Not sure where to start? The new **AI Planner** tab (`/plan`) builds a plan with
 3. **Paste the AI's reply back.** The plan loads straight onto the Maker grid, where the usual requirement and prerequisite checks verify it.
 4. **Fix problems in one click.** The site flags wrong terms, missing prerequisites, unmet requirements and plans under 20 courses, and copies them back for the AI to fix.
 
-### Other recent updates
+### 🔎 Course Explorer
 
-- **Course Explorer**: the Courses tab is now a searchable, filterable list with a detail panel, a prerequisite graph, course status, and an Add to Grid button that picks a valid term for you.
-- **New curriculum support**: pick the six-area curriculum (before Fall 2026) or Electrical / Computer with groups A, B and C (Fall 2026+). Requirements are now data-driven.
+The Courses tab is now the **Course Explorer**: think ECE Iris, but easier to read and tied to your own plan. Instead of a giant web of crossing lines, you pick a course and see just its part of the map.
+
+- **Focused prerequisite graph**: left to right, what the course needs (and what those need), the course itself, then what it unlocks two levels down. Click any course in the graph to jump to it.
+- **Knows your plan**: every course shows where it stands for *your* grid: "In 3F on your grid", "Can take from 4F", "Missing prerequisites" or "Already taken". It uses the same rules as the Maker, so the two always agree.
+- **Add to Grid** right from the course page: it picks the earliest valid term (or lets you choose another) and can overload into the sixth column.
+- **Search and filter** the full list, including your custom courses, and follow the curriculum you picked.
+- **Shareable links**: the selected course is in the URL (e.g. `/courses?c=ECE302`)
+
+### 🎓 New curriculum support
+
+Plan for either curriculum with the **curriculum picker**:
+
+- **Before Fall 2026**: the six-area system (kernels, breadth and depth).
+- **Fall 2026+**: Electrical or Computer, with groups A, B and C.
+
+The graduation check is now a data-driven requirements engine, so each curriculum is its own rule set.
+
+### Other Fall 2026 updates
+
 - **Overloading and extra courses**: an optional sixth column for 6-course terms, and an EXT toggle for courses that don't count toward the degree. The XX row (courses before third year) now sits at the top.
-- **Count-once rules (pre-2026)**: each course counts toward only one requirement, matching the calendar.
-- **Custom courses can join group A, B or C** so they count in the 2026 curricula.
 - **Course list updates reach existing users** automatically, without resetting your layout.
-- **Sturdier layout strings** that stay compatible with ones you've already saved.
-- **Smoother UI**: no page reloads between tabs, a redesigned FAQ with search, lighter styling throughout, drag feedback, Undo instead of confirm popups, keyboard focus rings, and the theme set before first paint.
+- **Count-once rules (pre-2026)**: each course counts toward only one requirement, matching the calendar.
+- **Smoother UI**: modern styling, a redesigned FAQ, and more
 
 ## Tech Stack
 
