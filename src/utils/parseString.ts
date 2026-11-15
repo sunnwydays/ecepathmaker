@@ -123,9 +123,10 @@ export const parseString = (str: string): ParseString => {
   };
 
   terms.forEach((term, termIndex) => {
+    if (termIndex > 4) return;
     const coursesInTerm = term.split("$$");
     coursesInTerm.forEach((courseStr, slotIndex) => {
-      if (!courseStr) return;
+      if (!courseStr || slotIndex > 4) return;
 
       const [codeAndName, optionsWithPreq] = courseStr.split("%%");
       const code = codeAndName.substring(0, 6);

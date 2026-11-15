@@ -209,3 +209,25 @@ describe("colours", () => {
     expect(serializeLayout(g, c)).toBe("AAA111a%%pBBB222$$@@@@@@@@");
   });
 });
+
+describe("oversized strings", () => {
+  const validKeys = Object.keys(emptyGrid).sort();
+
+  test("a 6th term is ignored", () => {
+    const r = parseString("AAA111a%%@@@@@@@@@@BBB222b%%");
+    expect(Object.keys(r.coursesOnGrid).sort()).toEqual(validKeys);
+    expect(r.courses).toHaveProperty("AAA111");
+    expect(r.courses).not.toHaveProperty("BBB222");
+    expect(r.coursesUsed).not.toHaveProperty("BBB222");
+  });
+
+  test("a 6th course in a term is ignored", () => {
+    const r = parseString(
+      "AAA111a%%$$BBB222b%%$$CCC333c%%$$DDD444d%%$$EEE555e%%$$FFF666f%%",
+    );
+    expect(Object.keys(r.coursesOnGrid).sort()).toEqual(validKeys);
+    expect(r.coursesOnGrid["3F.5"]).toBe("EEE555");
+    expect(r.courses).not.toHaveProperty("FFF666");
+    expect(r.coursesUsed).not.toHaveProperty("FFF666");
+  });
+});
