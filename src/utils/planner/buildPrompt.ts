@@ -3,6 +3,7 @@ import { withoutCoreCourses } from "../../data/coreCourses";
 import { getMembership, hasFlag } from "../../requirements/evaluate";
 import { Curriculum } from "../../requirements/types";
 import { PLAN_TERMS, PlanTerm } from "./parsePlan";
+import { buildUnlocks } from "../prereqGraph";
 
 export interface PlannerAnswers {
   interests: string[]; // curriculum group ids the student ticked
@@ -10,11 +11,32 @@ export interface PlannerAnswers {
   designation: "CE" | "EE" | "none"; // only used when designation is derived
   includeGrid: boolean; // send the current grid as the starting point
   lockedTerms: PlanTerm[]; // of 3F/3S/4F/4S; only used with includeGrid
-  taken: string; // courses beyond the core taken before third year (XX)
+  taken: string;
+  workload: Workload; // courses beyond the core taken before third year (XX)
   mustTake: string;
   avoid: string;
   notes: string;
 }
+
+export type Workload = "even" | "front" | "lightThird";
+
+const workloadLines: Record<Workload, string> = {
+  even: "Keep the workload about even across the four terms.",
+  front:
+    "Front-load: put the harder technical courses in third year, so fourth year is lighter and I learn the core material earlier.",
+  lightThird:
+    "Keep third year lighter and put more of the harder courses in fourth year. I plan to do PEY after third year, and applying for it during third year is like an extra course.",
+};
+
+// Courses that many others list as a prerequisite or corequisite, most first
+const keyPrereqs = (courses: CourseList) =>
+  [...buildUnlocks(courses)]
+    // ECE courses only: a science course needed by its own follow-up is not a planning hint
+    .filter(([code]) => courses[code] && code.startsWith("ECE"))
+    .map(([code, list]) => [code, new Set(list.map((u) => u.code)).size] as const)
+    .filter(([, count]) => count >= 2)
+    .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+    .slice(0, 6);
 
 export const groupWord = (curriculum: Curriculum) =>
   curriculum.id === "ece-pre2026" ? "Area" : "Group";
@@ -222,6 +244,22 @@ Format: CODE | name | group | terms | type | prereq | coreq
   if (answers.mustTake.trim()) about.push(`- Must take: ${answers.mustTake.trim()}`);
   if (answers.avoid.trim()) about.push(`- Avoid: ${answers.avoid.trim()}`);
   if (answers.notes.trim()) about.push(`- Other notes: ${answers.notes.trim()}`);
+  const prereqs = keyPrereqs(courses)
+    .map(([code, count]) => `${code} (needed by ${count})`)
+    .join(", ");
+  sections.push(
+    [
+      "## Planning guidelines",
+      "Habits that usually make a plan easier. Follow them unless they clash with a requirement or with something I asked for.",
+      "- Spread the complementary studies (CS/HSS) electives out, about one per term. They take less time than technical courses, so each one lightens its term.",
+      "- ECE472 (Engineering Economics) is also on the lighter side; use it to balance a heavy term.",
+      ...(prereqs
+        ? [`- Take courses that other courses need early, so later choices stay open. ECE302 and ECE345 matter most in practice (ECE345 is also needed by courses outside this catalogue). Most needed in this catalogue: ${prereqs}.`]
+        : []),
+      `- ${workloadLines[answers.workload]}`,
+    ].join("\n")
+  );
+
   if (about.length) sections.push(`## About me\n${about.join("\n")}`);
 
   if (showGrid) {

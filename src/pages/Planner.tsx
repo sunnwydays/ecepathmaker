@@ -12,6 +12,7 @@ import {
   groupHints,
   groupWord,
   PlannerAnswers,
+  Workload,
 } from "../utils/planner/buildPrompt";
 import { parsePlan, PlanTerm } from "../utils/planner/parsePlan";
 import { applyPlan } from "../utils/planner/applyPlan";
@@ -80,6 +81,7 @@ const Planner = () => {
   const [useGrid, setUseGrid] = useState(true);
   const [lockedTerms, setLockedTerms] = useState<PlanTerm[]>([]);
   const [taken, setTaken] = useState("");
+  const [workload, setWorkload] = useState<Workload>("even");
   const [mustTake, setMustTake] = useState("");
   const [avoid, setAvoid] = useState("");
   const [notes, setNotes] = useState("");
@@ -130,6 +132,7 @@ const Planner = () => {
           includeGrid,
           lockedTerms,
           taken,
+          workload,
           mustTake,
           avoid,
           notes,
@@ -145,6 +148,7 @@ const Planner = () => {
       includeGrid,
       lockedTerms,
       taken,
+      workload,
       mustTake,
       avoid,
       notes,
@@ -280,6 +284,29 @@ const Planner = () => {
               ))}
             </fieldset>
           )}
+
+          <fieldset className="flex flex-col gap-2">
+            <legend className="mb-1 text-sm font-medium">Workload</legend>
+            {(
+              [
+                ["even", "About even across all four terms"],
+                ["front", "Harder third year, easier fourth year"],
+                ["lightThird", "Lighter third year (e.g. for PEY applications)"],
+              ] as const
+            ).map(([value, label]) => (
+              <label key={value} className={checkbox}>
+                <input
+                  type="radio"
+                  name="workload"
+                  value={value}
+                  checked={workload === value}
+                  onChange={() => setWorkload(value)}
+                  data-testid={`workload-${value}`}
+                />
+                <span>{label}</span>
+              </label>
+            ))}
+          </fieldset>
 
           {gridHasCourses && (
             <div className="flex flex-col gap-2">

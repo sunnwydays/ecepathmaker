@@ -173,6 +173,7 @@ describe("buildPrompt", () => {
     includeGrid: false,
     lockedTerms: [],
     taken: "",
+    workload: "even",
     mustTake: "",
     avoid: "",
     notes: "",
@@ -253,6 +254,18 @@ describe("buildPrompt", () => {
     expect(build(pre2026, { includeGrid: true }, grid)).not.toContain(
       "Taken before third year"
     );
+  });
+
+  it("adds planning guidelines with key prerequisites and the workload choice", () => {
+    const prompt = build();
+    expect(prompt).toContain("## Planning guidelines");
+    expect(prompt).toContain("about one per term");
+    expect(prompt).toContain("ECE302 and ECE345 matter most");
+    expect(prompt).toMatch(/Most needed in this catalogue: ECE302 \(needed by \d+\)/);
+    expect(prompt).not.toContain("CHE353 (needed by");
+    expect(prompt).toContain("about even across the four terms");
+    expect(build(pre2026, { workload: "front" })).toContain("Front-load");
+    expect(build(pre2026, { workload: "lightThird" })).toContain("PEY");
   });
 
   it("leaves out empty answers", () => {
