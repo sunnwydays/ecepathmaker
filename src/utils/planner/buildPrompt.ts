@@ -140,8 +140,8 @@ Otherwise go straight to the plan.`
   sections.push(
     `## How a plan works
 - Four terms: 3F (third-year fall), 3S (third-year winter), 4F, 4S.
-- Normally 5 courses per term. A term can hold at most 6.
-- At most 20 courses count toward the degree, including any in XX.
+- The degree needs 20 courses, including any in XX. Plan exactly 20: 5 per term, with the capstone halves counted as courses in 4F and 4S. If I have courses in XX, take that many out of the terms. A term can hold at most 6.
+- If the requirements are met with fewer than 20, fill the rest with technical electives that fit my interests (the free elective can be any course).
 - XX holds courses I took before third year. They are done, so their own prerequisites do not matter, and they can count toward any requirement.
 - First- and second-year core ECE courses are already done. Prerequisites they cover have been removed from the catalogue below.
 - A prerequisite must be in an earlier term than the course. A corequisite must be in the same term or earlier. "(A or B)" means any one of them.
@@ -253,6 +253,9 @@ Format: CODE | name | group | terms | type | prereq | coreq
       "Habits that usually make a plan easier. Follow them unless they clash with a requirement or with something I asked for.",
       "- Spread the complementary studies (CS/HSS) electives out, about one per term. They take less time than technical courses, so each one lightens its term.",
       "- ECE472 (Engineering Economics) is also on the lighter side; use it to balance a heavy term.",
+      "- Most technical courses are about the same amount of work, so don't try to balance terms by difficulty beyond the points here.",
+      "- If I'm into computer hardware, take ECE342 in third year: it's one of the simpler courses and later hardware courses build on it.",
+      "- If I'm into robotics or controls, take ECE311 early in third year, since the control and robotics courses need it. Otherwise it's optional.",
       ...(prereqs
         ? [`- Take courses that other courses need early, so later choices stay open. ECE302 and ECE345 matter most in practice (ECE345 is also needed by courses outside this catalogue). Most needed in this catalogue: ${prereqs}.`]
         : []),

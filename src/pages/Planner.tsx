@@ -196,13 +196,24 @@ const Planner = () => {
       coursesOnGrid: applied.coursesOnGrid,
       coursesUsed: applied.coursesUsed,
     });
+    // The Maker only checks the 20-course maximum; a plan should also reach it
+    const degreeCourses = Object.values(applied.coursesOnGrid).filter(
+      (code) => code && !nextCourses[code]?.isExtra
+    ).length;
     setResult({
       kind: "loaded",
       placed: applied.placed,
       warnings: applied.warnings,
-      unmet: check.results
-        .filter((r) => !r.met)
-        .map((r) => `${r.label} (${r.have}/${r.need}): ${r.tooltip}`),
+      unmet: [
+        ...check.results
+          .filter((r) => !r.met)
+          .map((r) => `${r.label} (${r.have}/${r.need}): ${r.tooltip}`),
+        ...(degreeCourses < 20
+          ? [
+              `Course count (${degreeCourses}/20): the degree needs 20 courses; add ${20 - degreeCourses} more (a technical or free elective)`,
+            ]
+          : []),
+      ],
     });
     setFixCopied(false);
   };

@@ -108,6 +108,19 @@ describe('Planner page', () => {
         expect(screen.queryByTestId('copy-fix')).not.toBeInTheDocument();
     });
 
+    it('flags a plan with fewer than 20 courses', () => {
+        renderPage();
+        loadPlan([
+            '3F: ECE302, ECE311, ECE331, ECE345, TEP444',
+            '3S: ECE342, ECE361, ECE412, ECE470, ECE472',
+            '4F: ECE496, ECE410, ECE430, ECE421, TEP343',
+            '4S: ECE497, ECE390, TEP442, JRE300',
+        ].join('\n'));
+        expect(screen.getByTestId('plan-unmet')).toHaveTextContent(
+            'Course count (19/20): the degree needs 20 courses; add 1 more'
+        );
+    });
+
     it('warns about an unknown code', () => {
         renderPage();
         loadPlan('3F: ECE302, ZZZ999');
