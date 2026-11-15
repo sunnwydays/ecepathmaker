@@ -8,7 +8,7 @@ import { iconButton, navPill, navPillActive, navPillIdle } from "../../styles/ui
 
 const links = [
     { to: "/", label: "Maker", end: true },
-    { to: "/courses", label: "Courses", end: false },
+    { to: "/courses", label: "Course Explorer", end: false },
     { to: "/faq", label: "FAQs", end: false },
 ];
 

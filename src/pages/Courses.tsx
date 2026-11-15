@@ -22,7 +22,7 @@ const coursesJsonLd: Record<string, unknown> = {
     {
       "@type": "ListItem",
       position: 2,
-      name: "Courses",
+      name: "Course Explorer",
       item: `${SITE_URL}/courses`,
     },
   ],
@@ -81,7 +81,7 @@ const Courses = () => {
   return (
     <div>
       <Seo
-        title={selected ? `${selected} ${courses[selected].name}` : "Courses"}
+        title={selected ? `${selected} ${courses[selected].name}` : "Course Explorer"}
         path="/courses"
         description="Explore UofT ECE courses: filter by group, term and type, and see each course's prerequisites and what it unlocks"
         jsonLd={coursesJsonLd}
