@@ -120,7 +120,7 @@ Otherwise go straight to the plan.`
 - Four terms: 3F (third-year fall), 3S (third-year winter), 4F, 4S.
 - Normally 5 courses per term. A term can hold at most 6.
 - At most 20 courses count toward the degree, including any in XX.
-- XX holds courses I took before third year.
+- XX holds courses I took before third year. They are done, so their own prerequisites do not matter, and they can count toward any requirement.
 - First- and second-year core ECE courses are already done. Prerequisites they cover have been removed from the catalogue below.
 - A prerequisite must be in an earlier term than the course. A corequisite must be in the same term or earlier. "(A or B)" means any one of them.
 - If a prerequisite code is not in the catalogue, I cannot add it. Pick another option from its "or" group, or avoid the course, unless I say I have taken it.

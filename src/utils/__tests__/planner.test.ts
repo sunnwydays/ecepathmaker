@@ -50,11 +50,17 @@ describe("parsePlan", () => {
     });
   });
 
-  it("keeps the first line for each term", () => {
+  it("keeps the last line for each term", () => {
     expect(parsePlan("3F: ECE302\n3F: ECE345\n3S: ECE311")).toEqual({
-      "3F": ["ECE302"],
+      "3F": ["ECE345"],
       "3S": ["ECE311"],
     });
+  });
+
+  it("reads a first line glued to a code block label", () => {
+    expect(
+      parsePlan("Add ECE568 in 4S for 20 credits).Plaintext3F: ECE302, ECE361\n3S: ECE342")
+    ).toEqual({ "3F": ["ECE302", "ECE361"], "3S": ["ECE342"] });
   });
 
   it("treats a term with no codes as present and empty", () => {
