@@ -237,7 +237,7 @@ const Layout: FC<LayoutProps> = ({ children }) => {
       }}
     >
       <Seo jsonLd={siteJsonLd} />
-      <div className="min-h-screen flex flex-col w-max md:w-full dark:bg-gray-700">
+      <div className="min-h-screen flex flex-col w-max md:w-full bg-white dark:bg-gray-700 transition-colors duration-150">
         <div className="h-24" />
         <Navbar wide={widePage} />
         <main

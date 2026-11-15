@@ -304,21 +304,21 @@ const FAQ: FC = () => {
                 </div>
             </div>
 
-            {showButton && (
-                <button
-                    onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-                    className="
-                        fixed bottom-8 right-8 bg-green2 text-white
-                        shadow-lg rounded-full size-12
-                        flex items-center justify-center
-                        hover:bg-green3 transition-all
-                        dark:bg-green3 dark:hover:bg-green4
-                    "
-                    aria-label="Back to top"
-                >
-                    <ArrowUp className="size-5" />
-                </button>
-            )}
+            <button
+                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                className={`
+                    fixed bottom-8 right-8 bg-green2 text-white
+                    shadow-lg rounded-full size-12
+                    flex items-center justify-center
+                    hover:bg-green3 transition-[opacity,visibility,background-color] duration-200 ease-out
+                    dark:bg-green3 dark:hover:bg-green4
+                    ${showButton ? 'opacity-100' : 'opacity-0 invisible'}
+                `}
+                aria-label="Back to top"
+                tabIndex={showButton ? 0 : -1}
+            >
+                <ArrowUp className="size-5" />
+            </button>
         </div>
     );
 };

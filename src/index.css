@@ -19,6 +19,7 @@ background: #2d2d2d; /* adjust as needed */
 /* Handle */
 ::-webkit-scrollbar-thumb {
 background: #888;
+border-radius: 6px;
 }
 
 .dark ::-webkit-scrollbar-thumb {
@@ -115,5 +116,17 @@ background: rgb(106, 106, 106);
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
         scroll-behavior: auto !important;
+    }
+}
+
+/* Firefox has no ::-webkit-scrollbar; Chrome would drop the rules above if it
+   saw scrollbar-color, so only offer these where that selector is missing */
+@supports not selector(::-webkit-scrollbar) {
+    html {
+        scrollbar-width: auto;
+        scrollbar-color: #888 #f1f1f1;
+    }
+    html.dark {
+        scrollbar-color: #5a5a5a #2d2d2d;
     }
 }

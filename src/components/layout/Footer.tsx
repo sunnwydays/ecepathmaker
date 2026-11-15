@@ -59,7 +59,7 @@ const Footer: FC<{ wide?: boolean }> = ({ wide = false }) => {
 
     return (
         <footer className="
-            border-t border-neutral2 bg-neutral1 md:w-full w-navFoot
+            border-t border-neutral2 bg-neutral1 md:w-full w-navFoot transition-colors duration-150
             dark:border-gray-600 dark:bg-gray-800
         ">
             <div className={`

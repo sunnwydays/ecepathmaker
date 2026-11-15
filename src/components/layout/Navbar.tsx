@@ -63,7 +63,7 @@ const Navbar: FC<{ wide?: boolean }> = ({ wide = false }) => {
             <div
                 aria-hidden
                 className="
-                    absolute inset-0 -z-10 backdrop-blur
+                    absolute inset-0 -z-10 backdrop-blur transition-colors duration-150
                     border-b border-neutral2 bg-white/80
                     dark:border-gray-600 dark:bg-gray-800/80
                 "
