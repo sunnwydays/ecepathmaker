@@ -210,6 +210,19 @@ Format: CODE | name | group | terms | type | prereq | coreq
         .join("\n")
   );
 
+  // The terms column is easy to skim past, so repeat it as two short lists
+  const termOnly = (key: "onlyF" | "onlyS") =>
+    Object.keys(courses)
+      .filter((code) => !PLACEHOLDERS.has(code) && courses[code][key])
+      .sort()
+      .join(", ");
+  sections.push(
+    `## Courses offered in one term only
+Fall only (3F or 4F): ${termOnly("onlyF") || "none"}
+Winter only (3S or 4S): ${termOnly("onlyS") || "none"}
+Every other course can go in either term.`
+  );
+
   const about: string[] = [];
   if (answers.interests.length) {
     about.push(
@@ -278,7 +291,7 @@ Format: CODE | name | group | terms | type | prereq | coreq
   sections.push(
     `## What I want back
 1. A recommended plan, term by term, with one short reason per course.
-2. A checklist showing how the plan meets each graduation requirement.
+2. A checklist showing how the plan meets each graduation requirement. Before writing it, go through every course in the plan and check its term against the fall-only and winter-only lists, and its prerequisites against the catalogue. Fix anything that fails instead of reporting it as fine.
 3. Two or three alternatives or swaps (for example a different depth area, or a lighter term) and what each one changes.
 4. Finish with the recommended plan in exactly this format, in one code block, using only course codes from the catalogue, all four terms listed:
 

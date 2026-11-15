@@ -87,6 +87,7 @@ describe('Planner page', () => {
         renderPage();
         loadPlan('3F: ECE302\n4S: ECE444');
         expect(screen.getByText(/ECE444 is F only but is in 4S/)).toBeInTheDocument();
+        expect(screen.queryByTestId('plan-meets')).not.toBeInTheDocument();
         expect(screen.getByTestId('plan-unmet')).toHaveTextContent(/Economics/);
         fireEvent.click(screen.getByTestId('copy-fix'));
         await waitFor(() => expect(writeText).toHaveBeenCalled());
@@ -106,6 +107,18 @@ describe('Planner page', () => {
         ].join('\n'));
         expect(screen.getByTestId('plan-meets')).toBeInTheDocument();
         expect(screen.queryByTestId('copy-fix')).not.toBeInTheDocument();
+    });
+
+    it('does not call a plan with a term problem a pass', () => {
+        renderPage();
+        loadPlan([
+            '3F: ECE302, ECE311, ECE342, ECE345, TEP444',
+            '3S: ECE331, ECE361, ECE412, ECE470, ECE472',
+            '4F: ECE496, ECE410, ECE430, ECE421, TEP343',
+            '4S: ECE497, ECE390, ECE344, TEP442, JRE300',
+        ].join('\n'));
+        expect(screen.getByText(/ECE342 is S only but is in 3F/)).toBeInTheDocument();
+        expect(screen.getByTestId('plan-meets')).toHaveTextContent(/fix the problems above first/);
     });
 
     it('flags a plan with fewer than 20 courses', () => {

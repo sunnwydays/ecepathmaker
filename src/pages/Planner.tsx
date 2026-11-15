@@ -510,8 +510,10 @@ const Planner = () => {
                 </>
               ) : (
                 <p className="font-medium" data-testid="plan-meets">
-                  Meets every requirement the site checks. Still check:{" "}
-                  {curriculum.manualChecks}
+                  {result.warnings.length
+                    ? "The graduation requirements are met, but fix the problems above first: the Maker greys out those courses."
+                    : "Meets every requirement the site checks."}{" "}
+                  Still check: {curriculum.manualChecks}
                 </p>
               )}
               {fixMessage && (

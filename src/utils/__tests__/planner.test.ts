@@ -263,6 +263,8 @@ describe("buildPrompt", () => {
     expect(prompt).toContain("take ECE342 in third year");
     expect(prompt).toContain("take ECE311 early");
     expect(prompt).toContain("Plan exactly 20: 5 per term");
+    expect(prompt).toMatch(/Fall only \(3F or 4F\): .*ECE331/);
+    expect(prompt).toMatch(/Winter only \(3S or 4S\): .*ECE342/);
     expect(prompt).toContain("ECE302 and ECE345 matter most");
     expect(prompt).toMatch(/Most needed in this catalogue: ECE302 \(needed by \d+\)/);
     expect(prompt).not.toContain("CHE353 (needed by");
