@@ -231,3 +231,31 @@ describe("oversized strings", () => {
     expect(r.coursesUsed).not.toHaveProperty("FFF666");
   });
 });
+
+describe("custom course groups", () => {
+  test("a group and a colour together", () => {
+    const str = "XYZ123Custom%%B#aabbcc";
+    expect(isValidString(str)).toBe(true);
+    const c = parseString(str).courses["XYZ123"];
+    expect(c.group).toBe("B");
+    expect(c.color).toBe("aabbcc");
+  });
+
+  test("a group is serialized after streams and k, and round-trips", () => {
+    const g = grid({ "3F.1": "XYZ123" });
+    const c = { XYZ123: course("Custom", { group: "C", color: "aabbcc", onlyF: true }) };
+    const str = serializeLayout(g, c);
+    expect(str).toBe("XYZ123Custom%%Cf#aabbcc$$@@@@@@@@");
+    expect(parseString(str).courses["XYZ123"]).toMatchObject({ group: "C", onlyF: true, color: "aabbcc" });
+  });
+
+  test("a course without a group has no group key", () => {
+    expect("group" in parseString("XYZ123Custom%%k").courses["XYZ123"]).toBe(false);
+  });
+
+  test("an unknown group is not written", () => {
+    const g = grid({ "3F.1": "XYZ123" });
+    const c = { XYZ123: course("Custom", { group: "Z" }) };
+    expect(serializeLayout(g, c)).toBe("XYZ123Custom%%$$@@@@@@@@");
+  });
+});

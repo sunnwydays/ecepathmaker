@@ -44,6 +44,7 @@ export const isValidString = (str: string): boolean => {
     "f", "s",
     "1", "2", "3", "4", "5", "6", "k",
     "c", "h", "m", "a",
+    "A", "B", "C",
   ]);
 
   return terms.every((term) => {
@@ -165,6 +166,11 @@ export const parseString = (str: string): ParseString => {
                 break;
               case "k":
                 course.kernel = true;
+                break;
+              case "A":
+              case "B":
+              case "C":
+                course.group = options[i];
                 break;
               case "c":
                 course.isCS = true;

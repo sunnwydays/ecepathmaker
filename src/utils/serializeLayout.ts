@@ -14,6 +14,7 @@ const serializeCourse = (code: string, course: CourseList[string]): string => {
   let str = code + course.name + "%%";
   if (course.streams) str += course.streams.join("");
   if (course.kernel) str += "k";
+  if (course.group && /^[ABC]$/.test(course.group)) str += course.group;
   if (course.onlyF) str += "f";
   else if (course.onlyS) str += "s";
   if (course.isHSS) str += "h";
