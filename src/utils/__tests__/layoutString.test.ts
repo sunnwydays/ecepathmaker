@@ -93,7 +93,7 @@ describe("serializeLayout", () => {
   test("course in slot 5", () => {
     const g = grid({ "3F.5": "AAA111" });
     expect(serializeLayout(g, { AAA111: course("a") })).toBe(
-      "AAA111a%%@@@@@@@@",
+      "$$$$$$$$AAA111a%%@@@@@@@@",
     );
   });
 
@@ -122,5 +122,44 @@ describe("serializeLayout", () => {
   test("packed grid round-trips", () => {
     const parsed = parseString(serializeLayout(packed, packedCourses));
     expect(parsed.coursesOnGrid).toEqual(packed);
+  });
+
+  const roundTrip = (g: CoursesOnGrid) => {
+    const c: CourseList = {};
+    Object.values(g).forEach((code) => {
+      if (code) c[code] = course(code.toLowerCase());
+    });
+    return parseString(serializeLayout(g, c)).coursesOnGrid;
+  };
+
+  test("gap at the start round-trips", () => {
+    const g = grid({ "3F.2": "AAA111", "3F.3": "BBB222" });
+    expect(roundTrip(g)).toEqual(g);
+  });
+
+  test("gap in the middle is written with an empty piece", () => {
+    const g = grid({ "3F.1": "AAA111", "3F.3": "BBB222" });
+    expect(serializeLayout(g, { AAA111: course("a"), BBB222: course("b") })).toBe(
+      "AAA111a%%$$$$BBB222b%%$$@@@@@@@@",
+    );
+    expect(roundTrip(g)).toEqual(g);
+  });
+
+  test("gap before slot 5 round-trips", () => {
+    const g = grid({ "3F.1": "AAA111", "3F.5": "BBB222", "4S.2": "CCC333" });
+    expect(roundTrip(g)).toEqual(g);
+  });
+
+  test("only slot 5 filled round-trips", () => {
+    const g = grid({ "3F.5": "AAA111", "XX.5": "BBB222" });
+    expect(roundTrip(g)).toEqual(g);
+  });
+
+  test("a course missing from the course list leaves an empty slot", () => {
+    const g = grid({ "3F.1": "AAA111", "3F.2": "GHOST1", "3F.3": "BBB222" });
+    const c = { AAA111: course("a"), BBB222: course("b") };
+    expect(serializeLayout(g, c)).toBe(
+      "AAA111a%%$$$$BBB222b%%$$@@@@@@@@",
+    );
   });
 });

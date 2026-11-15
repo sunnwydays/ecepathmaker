@@ -1,5 +1,4 @@
 import { CourseList, CoursesOnGrid, GridPositionBase } from "../types/types";
-import { emptyGrid } from "./emptyGrid";
 
 const serializeReqs = (label: string, reqs?: (string | string[])[]) => {
   if (!reqs?.length) return "";
@@ -7,34 +6,42 @@ const serializeReqs = (label: string, reqs?: (string | string[])[]) => {
   return label + parts.join(",");
 };
 
+const TERMS = ["3F", "3S", "4F", "4S", "XX"];
+const SLOTS = 5;
+
+const serializeCourse = (code: string, course: CourseList[string]): string => {
+  let str = code + course.name + "%%";
+  if (course.streams) str += course.streams.join("");
+  if (course.kernel) str += "k";
+  if (course.onlyF) str += "f";
+  else if (course.onlyS) str += "s";
+  if (course.isHSS) str += "h";
+  else if (course.isCS) str += "c";
+  if (course.isSciMath) str += "m";
+  if (course.isArtSci) str += "a";
+  if (course.color) str += "#" + course.color;
+
+  const hasPreq = course.preq?.length;
+  const hasCoreq = course.coreq?.length;
+  if (hasPreq) str += serializeReqs("p", course.preq);
+  if (hasCoreq) str += serializeReqs(hasPreq ? "o" : "po", course.coreq);
+  return str;
+};
+
 export const serializeLayout = (
   coursesOnGrid: CoursesOnGrid,
   courses: CourseList,
-): string => {
-  let newStr = "";
-  Object.keys(emptyGrid).map((slot) => {
-    const courseCode: string = coursesOnGrid[slot as GridPositionBase];
-    if (slot !== "3F.1" && slot.includes(".1")) newStr += "@@";
-    if (!courseCode) return;
-    const course = courses[courseCode];
-    if (!course) return;
-    newStr += courseCode + course.name + "%%";
-    if (course.streams) newStr += course.streams.join("");
-    if (course.kernel) newStr += "k";
-    if (course.onlyF) newStr += "f";
-    else if (course.onlyS) newStr += "s";
-    if (course.isHSS) newStr += "h";
-    else if (course.isCS) newStr += "c";
-    if (course.isSciMath) newStr += "m";
-    if (course.isArtSci) newStr += "a";
-    if (course.color) newStr += "#" + course.color;
-
-    const hasPreq = course.preq?.length;
-    const hasCoreq = course.coreq?.length;
-    if (hasPreq) newStr += serializeReqs("p", course.preq);
-    if (hasCoreq) newStr += serializeReqs(hasPreq ? "o" : "po", course.coreq);
-
-    if (slot[3] != "5") newStr += "$$";
-  });
-  return newStr;
-};
+): string =>
+  TERMS.map((term) => {
+    const slots = Array.from({ length: SLOTS }, (_, i) => {
+      const code = coursesOnGrid[`${term}.${i + 1}` as GridPositionBase];
+      const course = code ? courses[code] : undefined;
+      return course ? serializeCourse(code, course) : "";
+    });
+    // Keep empty slots before the last course so positions survive a reload
+    const last = slots.map((s) => s !== "").lastIndexOf(true);
+    return slots
+      .slice(0, last + 1)
+      .map((s, i) => (i === SLOTS - 1 ? s : s + "$$"))
+      .join("");
+  }).join("@@");
