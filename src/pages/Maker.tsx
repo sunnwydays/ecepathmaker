@@ -3,7 +3,6 @@ import { CourseCardProps } from "../types/types";
 import {
   CourseForm,
   CourseGrid,
-  CurriculumPicker,
   LoadLayout,
   SaveLayout,
 } from "../utils/componentImports";
@@ -34,7 +33,6 @@ const Maker = () => {
         path="/"
         description="UofT Magellan move over, plan your upper-year ECE courses on a drag-and-drop grid that tracks requirements without wait"
       />
-      <CurriculumPicker />
       <CourseGrid
         setCustomInfo={setCustomInfo}
         setPreqString={setPreqString}

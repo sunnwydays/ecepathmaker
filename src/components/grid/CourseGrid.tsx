@@ -27,6 +27,7 @@ import {
 } from "@dnd-kit/core";
 import { createPortal } from "react-dom";
 import Filter from "../forms/Filter";
+import CurriculumPicker from "../forms/CurriculumPicker";
 import WillYouGraduate from "../info/WillYouGraduate";
 import { getValidYearTerms } from "../../utils/getValidYearTerms";
 import { getYearTerm } from "../../utils/getYearTerm";
@@ -410,6 +411,8 @@ const CourseGrid: FC<CourseGridProps> = ({
       sensors={sensors}
     >
       <section className="flex lg:flex-row flex-col gap-x-6 gap-y-4">
+        <div className="flex flex-col flex-shrink-0">
+        <CurriculumPicker />
         <div
           className={`grid ${
             sixthVisible ? "grid-cols-6" : "grid-cols-5"
@@ -451,6 +454,7 @@ const CourseGrid: FC<CourseGridProps> = ({
               );
             })
           )}
+        </div>
         </div>
         <div>
           {/* Courses to choose from */}
