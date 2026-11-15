@@ -134,3 +134,17 @@ describe('Grid row order', () => {
         expect(within(grid()).getAllByText(/^(AAA111|BBB222)$/)[0]).toHaveTextContent('BBB222');
     });
 });
+
+describe('Sixth column toggle while filled', () => {
+    it('looks disabled but still shows the message on click', () => {
+        localStorage.clear();
+        renderMaker();
+        const toggle = () => screen.getByTestId('toggle-sixth');
+        expect(toggle()).toHaveAttribute('aria-disabled', 'false');
+        loadString(SIX_IN_3F);
+        expect(toggle()).toHaveAttribute('aria-disabled', 'true');
+        expect(toggle()).toHaveClass('opacity-50');
+        fireEvent.click(toggle());
+        expect(screen.getByText('Move the courses out of the 6th column first')).toBeInTheDocument();
+    });
+});

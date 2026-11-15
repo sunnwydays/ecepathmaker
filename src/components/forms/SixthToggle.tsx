@@ -31,9 +31,12 @@ const SixthToggle: FC = () => {
         type="button"
         role="switch"
         aria-checked={on}
+        aria-disabled={filled}
         onClick={handleClick}
         data-testid="toggle-sixth"
-        className="mb-4 flex items-center gap-2 font-medium dark:text-gray-50"
+        className={`mb-4 flex items-center gap-2 font-medium dark:text-gray-50 ${
+          filled ? "opacity-50 cursor-not-allowed saturate-50" : ""
+        }`}
       >
         <span>6th column</span>
         <span
