@@ -56,6 +56,9 @@ export interface LayoutContextType {
 
   savedLayouts: savedLayout[];
   setSavedLayouts: React.Dispatch<React.SetStateAction<savedLayout[]>>;
+
+  curriculumId: string;
+  setCurriculumId: React.Dispatch<React.SetStateAction<string>>;
 }
 
 interface CourseIdentifierWithoutCode {

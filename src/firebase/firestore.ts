@@ -141,3 +141,10 @@ export async function saveTheme(uid: string, theme: string) {
 export async function loadTheme(uid: string) {
   return loadUserData(uid, "theme", "");
 }
+
+export async function saveCurriculum(uid: string, curriculumId: string) {
+  return saveUserData(uid, "curriculum", curriculumId);
+}
+export async function loadCurriculum(uid: string) {
+  return loadUserData(uid, "curriculum", "");
+}

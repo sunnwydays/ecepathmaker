@@ -13,9 +13,11 @@ import { CoursesOnGrid, CoursesUsed, LayoutContextType, savedLayout } from "../.
 import { UniqueIdentifier } from "@dnd-kit/core";
 import { emptyGrid } from "../../utils/emptyGrid";
 import mockCourses from "../../data/mockCourses";
-import { saveCourses, saveCoursesOnGrid, saveCoursesUsed, saveDependencies, saveLayouts } from "../../firebase/firestore";
+import { saveCourses, saveCoursesOnGrid, saveCoursesUsed, saveCurriculum, saveDependencies, saveLayouts } from "../../firebase/firestore";
 import { auth } from "../../firebase/firebase";
 import Seo from "../seo/Seo";
+import { getCurriculum } from "../../requirements/curricula";
+import { Curriculum } from "../../requirements/types";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "../../lib/site";
 
 const siteJsonLd: Record<string, unknown>[] = [
@@ -126,7 +128,17 @@ const Layout: FC<LayoutProps> = ({ children }) => {
     const user = auth.currentUser;
     if (user) saveLayouts(user.uid, savedLayouts);
   }, [savedLayouts]);
-  
+
+  // curriculum (an unknown or missing saved id means the default one)
+  const [curriculumId, setCurriculumId] = useState<string>(() =>
+    getCurriculum(localStorage.getItem("curriculum")).id
+  );
+  useEffect(() => {
+    localStorage.setItem("curriculum", curriculumId);
+    const user = auth.currentUser;
+    if (user) saveCurriculum(user.uid, curriculumId);
+  }, [curriculumId]);
+
   return (
     <LayoutContext.Provider
       value={{
@@ -140,6 +152,8 @@ const Layout: FC<LayoutProps> = ({ children }) => {
         setDependencies,
         savedLayouts,
         setSavedLayouts,
+        curriculumId,
+        setCurriculumId,
       }}
     >
       <Seo jsonLd={siteJsonLd} />
@@ -162,6 +176,14 @@ export function useLayoutContext(): LayoutContextType {
   if (!ctx)
     throw new Error("useLayoutContext must be used within LayoutProvider");
   return ctx;
+}
+
+// Unlike useLayoutContext, this works outside the provider (e.g. a card
+// rendered on its own) and falls back to the default curriculum.
+// eslint-disable-next-line react-refresh/only-export-components
+export function useCurriculum(): Curriculum {
+  const ctx = useContext(LayoutContext);
+  return getCurriculum(ctx?.curriculumId);
 }
 
 export default Layout;

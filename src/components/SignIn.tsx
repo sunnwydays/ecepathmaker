@@ -3,7 +3,8 @@ import { CiLogin, CiLogout } from "react-icons/ci";
 import { signInGoogle, signOut } from "../firebase/auth";
 import { useAuth } from "../contexts/AuthContext";
 import { useLayoutContext } from "./layout/Layout";
-import { loadCourses, loadCoursesOnGrid, loadCoursesUsed, loadDependencies, loadLayouts, loadTheme } from "../firebase/firestore";
+import { getCurriculum } from "../requirements/curricula";
+import { loadCourses, loadCoursesOnGrid, loadCurriculum, loadCoursesUsed, loadDependencies, loadLayouts, loadTheme } from "../firebase/firestore";
 
 const SignIn: FC = () => {
   const { signedIn } = useAuth();
@@ -13,7 +14,8 @@ const SignIn: FC = () => {
     setCourses,
     setCoursesUsed,
     setCoursesOnGrid,
-    setDependencies
+    setDependencies,
+    setCurriculumId,
   } = useLayoutContext();
 
   const signIn = async (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -30,6 +32,7 @@ const SignIn: FC = () => {
         remoteCoursesOnGrid,
         remoteDependencies,
         remoteTheme,
+        remoteCurriculum,
       ] = await Promise.all([
         loadLayouts(user.uid),
         loadCourses(user.uid),
@@ -37,6 +40,7 @@ const SignIn: FC = () => {
         loadCoursesOnGrid(user.uid),
         loadDependencies(user.uid),
         loadTheme(user.uid),
+        loadCurriculum(user.uid),
       ]);
 
       // Apply loaded data only if available
@@ -45,6 +49,7 @@ const SignIn: FC = () => {
       if (Object.keys(remoteCoursesUsed ?? {}).length) setCoursesUsed(remoteCoursesUsed);
       if (Object.keys(remoteCoursesOnGrid ?? {}).length) setCoursesOnGrid(remoteCoursesOnGrid);
       if (remoteDependencies?.size) setDependencies(remoteDependencies);
+      if (remoteCurriculum) setCurriculumId(getCurriculum(remoteCurriculum).id);
       if (remoteTheme) {
         if (remoteTheme == 'dark') {
           document.documentElement.classList.add('dark');
