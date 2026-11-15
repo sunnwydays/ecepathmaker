@@ -213,6 +213,75 @@ describe('Curriculum picker on the Maker page', () => {
     });
 });
 
+describe('Custom courses with a group', () => {
+    beforeEach(() => {
+        localStorage.clear();
+    });
+
+    const addCustom = (code: string, groupTestId?: string) => {
+        fireEvent.change(screen.getByTestId('code-input'), { target: { value: code } });
+        fireEvent.change(screen.getByPlaceholderText('Course Name'), { target: { value: 'Custom thing' } });
+        if (groupTestId) fireEvent.click(screen.getByTestId(groupTestId));
+        fireEvent.click(screen.getByText('Add/Update Course'));
+    };
+
+    it('adds a Group B course through the form, labelled, coloured and filterable', () => {
+        renderMaker();
+        pick('ele-2026');
+        addCustom('XYZ123', 'group-B');
+
+        const bucket = screen.getByTestId('bucket');
+        const card = () => within(bucket).getByText('XYZ123').closest('article') as HTMLElement;
+        expect(within(card()).getByText('Stream: B')).toBeInTheDocument();
+        expect(card()).toHaveStyle({ backgroundColor: '#79d675' });
+
+        fireEvent.click(screen.getByTestId('filter-stream-B'));
+        expect(within(bucket).getByText('XYZ123')).toBeInTheDocument();
+        fireEvent.click(screen.getByTestId('filter-stream-B'));
+        fireEvent.click(screen.getByTestId('filter-stream-A'));
+        expect(within(bucket).queryByText('XYZ123')).not.toBeInTheDocument();
+    });
+
+    it('a course with no group chosen has no label', () => {
+        renderMaker();
+        pick('ele-2026');
+        addCustom('XYZ124');
+        const card = within(screen.getByTestId('bucket')).getByText('XYZ124').closest('article') as HTMLElement;
+        expect(within(card).queryByText(/Stream:/)).not.toBeInTheDocument();
+    });
+
+    it('a placed custom course counts toward the technical electives', () => {
+        renderMaker();
+        pick('ele-2026');
+        // elePlan with ECE342 (a technical elective) replaced by a custom Group B course
+        loadString(elePlan.replace('ECE342Computer Hardware%%s', 'XYZ123Custom%%sB'));
+        expect(screen.getByText(/Technical electives: ✅ \(3\/3\)/)).toBeInTheDocument();
+
+        // Without the group the same course no longer counts
+        loadString(elePlan.replace('ECE342Computer Hardware%%s', 'XYZ123Custom%%s'));
+        expect(screen.getByText(/Technical electives: ❌ \(2\/3\)/)).toBeInTheDocument();
+    });
+
+    it('streams come back after switching to the pre-2026 curriculum, and the group is ignored', () => {
+        renderMaker();
+        pick('ele-2026');
+        addCustom('XYZ123', 'group-B');
+        pick('ece-pre2026');
+        expect(screen.getByTestId('stream-1')).toBeInTheDocument();
+        expect(screen.queryByTestId('group-B')).not.toBeInTheDocument();
+        const card = within(screen.getByTestId('bucket')).getByText('XYZ123').closest('article') as HTMLElement;
+        expect(within(card).queryByText(/Stream:/)).not.toBeInTheDocument();
+    });
+
+    it('shows the calendar group read-only for an official course code', () => {
+        renderMaker();
+        pick('ele-2026');
+        fireEvent.change(screen.getByTestId('code-input'), { target: { value: 'ECE335' } });
+        expect(screen.getByText('Group A (set by the calendar)')).toBeInTheDocument();
+        expect(screen.queryByTestId('group-B')).not.toBeInTheDocument();
+    });
+});
+
 describe('Curriculum picker on the Courses page', () => {
     beforeEach(() => {
         localStorage.clear();
