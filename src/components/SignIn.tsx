@@ -1,5 +1,6 @@
 import { FC } from "react";
-import { CiLogin, CiLogout } from "react-icons/ci";
+import { LogIn, LogOut } from "lucide-react";
+import { iconButton } from "../styles/ui";
 import { signInGoogle, signOut } from "../firebase/auth";
 import { useAuth } from "../contexts/AuthContext";
 import { useLayoutContext } from "./layout/Layout";
@@ -95,9 +96,9 @@ const SignIn: FC = () => {
       <button
         onClick={signedIn ? signOut : signIn}
         aria-label={signedIn ? "Sign out" : "Sign in with Google"}
-        className="px-1 py-2 text-2xl flex items-center"
+        className={iconButton}
       >
-        {signedIn ? <CiLogout /> : <CiLogin />}
+        {signedIn ? <LogOut className="size-5" /> : <LogIn className="size-5" />}
       </button>
     </div>
   );

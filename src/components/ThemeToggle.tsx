@@ -1,7 +1,8 @@
 import { saveTheme } from "../firebase/firestore";
 import { auth } from "../firebase/firebase";
 import { useDarkMode } from "../utils/utilImports";
-import { CiLight, CiDark } from "react-icons/ci";
+import { Moon, Sun } from "lucide-react";
+import { iconButton } from "../styles/ui";
 
 
 const ThemeToggle = () => {
@@ -21,9 +22,9 @@ const ThemeToggle = () => {
     <button
       onClick={toggleDarkMode}
       aria-label={isDarkMode ? "Switch to light theme" : "Switch to dark theme"}
-      className="px-1 py-2 text-black dark:text-white text-2xl flex items-center"
+      className={iconButton}
     >
-      {isDarkMode ? <CiDark /> : <CiLight />}
+      {isDarkMode ? <Sun className="size-5" /> : <Moon className="size-5" />}
     </button>
   );
 };

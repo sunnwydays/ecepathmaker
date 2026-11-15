@@ -239,12 +239,12 @@ const Layout: FC<LayoutProps> = ({ children }) => {
       <Seo jsonLd={siteJsonLd} />
       <div className="min-h-screen flex flex-col w-max md:w-full dark:bg-gray-700">
         <div className="h-24" />
-        <Navbar />
+        <Navbar wide={widePage} />
         <main
           className={`flex-grow md:mx-auto mx-3 my-12 ${
             widePage
               ? "xl:w-[90%] lg:w-[92%] w-wps"
-              : "xl:wp lg:w-wpl w-wps"
+              : "lg:w-wpl w-wps"
           }`}
         >
           <WidePageContext.Provider value={setWidePage}>
@@ -252,7 +252,7 @@ const Layout: FC<LayoutProps> = ({ children }) => {
           </WidePageContext.Provider>
           <Analytics />
         </main>
-        <Footer />
+        <Footer wide={widePage} />
       </div>
     </LayoutContext.Provider>
   );

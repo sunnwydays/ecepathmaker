@@ -1,25 +1,45 @@
-import { IoIosMenu, IoIosClose } from "react-icons/io";
-import { Link, NavLink } from "react-router-dom";
+import { Menu, X } from "lucide-react";
+import { Link, NavLink, useLocation } from "react-router-dom";
 import { FC, useState, useEffect, useRef } from 'react';
 import { logo } from '../../utils/assetImports';
 import ThemeToggle from "../ThemeToggle";
 import SignIn from "../SignIn";
+import { iconButton, navPill, navPillActive, navPillIdle } from "../../styles/ui";
 
-const Navbar:FC = () => {
+const links = [
+    { to: "/", label: "Maker", end: true },
+    { to: "/courses", label: "Courses", end: false },
+    { to: "/faq", label: "FAQs", end: false },
+];
+
+const Navbar: FC<{ wide?: boolean }> = ({ wide = false }) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isScrolled, setIsScrolled] = useState(false);
     const menuRef = useRef<HTMLDivElement>(null);
+    const { pathname } = useLocation();
 
+    // Close the drawer on outside tap, Escape, or a page change
     useEffect(() => {
-        const handleClickOutside = (event: MouseEvent) => {
+        const handlePointerDown = (event: PointerEvent) => {
             if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
                 setIsMenuOpen(false);
             }
         };
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (event.key === 'Escape') setIsMenuOpen(false);
+        };
 
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => document.removeEventListener('mousedown', handleClickOutside);
+        document.addEventListener('pointerdown', handlePointerDown);
+        document.addEventListener('keydown', handleKeyDown);
+        return () => {
+            document.removeEventListener('pointerdown', handlePointerDown);
+            document.removeEventListener('keydown', handleKeyDown);
+        };
     }, []);
+
+    useEffect(() => {
+        setIsMenuOpen(false);
+    }, [pathname]);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -34,82 +54,71 @@ const Navbar:FC = () => {
 
     return (
         <nav className={`
-            fixed z-40 top-0 w-full 
-            transition-all ${isScrolled ? 'h-14' : 'h-24'} 
-            bg-white bg-opacity-95 shadow 
-            dark:bg-gray-800 dark:bg-opacity-95 dark:text-white
+            fixed z-40 top-0 w-full
+            transition-[height] duration-200 ease-out ${isScrolled ? 'h-14' : 'h-24'}
+            dark:text-white
         `}>
-            <div className="
-                mx-auto xl:wp lg:w-wpl w-wps 
+            {/* The blur lives on its own layer: backdrop-filter on the nav itself
+                would make it the containing block of the fixed drawer below */}
+            <div
+                aria-hidden
+                className="
+                    absolute inset-0 -z-10 backdrop-blur
+                    border-b border-neutral2 bg-white/80
+                    dark:border-gray-600 dark:bg-gray-800/80
+                "
+            />
+            <div className={`
+                mx-auto ${wide ? 'xl:w-[90%] lg:w-[92%]' : 'lg:w-wpl'} w-wps
                 flex justify-between items-center py-2
-            ">
-                <Link 
-                    to="/" 
-                    className={`${isScrolled ? 'w-24' : 'w-56' } transition-all`}
+            `}>
+                <Link
+                    to="/"
+                    className={`${isScrolled ? 'w-24' : 'w-56'} transition-[width] duration-200 ease-out`}
                 >
                     <img src={logo} alt="ECE Pathmaker logo" />
                 </Link>
                 <div className="z-30 flex items-center" ref={menuRef}>
+                    <div
+                        aria-hidden
+                        onClick={() => setIsMenuOpen(false)}
+                        className={`
+                            md:hidden fixed inset-0 bg-black/30
+                            transition-opacity duration-200 ease-out
+                            ${isMenuOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}
+                        `}
+                    />
                     <ul className={`
-                        md:static fixed 
-                        top-0 ${isMenuOpen ? 'right-0' : '-right-full'}
+                        md:static fixed
+                        top-0 ${isMenuOpen ? 'right-0' : '-right-full max-md:invisible'}
                         md:h-auto h-screen
-                        md:bg-transparent bg-white 
-                        dark:md:bg-transparent dark:bg-gray-800 
+                        md:bg-transparent bg-white
+                        dark:md:bg-transparent dark:bg-gray-800
                         md:w-auto w-64
-                        md:shadow-none shadow-md
+                        md:border-0 border-l border-neutral2 dark:border-gray-600
                         flex flex-col md:flex-row
                         items-center justify-center
-                        md:transition-none transition-all duration-500
-                        md:gap-[3vw] gap-8
-                        md:text-base font-medium text-xl
-                        dark:text-white
-                        ${isScrolled 
-                            ? 'text-l md:font-normal' 
-                            : 'md:font-medium md:text-xl'
-                        }
+                        md:transition-none max-md:transition-[right,visibility] duration-200 ease-out
+                        md:gap-2 gap-4
+                        text-base
                         md:py-0 py-12
                         md:px-0 px-5
                     `}>
-                        <li>
-                            <NavLink end 
-                                onClick={() => setIsMenuOpen(false)} 
-                                className="
-                                    hover:text-green2 
-                                    transition-all 
-                                    mx-auto
-                                " 
-                                to="/"
-                            >
-                                Maker
-                            </NavLink>
-                        </li>
-                        <li>
-                            <NavLink 
-                                onClick={() => setIsMenuOpen(false)} 
-                                className="
-                                        hover:text-green2 
-                                        transition-all 
-                                        mx-auto
-                                    " 
-                                to="/courses"
-                            >
-                                Courses
-                            </NavLink>
-                        </li>
-                        <li>
-                            <NavLink 
-                                onClick={() => setIsMenuOpen(false)} 
-                                className="
-                                    hover:text-green2 
-                                    transition-all 
-                                    mx-auto
-                                " 
-                                to="/faq"
-                            >
-                                FAQs
-                            </NavLink>
-                        </li>
+                        {links.map(({ to, label, end }) => (
+                            <li key={to} className="max-md:w-full max-md:text-center">
+                                <NavLink
+                                    to={to}
+                                    end={end}
+                                    onClick={() => setIsMenuOpen(false)}
+                                    className={({ isActive }) => `
+                                        block ${navPill}
+                                        ${isActive ? navPillActive : navPillIdle}
+                                    `}
+                                >
+                                    {label}
+                                </NavLink>
+                            </li>
+                        ))}
                         <li>
                             <SignIn />
                         </li>
@@ -117,16 +126,13 @@ const Navbar:FC = () => {
                             <ThemeToggle />
                         </li>
                     </ul>
-                    <button 
+                    <button
                         onClick={() => setIsMenuOpen(!isMenuOpen)}
+                        className={`z-50 md:hidden ${iconButton}`}
                         aria-label={isMenuOpen ? "Close menu" : "Open menu"}
                         aria-expanded={isMenuOpen}
-                        className="
-                            z-50 md:hidden text-3xl cursor-pointer 
-                            flex items-center
-                        "
                     >
-                        {!isMenuOpen ? <IoIosMenu /> : <IoIosClose />}
+                        {!isMenuOpen ? <Menu className="size-6" /> : <X className="size-6" />}
                     </button>
                 </div>
             </div>
