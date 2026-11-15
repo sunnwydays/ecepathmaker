@@ -37,6 +37,15 @@ describe('Courses page', () => {
         expect(screen.queryByText(/Random Processes/)).not.toBeInTheDocument();
     });
 
+    it('does not add a course to the grid when pressing enter', async () => {
+        const user = userEvent.setup()
+        const inputBox = screen.getByPlaceholderText('Search by code or name');
+        await user.type(inputBox, 'APS360{enter}');
+
+        expect(screen.queryByText(/Added APS360/)).not.toBeInTheDocument();
+        expect((inputBox as HTMLInputElement).value).toBe('APS360');
+    });
+
     it('shows no results message for garbage search', () => {
         const searchInput = screen.getByPlaceholderText('Search by code or name');
         fireEvent.change(searchInput, { target: { value: 'xxxxx' } });

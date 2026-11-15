@@ -9,7 +9,9 @@ import Announcement from "../info/Announcement";
 const Filter: FC<{
   filters: FilterState;
   setFilters: React.Dispatch<React.SetStateAction<FilterState>>;
-}> = ({ filters, setFilters }) => {
+  // Enter adds the single matching course to the grid; only wanted on the Maker
+  quickAdd?: boolean;
+}> = ({ filters, setFilters, quickAdd = false }) => {
   const curriculum = useCurriculum();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -96,6 +98,7 @@ const Filter: FC<{
   // If only 1 course in search result, then add that to the earliest empty slot
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!quickAdd) return;
 
     let code: UniqueIdentifier = '';
     let found = false;

@@ -561,7 +561,7 @@ const CourseGrid: FC<CourseGridProps> = ({
 
         return <Announcement>{message}</Announcement>;
       })()}
-      <Filter filters={filters} setFilters={setFilters} />
+      <Filter filters={filters} setFilters={setFilters} quickAdd />
       <WillYouGraduate result={result} curriculum={curriculum} />
     </DndContext>
   );
