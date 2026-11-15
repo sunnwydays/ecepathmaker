@@ -8,10 +8,33 @@ ECE Pathmaker is a visual drag-and-drop course planner for UofT electrical and c
 
 ![Project Screenshot](./public/project_screenshot.png)
 
+## What's New
+
+### ✨ AI Planner (new tab)
+
+Not sure where to start? The new **AI Planner** tab (`/plan`) builds a plan with any AI chat (ChatGPT, Claude, Gemini, ...), no account or API key needed:
+
+1. **Fill in a short form**: your curriculum, the groups or areas you like, your interests, workload, courses you took before third year, courses you must take or want to avoid, and anything else (minors, PEY, ...).
+2. **Copy the generated prompt** into your AI chat. It's built from the site's own course list and graduation rules, so it never goes stale.
+3. **Paste the AI's reply back.** The plan loads straight onto the Maker grid, where the usual requirement and prerequisite checks verify it.
+4. **Fix problems in one click.** The site flags wrong terms, missing prerequisites, unmet requirements and plans under 20 courses, and copies them back for the AI to fix.
+
+### Other recent updates
+
+- **Course Explorer**: the Courses tab is now a searchable, filterable list with a detail panel, a prerequisite graph, course status, and an Add to Grid button that picks a valid term for you.
+- **New curriculum support**: pick the six-area curriculum (before Fall 2026) or Electrical / Computer with groups A, B and C (Fall 2026+). Requirements are now data-driven.
+- **Overloading and extra courses**: an optional sixth column for 6-course terms, and an EXT toggle for courses that don't count toward the degree. The XX row (courses before third year) now sits at the top.
+- **Count-once rules (pre-2026)**: each course counts toward only one requirement, matching the calendar.
+- **Custom courses can join group A, B or C** so they count in the 2026 curricula.
+- **Course list updates reach existing users** automatically, without resetting your layout.
+- **Sturdier layout strings** that stay compatible with ones you've already saved.
+- **Smoother UI**: no page reloads between tabs, a redesigned FAQ with search, lighter styling throughout, drag feedback, Undo instead of confirm popups, keyboard focus rings, and the theme set before first paint.
+
 ## Tech Stack
 
 The project is built using the following technologies:
-- **Frontend**: React, TypeScript, HTML, Tailwind CSS, dnd-kit (drag-and-drop), shadcn/ui (tooltip buttons)
+- **Frontend**: React, TypeScript, HTML, Tailwind CSS, dnd-kit (drag-and-drop), shadcn/ui (tooltip buttons), React Router
+- **Auth & storage**: Firebase (Google sign-in, Firestore), `localStorage`
 - **Testing**: Jest, manual testing
 - **Build Tools**: Vite, PostCSS
 - **Version Control**: Git, GitHub
@@ -50,6 +73,8 @@ When you change `mockCourses.ts`, add an entry to `src/data/courseUpdates.ts` so
 - [x] Google OAuth login (Firebase)
 - [x] Curriculum picker (six-area option for before Fall 2026, Electrical or Computer for Fall 2026+)
 - [x] 6th column for overloading (in a different color), and extra (EXT) courses
+- [x] Course explorer with prerequisite graph
+- [x] AI Planner: generate a prompt for any AI chat and load its plan onto the grid
 - [ ] Proper backend to store core course details and improve save/load functionality
 - [ ] Store data in the URL
 - [ ] Checking for minors and certificates (much hardcoding)
