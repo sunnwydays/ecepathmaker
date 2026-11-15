@@ -380,6 +380,39 @@ const Planner = () => {
               data-testid="avoid"
             />
           </Field>
+          <div className="text-sm" data-testid="planner-factors">
+            <p className="font-medium">Other things worth mentioning below</p>
+            <ul className="mt-1 list-disc space-y-1 pl-5 text-gray-600 dark:text-gray-300">
+              <li>
+                <span className="font-medium">PEY:</span> applying during
+                third year is like an extra course, so you may want a lighter
+                third year (see Workload above).
+              </li>
+              <li>
+                <span className="font-medium">Grad school:</span> you might
+                lean towards 500-level courses in your area, but interest
+                matters more.
+              </li>
+              <li>
+                <span className="font-medium">Lab-heavy courses:</span> a bit
+                more work, but not enough to plan around for most people.
+              </li>
+              <li>
+                <span className="font-medium">Minors or certificates:</span>
+                {" "}name them so the AI saves room for their courses (it does
+                not have their rules).
+              </li>
+              <li>
+                <span className="font-medium">A course you need for a later
+                one:</span> e.g. a 500-level course you want in 4S; the AI will
+                schedule its prerequisites in time.
+              </li>
+              <li>
+                <span className="font-medium">Timing limits:</span> a term
+                abroad, part-time study, or a term you want lighter.
+              </li>
+            </ul>
+          </div>
           <Field label="Anything else? (workload, minors, PEY, ...)">
             <textarea
               rows={3}
