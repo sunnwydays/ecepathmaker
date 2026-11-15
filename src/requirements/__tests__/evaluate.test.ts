@@ -576,6 +576,6 @@ describe('2026 data sanity', () => {
 
   it('the override courses have the expected state in mockCourses', () => {
     expect(mockCourses.ECE357).toBeUndefined();
-    expect(mockCourses.PHY358.isSciMath).toBe(true);
+    expect(mockCourses.PHY358).toBeUndefined();
   });
 });

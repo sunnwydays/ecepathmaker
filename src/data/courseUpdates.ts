@@ -15,6 +15,9 @@ export interface CourseUpdate {
 export const courseUpdates: CourseUpdate[] = [
   // ECE390 became second term only (ab4cf58), ECE412 gained a prerequisite (474a745)
   { version: 1, addMissing: true, upsert: ["ECE390", "ECE412"] },
+  // ECE435 gained the (ECE216 or ECE355) prerequisite. CIV220 and PHY358 need
+  // courses outside the usual ECE path, so they left the default list.
+  { version: 2, upsert: ["ECE435"], remove: ["CIV220", "PHY358"] },
 ];
 
 export const COURSE_DATA_VERSION =

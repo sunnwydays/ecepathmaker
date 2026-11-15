@@ -24,7 +24,8 @@ const courses: CourseList = {
     streams: [1, 3],
     onlyF: true,
     preq: [
-      ["MIE286", "ECE302"],
+      ["ECE216", "ECE355"],
+      ["ECE302", "MIE286"],
       ["ECE335", "ECE350"],
       ["ECE231", "ECE360"],
       ["ECE320", "ECE357"],
@@ -472,12 +473,6 @@ const courses: CourseList = {
     onlyF: true,
     isSciMath: true,
   },
-  CIV220: {
-    name: "Urban Engineering Ecology",
-    onlyF: true,
-    isSciMath: true,
-    preq: ["CHE112"],
-  },
   CIV300: {
     name: "Terrestrial Energy Systems",
     isSciMath: true,
@@ -498,12 +493,6 @@ const courses: CourseList = {
     onlyS: true,
     isSciMath: true,
     preq: ["CHE353"],
-  },
-  PHY358: {
-    name: "Atoms, Molecules and Solids",
-    onlyS: true,
-    isSciMath: true,
-    preq: ["PHY356"],
   },
   PHY365: {
     name: "Quantum Information",
