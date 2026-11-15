@@ -59,34 +59,57 @@ export const ecePre2026: Curriculum = {
   ],
   requirements: [
     ...commonRules,
+    // Breadth, depth, science/math and technical electives are exclusive: a
+    // course in several areas, or one that is also science/math, counts for
+    // only one of them.
     {
-      id: "sciMath",
-      label: "Sci/Math",
-      tooltip: "At least 1 course labelled as science/math (Area 7)",
-      section: "basics",
-      type: "count",
-      where: { flag: "isSciMath" },
-      min: 1,
+      id: "breadth",
+      showProgress: true,
+      label: "Breadth",
+      tooltip: "4 kernel courses, each in a different area",
+      section: "groups",
+      type: "areaBreadth",
+      kernelAreas: 4,
     },
     {
       id: "depth",
+      showProgress: true,
       label: "Depth",
-      tooltip: "Has stream kernel + 2 other stream courses",
+      tooltip:
+        "2 more courses in each of 2 of your kernel areas (extra kernels count)",
       section: "groups",
       type: "areaDepth",
-      minAreas: 2,
-      perArea: 3,
+      depthAreas: 2,
+      perArea: 2,
     },
     {
-      id: "breadth",
-      label: "Breadth",
-      tooltip: "Has stream kernel",
+      id: "sciMath",
+      label: "Sci/Math",
+      tooltip:
+        "At least 1 science/math course (Area 7) that is not already counted for breadth, depth or a technical elective",
+      section: "basics",
+      type: "slots",
+      pools: [{ where: { flag: "isSciMath" }, count: 1 }],
+    },
+    {
+      id: "techElectives",
+      showProgress: true,
+      label: "Technical electives",
+      tooltip:
+        "3 more courses from any of the six areas. One may come from another department with ECE approval (not checked here; add it as a custom course with an area)",
       section: "groups",
-      type: "areaBreadth",
-      minAreas: 2,
+      type: "slots",
+      pools: [{ where: { group: "any" }, count: 3 }],
     },
   ],
-  designation: { type: "derived", computerGroups: ["5", "6"] },
+  // Calendar: of the 8 breadth and depth courses, at least 4 from Areas 5-6
+  // gives Computer, at least 5 from Areas 1-4 gives Electrical.
+  designation: {
+    type: "derived",
+    computerGroups: ["5", "6"],
+    ceMin: 4,
+    eeMin: 5,
+  },
   manualChecks:
-    "Natural sciences, Free & technical elective, PEY / 600h technical XP, CEAB, No exclusion violation, Within 1.5 credit ArtSci -300/-400 limit",
+    "Natural sciences, Free elective, PEY / 600h technical XP, CEAB, No exclusion violation, Within 1.5 credit ArtSci -300/-400 limit",
 };

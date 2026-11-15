@@ -18,6 +18,22 @@ const mockLayouts = {
     sampleGrad: 'ECE331Analog Electronics%%3kf#b3e6b3$$ECE335Introduction to Electronic Devices%%1kf#ffcc99$$ECE302Probability and Applications%%45m#e6b3ff$$ECE361Co-302 Computer Networks I%%5k#ffb3b3$$CST000cs%%c#8faadc@@ECE469Optical Communications and Networks%%145s#ffcc99$$ECE344Operating Systems%%6k#ffd699$$ECE334Digital Electronics%%3k#b3e6b3$$ECE472Engineering Economics%%$$JRE410Markets and Competitive Strategy%%c#8faadc@@ECE446Audio, Acoustics and Sensing%%34f#b3e6b3$$ECE568Computer Security%%56#ffb3b3pECE344|ECE353$$ECE496Design Project h1%%$$HPS120How to Think about Science%%ha#d4a5a5$$@@ECE448Biocomputation%%6sm#ffd699$$ECE419Distributed Systems%%6s#ffd699pECE344|ECE353$$MIE369Introduction to Artificial Intelligence%%s#ffc2e0pMIE236|ECE286|ECE302$$ECE497Design Project h2 not a real course%%$$JRE420People Management and Organizational Behaviour%%h#d4a5a5@@',
 }
 
+// The fixtures above stay as they are (layoutString.test pins them). Pre-2026
+// counts each course once, which changes two of them:
+// - ECE is CE only: ECE437 (areas 1, 3) cannot be depth in both, so depth in
+//   areas 1 and 3 (the only EE choice) is impossible. ECE446 (areas 3, 4)
+//   makes it possible again.
+// - sampleGrad has 11 area courses for 12 exclusive slots (4 kernels, 4
+//   depth, 1 sci/math, 3 technical electives). ECE454 fills the last one.
+const countOnceLayouts = {
+    ECE: mockLayouts.ECE + '$$ECE446Audio, Acoustics and Sensing%%34f#b3e6b3',
+    sampleGrad: mockLayouts.sampleGrad.replace(
+        'HPS120How to Think about Science%%ha#d4a5a5$$@@',
+        // A function, because "$$" in a replacement string means "$"
+        () => 'HPS120How to Think about Science%%ha#d4a5a5$$ECE454Computer Systems Programming%%6f#ffd699@@',
+    ),
+};
+
 describe('Maker', () => {
     let stringInput: HTMLElement;
     let loadLayout: HTMLElement;
@@ -121,7 +137,7 @@ describe('Maker', () => {
     });
 
     it('evaluates computer or electrical engineering based on streams', () => {
-        fireEvent.change(stringInput, { target: { value: mockLayouts.ECE } });
+        fireEvent.change(stringInput, { target: { value: countOnceLayouts.ECE } });
         fireEvent.click(loadLayout);
         expect(screen.getByText(/CE or EE/)).toBeInTheDocument();
     });
@@ -138,7 +154,7 @@ describe('Maker', () => {
     });
     
     it('evaluates successful graduation', () => {
-        fireEvent.change(stringInput, { target: { value: mockLayouts.sampleGrad } });
+        fireEvent.change(stringInput, { target: { value: countOnceLayouts.sampleGrad } });
         fireEvent.click(loadLayout);
         expect(screen.getByText(/You graduate/)).toBeInTheDocument();
         expect(screen.getByText(/CE 🖥/)).toBeInTheDocument();

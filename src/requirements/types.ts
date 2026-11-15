@@ -31,15 +31,16 @@ export type Rule = RuleBase &
       { type: "courses"; anyOf: string[] }
     | // Both halves of one pair, both in the given year, in different terms.
       { type: "capstone"; pairs: [string, string][]; year: string }
-    | // Pre-2026 depth: `minAreas` groups that each have `perArea` courses
-      // including a kernel.
-      { type: "areaDepth"; minAreas: number; perArea: number }
-    | // Pre-2026 breadth: `minAreas` other groups with a kernel course. Depth
-      // groups beyond the areaDepth minimum also count.
-      { type: "areaBreadth"; minAreas: number }
-    | // Exclusive slots: each course fills at most one slot across ALL "slots"
-      // rules of the curriculum. Slots are filled in rule order, then pool
-      // order, so a shortage shows up in the later rules.
+    | // Pre-2026 breadth: `kernelAreas` kernel courses, each in a different
+      // group. Exclusive (see "slots"). Used together with areaDepth.
+      { type: "areaBreadth"; kernelAreas: number }
+    | // Pre-2026 depth: `depthAreas` of the breadth groups, each with
+      // `perArea` more courses in that group (kernel or not). Exclusive.
+      { type: "areaDepth"; depthAreas: number; perArea: number }
+    | // Exclusive slots: each course fills at most one slot across ALL
+      // exclusive rules of the curriculum (areaBreadth, areaDepth, slots).
+      // areaBreadth and areaDepth are filled first, then "slots" rules in
+      // rule order, then pool order, so a shortage shows up in later rules.
       { type: "slots"; pools: { where: Selector; count: number }[] }
   );
 
@@ -66,10 +67,13 @@ export interface Curriculum {
     Record<CourseFlag, { include: string[]; exclude: string[] }>
   >;
   requirements: Rule[];
-  // "derived": worked out from the depth and breadth groups (pre-2026).
+  // "derived" (pre-2026): worked out from the courses used for areaBreadth
+  // and areaDepth, each counted in the group of the slot it fills. CE needs
+  // at least `ceMin` of them in `computerGroups`, EE at least `eeMin` in other
+  // groups; "ECE" when different valid choices allow either.
   // "fixed": the program the student is registered in.
   designation:
-    | { type: "derived"; computerGroups: string[] }
+    | { type: "derived"; computerGroups: string[]; ceMin: number; eeMin: number }
     | { type: "fixed"; value: Designation };
   // Things the app does not check, shown under the result.
   manualChecks: string;
@@ -92,6 +96,9 @@ export interface EvaluationResult {
   // Courses on the grid per group, one key for every group in the curriculum.
   groupCounts: Record<string, number>;
   // Only filled when the curriculum has areaDepth / areaBreadth rules.
+  // When breadth and depth can be met: the groups that are depth in at least
+  // one valid choice, and the other groups that give a kernel in at least
+  // one. Otherwise the depth and kernel groups of the best partial choice.
   depthGroups: string[];
   breadthGroups: string[];
   designation: Designation | null;

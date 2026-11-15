@@ -423,10 +423,10 @@ describe('evaluate(ecePre2026) results', () => {
   it('lists results in requirement order with have/need on an empty grid', () => {
     const r = evaluate(ecePre2026, { courses: {}, coursesOnGrid: { ...emptyGrid }, coursesUsed: {} });
     expect(r.results.map((x) => x.id)).toEqual([
-      'cs', 'hss', 'economics', 'capstone', 'sciMath', 'depth', 'breadth',
+      'cs', 'hss', 'economics', 'capstone', 'breadth', 'depth', 'sciMath', 'techElectives',
     ]);
     expect(r.results.map((x) => [x.have, x.need])).toEqual([
-      [0, 4], [0, 2], [0, 1], [0, 1], [0, 1], [0, 2], [0, 2],
+      [0, 4], [0, 2], [0, 1], [0, 1], [0, 4], [0, 4], [0, 1], [0, 3],
     ]);
     expect(r.results.every((x) => !x.met)).toBe(true);
     expect(r.graduates).toBe(false);
@@ -448,6 +448,8 @@ describe('evaluate(ecePre2026) results', () => {
     D2a: { name: 'D2a', streams: [2], kernel: true }, D2b: { name: 'D2b', streams: [2] }, D2c: { name: 'D2c', streams: [2] },
     B3: { name: 'B3', streams: [3], kernel: true },
     B4: { name: 'B4', streams: [4], kernel: true },
+    // Technical electives, in areas with no kernel so they change nothing else
+    T5a: { name: 'T5a', streams: [5] }, T5b: { name: 'T5b', streams: [5] }, T6: { name: 'T6', streams: [6] },
     CS1: { name: 'CS1', isCS: true }, CS2: { name: 'CS2', isCS: true },
     HSS1: { name: 'HSS1', isCS: true, isHSS: true }, HSS2: { name: 'HSS2', isCS: true, isHSS: true },
     SM: { name: 'SM', isSciMath: true },
@@ -463,9 +465,10 @@ describe('evaluate(ecePre2026) results', () => {
       ['hss', 2, 2, true],
       ['economics', 1, 1, true],
       ['capstone', 1, 1, true],
+      ['breadth', 4, 4, true],
+      ['depth', 4, 4, true],
       ['sciMath', 1, 1, true],
-      ['depth', 2, 2, true],
-      ['breadth', 2, 2, true],
+      ['techElectives', 3, 3, true],
     ]);
     expect(r.depthGroups).toEqual(['1', '2']);
     expect(r.breadthGroups).toEqual(['3', '4']);
@@ -475,26 +478,9 @@ describe('evaluate(ecePre2026) results', () => {
 
   it('one unmet requirement means graduates is false', () => {
     const r = evaluate(ecePre2026, build(without(preAll, 'B4'), preCourses));
-    expect(result(r, 'breadth')).toMatchObject({ met: false, have: 1, need: 2 });
+    expect(result(r, 'breadth')).toMatchObject({ met: false, have: 3, need: 4 });
     expect(r.graduates).toBe(false);
     expect(r.designation).toBeNull();
-  });
-
-  it('extra depth areas count toward breadth (have = breadth + depth beyond the minimum)', () => {
-    const plan = ['D1a', 'D1b', 'D1c', 'D2a', 'D2b', 'D2c', 'B3'];
-    const r = evaluate(ecePre2026, build([...plan, 'D3x'], { ...preCourses, D3x: { name: 'D3x', streams: [3] } }));
-    expect(result(r, 'breadth')).toMatchObject({ have: 1, need: 2, met: false });
-    const three = evaluate(
-      ecePre2026,
-      build([...plan, 'D3b', 'D3c'], {
-        ...preCourses,
-        D3b: { name: 'D3b', streams: [3] },
-        D3c: { name: 'D3c', streams: [3] },
-      })
-    );
-    // 3 depth groups, 0 breadth: have = 0 + 1
-    expect(three.depthGroups).toEqual(['1', '2', '3']);
-    expect(result(three, 'breadth')).toMatchObject({ have: 1, need: 2, met: false });
   });
 
   it('throws a TypeError for a capstone course on the grid without a coursesUsed entry', () => {
@@ -502,6 +488,227 @@ describe('evaluate(ecePre2026) results', () => {
     expect(() =>
       evaluate(ecePre2026, { courses: {}, coursesOnGrid, coursesUsed: { ECE497: '4S.1' } })
     ).toThrow(TypeError);
+  });
+});
+
+// Expectations below come from the pre-2026 calendar text, not from the
+// engine: breadth = 4 kernels, each in a different area; depth = 2 of those
+// areas with 2 more courses each (kernels may count); 1 science/math; 3
+// technical electives from any area; each course counts for one of these.
+// Designation: of the 8 breadth and depth courses, >= 4 in Areas 5-6 is CE,
+// >= 5 in Areas 1-4 is EE, each course counted in the area it is used for.
+describe('pre-2026: each course counted once', () => {
+  const area = (streams: number[], kernel = false, isSciMath = false): CourseCardPropsWithoutCode => ({
+    name: 'x',
+    streams,
+    ...(kernel && { kernel: true }),
+    ...(isSciMath && { isSciMath: true }),
+  });
+  const pre = (courses: CourseList) => evaluate(ecePre2026, build(Object.keys(courses), courses));
+  const kernels = (...areas: number[]): CourseList =>
+    Object.fromEntries(areas.map((a) => [`K${a}`, area([a], true)]));
+  // Kernel in each of a, b, c, d; 2 more courses in each of a and b.
+  const plan = (a: number, b: number, c: number, d: number): CourseList => ({
+    ...kernels(a, b, c, d),
+    [`X${a}`]: area([a]), [`Y${a}`]: area([a]),
+    [`X${b}`]: area([b]), [`Y${b}`]: area([b]),
+  });
+
+  it('one multi-area course cannot serve two depth areas', () => {
+    // Area 1 extras: S, Y1. Area 2 extras: S, Y2. Only 3 distinct courses.
+    const courses = { ...kernels(1, 2, 3, 4), S: area([1, 2]), Y1: area([1]), Y2: area([2]) };
+    expect(result(pre(courses), 'depth')).toMatchObject({ met: false, have: 3, need: 4 });
+    const fixed = pre({ ...courses, Z2: area([2]) });
+    expect(result(fixed, 'depth')).toMatchObject({ met: true, have: 4 });
+  });
+
+  it('a kernel fills a kernel slot or a depth slot, not both', () => {
+    // Area 1 has only K1 + Y1, so K1 cannot also be one of area 1's 2 extras.
+    const courses = { ...kernels(1, 2, 3, 4), Y1: area([1]), Y2a: area([2]), Y2b: area([2]) };
+    const r = pre(courses);
+    expect(result(r, 'breadth').met).toBe(true);
+    expect(result(r, 'depth')).toMatchObject({ met: false, have: 3 });
+    // A second area-1 kernel is an extra course there (extra kernels count)
+    expect(result(pre({ ...courses, K1b: area([1], true) }), 'depth').met).toBe(true);
+  });
+
+  it('tries every choice of depth areas: {1, 2} fails, {1, 3} and {2, 3} work', () => {
+    const courses = {
+      ...kernels(1, 2, 3, 4),
+      S: area([1, 2]), A1: area([1]), A2: area([2]), A3a: area([3]), A3b: area([3]),
+    };
+    const r = pre(courses);
+    expect(result(r, 'depth').met).toBe(true);
+    expect(r.depthGroups).toEqual(['1', '2', '3']); // possible depth areas
+    expect(r.breadthGroups).toEqual(['4']);
+  });
+
+  it('a sci/math course needed for depth does not also count as sci/math', () => {
+    const courses = {
+      ...kernels(1, 2, 3, 4),
+      SM1: area([1], false, true), Y1: area([1]), Y2a: area([2]), Y2b: area([2]),
+      T5a: area([5]), T5b: area([5]), T5c: area([5]),
+    };
+    const r = pre(courses);
+    expect(result(r, 'depth').met).toBe(true);
+    expect(result(r, 'sciMath')).toMatchObject({ met: false, have: 0 });
+    // Another area-1 course takes the depth slot and SM1 moves to sci/math
+    const moved = pre({ ...courses, Y1b: area([1]) });
+    expect(result(moved, 'depth').met).toBe(true);
+    expect(result(moved, 'sciMath').met).toBe(true);
+    expect(result(moved, 'techElectives').met).toBe(true);
+  });
+
+  it('technical electives: 2 of 3, then 3 of 3; courses with no area do not count', () => {
+    const base = { ...plan(1, 2, 3, 4), T5a: area([5]), T6: area([6]), NONE: area([]) };
+    expect(result(pre(base), 'techElectives')).toMatchObject({ met: false, have: 2, need: 3 });
+    expect(result(pre({ ...base, T3: area([3]) }), 'techElectives')).toMatchObject({ met: true, have: 3 });
+  });
+
+  it('a technical elective course is not also a depth course', () => {
+    // 8 area courses exactly fill breadth and depth; none is left over.
+    const r = pre(plan(1, 2, 3, 4));
+    expect(result(r, 'depth').met).toBe(true);
+    expect(result(r, 'techElectives').have).toBe(0);
+  });
+
+  // Magellan talk slide 12, "Degree Designation Depends on Kernel/Depth
+  // Courses": depth areas A and B, kernel-only areas C and D. Areas 5 and 6
+  // are computer areas, 1-4 electrical.
+  it.each([
+    ['A, B computer; C, D electrical', [5, 6, 1, 2], 'CE'],
+    ['A, C computer; B, D electrical', [5, 1, 6, 2], 'CE'],
+    ['A computer; B, C, D electrical', [5, 1, 2, 3], 'EE'],
+    ['C, D computer; A, B electrical', [1, 2, 5, 6], 'EE'],
+    ['C computer; A, B, D electrical', [1, 2, 5, 3], 'EE'],
+    ['all electrical', [1, 2, 3, 4], 'EE'],
+  ] as const)('slide 12: %s -> %s', (_, [a, b, c, d], expected) => {
+    const r = pre(plan(a, b, c, d));
+    expect(result(r, 'breadth').met && result(r, 'depth').met).toBe(true);
+    expect(r.designation).toBe(expected);
+  });
+
+  it('is ECE when one valid choice gives CE and another EE', () => {
+    // Kernels in 1, 2, 5, 6; extras in 1, 2 and 5. Depth {1, 2} gives 2
+    // computer courses (EE); depth {1, 5} gives 4 (CE).
+    const courses = { ...plan(1, 2, 5, 6), X5: area([5]), Y5: area([5]) };
+    const r = pre(courses);
+    expect(r.designation).toBe('ECE');
+    expect(r.depthGroups).toEqual(['1', '2', '5']);
+    expect(r.breadthGroups).toEqual(['6']);
+  });
+
+  it('a depth course in a computer area counts as electrical when used for an electrical area', () => {
+    // M is in areas 1 and 5. Area 5 has no other extra course, so the only
+    // valid depth areas are 1 and 2, and M is used for area 1: 2 computer
+    // courses (K5, K6), so EE.
+    const courses = { ...kernels(1, 2, 5, 6), M: area([1, 5]), Y1: area([1]), Y2a: area([2]), Y2b: area([2]) };
+    expect(pre(courses).designation).toBe('EE');
+  });
+
+  it('designation only needs breadth and depth, not sci/math or electives', () => {
+    const r = pre(plan(5, 6, 1, 2));
+    expect(result(r, 'techElectives').met).toBe(false);
+    expect(r.designation).toBe('CE');
+  });
+
+  // Brute force: try every way to give each course one role (none, kernel of
+  // one of its areas, depth in one of its areas, sci/math, technical
+  // elective) and compare with the engine.
+  it('agrees with a brute-force search on random grids', () => {
+    let seed = 12345;
+    const random = () => {
+      seed = (seed * 1103515245 + 12345) % 2147483648;
+      return seed / 2147483648;
+    };
+    type Spec = { areas: number[]; kernel: boolean; sm: boolean };
+
+    // Returns one bit per reachable outcome: bit 2 * c + full, where c is the
+    // number of computer courses among the 8 and full means sci/math and
+    // electives are also filled.
+    const bruteForce = (specs: Spec[]): number => {
+      const memo = new Map<string, number>();
+      const go = (i: number, kMask: number, d: number[], sm: number, te: number): number => {
+        if (i === specs.length) {
+          const dAreas = d.flatMap((n, a) => (n > 0 ? [a] : []));
+          const kCount = [0, 1, 2, 3, 4, 5].filter((a) => kMask & (1 << a)).length;
+          if (kCount !== 4 || dAreas.length !== 2) return 0;
+          if (dAreas.some((a) => d[a] !== 2 || !(kMask & (1 << a)))) return 0;
+          const computer = (a: number) => a === 4 || a === 5; // areas 5, 6
+          const c =
+            [0, 1, 2, 3, 4, 5].filter((a) => kMask & (1 << a) && computer(a)).length +
+            2 * dAreas.filter(computer).length;
+          return 1 << (2 * c + (sm === 1 && te === 3 ? 1 : 0));
+        }
+        const key = `${i}|${kMask}|${d.join('')}|${sm}|${te}`;
+        const cached = memo.get(key);
+        if (cached !== undefined) return cached;
+        const { areas, kernel, sm: isSm } = specs[i];
+        let out = go(i + 1, kMask, d, sm, te);
+        const kCount = [0, 1, 2, 3, 4, 5].filter((a) => kMask & (1 << a)).length;
+        const dUsed = d.filter((n) => n > 0).length;
+        for (const s of areas) {
+          const a = s - 1;
+          if (kernel && !(kMask & (1 << a)) && kCount < 4) out |= go(i + 1, kMask | (1 << a), d, sm, te);
+          if (d[a] < 2 && (d[a] > 0 || dUsed < 2)) {
+            const next = [...d];
+            next[a]++;
+            out |= go(i + 1, kMask, next, sm, te);
+          }
+        }
+        if (isSm && sm === 0) out |= go(i + 1, kMask, d, 1, te);
+        if (areas.length > 0 && te < 3) out |= go(i + 1, kMask, d, sm, te + 1);
+        memo.set(key, out);
+        return out;
+      };
+      return go(0, 0, [0, 0, 0, 0, 0, 0], 0, 0);
+    };
+
+    // How often each outcome came up, so the test cannot pass vacuously
+    const seen: Record<string, number> = {};
+    for (let trial = 0; trial < 300; trial++) {
+      const n = 8 + Math.floor(random() * 6); // 8..13 courses
+      const specs: Spec[] = Array.from({ length: n }, () => {
+        const areas: number[] = [];
+        if (random() > 0.1) {
+          areas.push(1 + Math.floor(random() * 6));
+          if (random() < 0.35) {
+            const second = 1 + Math.floor(random() * 6);
+            if (second !== areas[0]) areas.push(second);
+          }
+        }
+        return { areas, kernel: areas.length > 0 && random() < 0.4, sm: random() < 0.2 };
+      });
+      const courses: CourseList = {};
+      specs.forEach((s, i) => (courses[`C${i}`] = area(s.areas, s.kernel, s.sm)));
+      const r = pre(courses);
+
+      const outcomes = bruteForce(specs);
+      const bits = Array.from({ length: 18 }, (_, b) => (outcomes >> b) & 1);
+      const counts = bits.flatMap((on, b) => (on ? [b >> 1] : []));
+      const ce = counts.some((c) => c >= 4);
+      const ee = counts.some((c) => 8 - c >= 5);
+      const expected = {
+        areaRules: outcomes !== 0,
+        all: bits.some((on, b) => on && b % 2 === 1),
+        designation: ce && ee ? 'ECE' : ce ? 'CE' : ee ? 'EE' : null,
+      };
+      const met = (id: string) => result(r, id).met;
+      expect({
+        areaRules: met('breadth') && met('depth'),
+        all: met('breadth') && met('depth') && met('sciMath') && met('techElectives'),
+        designation: r.designation,
+      }).toEqual(expected);
+      const tag = `${expected.areaRules}/${expected.all}/${expected.designation}`;
+      seen[tag] = (seen[tag] || 0) + 1;
+      seen[String(expected.designation)] = (seen[String(expected.designation)] || 0) + 1;
+    }
+    expect(seen['false/false/null']).toBeGreaterThan(10);
+    expect(seen['CE']).toBeGreaterThan(10);
+    expect(seen['EE']).toBeGreaterThan(10);
+    expect(seen['ECE']).toBeGreaterThan(10);
+    expect(Object.keys(seen).filter((t) => t.startsWith('true/true')).length).toBeGreaterThan(0);
+    expect(Object.keys(seen).filter((t) => t.startsWith('true/false')).length).toBeGreaterThan(0);
   });
 });
 

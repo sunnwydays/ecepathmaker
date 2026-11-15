@@ -10,9 +10,14 @@ import {
   GridPositionBase,
 } from '../../types/types';
 
-// These tests pin what computeConditions returns TODAY, including odd cases.
-// They only assert on the returned object and use small synthetic courses,
-// except for the one clearly marked data-dependent smoke test at the bottom.
+// These tests pin what computeConditions returns, including odd cases. They
+// only assert on the returned object and use small synthetic courses, except
+// for the one clearly marked data-dependent smoke test at the bottom.
+// Pre-2026 rules (calendar): breadth = 4 kernels in different areas; depth =
+// 2 of those areas with 2 more courses each; each course counts once among
+// breadth, depth, science/math and technical electives. The adapter's
+// depthStreams / breadthStreams are the areas possible as depth / as another
+// kernel area over every valid choice (or of the best partial choice).
 
 type Flags = Partial<CourseCardPropsWithoutCode>;
 
@@ -150,11 +155,13 @@ describe('computeConditions: depth', () => {
     expect(result.breadthStreams).toEqual([1]);
   });
 
-  it('a kernel flag on a multi-stream course counts as a kernel in each of its streams', () => {
+  it('a multi-stream kernel is the kernel of only one of its streams', () => {
+    // A can be the area-1 kernel or the area-2 kernel, not both. Area 1 has
+    // A + B + C, so A is used there and area 2 has no kernel left.
     const courses = { A: course([1, 2], true), B: course([1]), C: course([1]), D: course([2]) };
     const result = run(courses, fill(['A', 'B', 'C', 'D']));
     expect(result.depthStreams).toEqual([1]);
-    expect(result.breadthStreams).toEqual([2]);
+    expect(result.breadthStreams).toEqual([]);
   });
 
   it('hasDepth needs 2 depth streams: 0 and 1 false, 2 and 3 true', () => {
@@ -193,8 +200,10 @@ describe('computeConditions: breadth', () => {
     expect(result.breadthStreams).toEqual([]);
   });
 
-  it('hasBreadth: 2 breadth streams is true (even with 0 depth)', () => {
-    expect(planFor([], [1, 2]).hasBreadth).toBe(true);
+  it('hasBreadth needs kernels in 4 different areas, depth or not', () => {
+    expect(planFor([], [1, 2]).hasBreadth).toBe(false);
+    expect(planFor([], [1, 2, 3]).hasBreadth).toBe(false);
+    expect(planFor([], [1, 2, 3, 4]).hasBreadth).toBe(true);
     expect(planFor([1, 2], [3, 4]).hasBreadth).toBe(true);
   });
 
@@ -219,7 +228,7 @@ describe('computeConditions: breadth', () => {
   });
 
   it('hasBreadth can be true while hasDepth is false, and ceOrEE stays null', () => {
-    const result = planFor([1], [2, 3]);
+    const result = planFor([1], [2, 3, 4]);
     expect(result.hasBreadth).toBe(true);
     expect(result.hasDepth).toBe(false);
     expect(result.ceOrEE).toBeNull();
@@ -252,8 +261,8 @@ describe('computeConditions: ceOrEE', () => {
   // Streams 5 and 6 are the computer streams; 1-4 are EE streams.
   // The helper planFor(depth, breadth) builds exactly those depth/breadth sets.
 
-  it('is null when depth is unmet (D{5}, B{1,2})', () => {
-    const r = planFor([5], [1, 2]);
+  it('is null when depth is unmet (D{5}, B{1,2,3})', () => {
+    const r = planFor([5], [1, 2, 3]);
     expect(r.hasDepth).toBe(false);
     expect(r.hasBreadth).toBe(true);
     expect(r.ceOrEE).toBeNull();
@@ -367,17 +376,20 @@ describe('computeConditions: ceOrEE', () => {
     expect(planFor([5, 1, 2, 3], [6]).ceOrEE).toBe('ECE');
   });
 
-  it('works when the needed streams are fit in with multi-stream courses', () => {
-    // 3 multi-stream courses give depth in 5 and 6 (kernel via the first),
-    // 3 more give depth in 1 and 2 -> D{1,2,5,6}, no breadth needed (4 depth)
+  it('multi-stream courses count once: 2 multi-stream kernels give 2 kernel areas, not 4', () => {
+    // Kernels A (5 or 6) and D (1 or 2) fill only 2 of the 4 kernel slots.
+    // Depth is met with one area from each pair, e.g. 1 (D + E, F) and
+    // 5 (A + B, C); the first such choice in area order is {1, 5}.
     const courses: CourseList = {
       A: course([5, 6], true), B: course([5, 6]), C: course([5, 6]),
       D: course([1, 2], true), E: course([1, 2]), F: course([1, 2]),
     };
     const r = run(courses, fill(['A', 'B', 'C', 'D', 'E', 'F']));
-    expect(r.depthStreams).toEqual([1, 2, 5, 6]);
+    expect(r.hasBreadth).toBe(false);
+    expect(r.hasDepth).toBe(true);
+    expect(r.depthStreams).toEqual([1, 5]);
     expect(r.breadthStreams).toEqual([]);
-    expect(r.ceOrEE).toBe('ECE');
+    expect(r.ceOrEE).toBeNull();
   });
 });
 

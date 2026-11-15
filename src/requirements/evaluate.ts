@@ -49,6 +49,19 @@ export function hasFlag(
   return Boolean(course?.[flag]);
 }
 
+// All `size`-element subsets of `items`, keeping their order.
+function subsets(items: string[], size: number): string[][] {
+  if (size === 0) return [[]];
+  if (items.length < size) return [];
+  const [first, ...rest] = items;
+  return [
+    ...subsets(rest, size - 1).map((s) => [first, ...s]),
+    ...subsets(rest, size),
+  ];
+}
+
+type Slot = { ruleIndex: number; selector: Selector; area?: string };
+
 export function evaluate(
   curriculum: Curriculum,
   input: {
@@ -62,12 +75,19 @@ export function evaluate(
     (code) => code !== ""
   );
 
-  const matches = (selector: Selector, code: string): boolean => {
-    const course = courses[code];
-    if ("flag" in selector) {
-      return hasFlag(curriculum, selector.flag, code, course);
+  // Membership per course, looked up once.
+  const membershipOf = new Map<string, { groups: string[]; kernel: boolean }>();
+  gridCourses.forEach((code) => {
+    if (!membershipOf.has(code)) {
+      membershipOf.set(code, getMembership(curriculum, code, courses[code]));
     }
-    const { groups, kernel } = getMembership(curriculum, code, course);
+  });
+
+  const matches = (selector: Selector, code: string): boolean => {
+    if ("flag" in selector) {
+      return hasFlag(curriculum, selector.flag, code, courses[code]);
+    }
+    const { groups, kernel } = membershipOf.get(code)!;
     const inGroup =
       selector.group === "any"
         ? groups.length > 0
@@ -78,69 +98,182 @@ export function evaluate(
   // Group counts (declared groups only)
   const groupCounts: Record<string, number> = {};
   curriculum.groups.forEach((g) => (groupCounts[g.id] = 0));
-  // Tally for depth/breadth analysis (any group id, even undeclared ones).
-  // A plain object keyed by group id keeps integer-like ids in ascending order.
-  const tally: Record<string, { count: number; hasKernel: boolean }> = {};
+  // Every group id on the grid, even undeclared ones (a custom course or an
+  // old layout may carry stream 7), and whether it has a kernel course. A
+  // plain object keyed by group id keeps integer-like ids in ascending order.
+  const tally: Record<string, { hasKernel: boolean }> = {};
   gridCourses.forEach((code) => {
-    const { groups, kernel } = getMembership(curriculum, code, courses[code]);
+    const { groups, kernel } = membershipOf.get(code)!;
     groups.forEach((g) => {
       if (g in groupCounts) groupCounts[g]++;
-      if (!tally[g]) tally[g] = { count: 0, hasKernel: false };
-      tally[g].count++;
+      if (!tally[g]) tally[g] = { hasKernel: false };
       if (kernel) tally[g].hasKernel = true;
     });
   });
+  const areas = Object.keys(tally);
 
-  // Area analysis
-  const depthRule = curriculum.requirements.find(
-    (r): r is Extract<Rule, { type: "areaDepth" }> => r.type === "areaDepth"
+  // Exclusive rules: areaBreadth, areaDepth and every "slots" rule share one
+  // pool, so each course fills at most one slot among them.
+  const breadthIndex = curriculum.requirements.findIndex(
+    (r) => r.type === "areaBreadth"
   );
-  let depthGroups: string[] = [];
-  let breadthGroups: string[] = [];
-  if (depthRule) {
-    depthGroups = Object.entries(tally)
-      .filter(([, i]) => i.count >= depthRule.perArea && i.hasKernel)
-      .map(([g]) => g);
-    breadthGroups = Object.entries(tally)
-      .filter(
-        ([g, i]) => i.count >= 1 && i.hasKernel && !depthGroups.includes(g)
-      )
-      .map(([g]) => g);
-  }
+  const depthIndex = curriculum.requirements.findIndex(
+    (r) => r.type === "areaDepth"
+  );
+  const breadthRule = curriculum.requirements[breadthIndex] as
+    | Extract<Rule, { type: "areaBreadth" }>
+    | undefined;
+  const depthRule = curriculum.requirements[depthIndex] as
+    | Extract<Rule, { type: "areaDepth" }>
+    | undefined;
+  const hasAreaRules = breadthRule !== undefined || depthRule !== undefined;
 
-  // Slot assignment (Kuhn's algorithm) across all "slots" rules
-  const slots: { ruleIndex: number; selector: Selector }[] = [];
+  // Slots that do not depend on the choice of areas, in rule then pool order.
+  const fixedSlots: Slot[] = [];
   curriculum.requirements.forEach((rule, ruleIndex) => {
     if (rule.type !== "slots") return;
     rule.pools.forEach((pool) => {
       for (let i = 0; i < pool.count; i++) {
-        slots.push({ ruleIndex, selector: pool.where });
+        fixedSlots.push({ ruleIndex, selector: pool.where });
       }
     });
   });
-  const owner = new Map<string, number>(); // course code -> slot index
-  const tryFill = (slot: number, visited: Set<string>): boolean => {
-    for (const code of gridCourses) {
-      if (visited.has(code) || !matches(slots[slot].selector, code)) continue;
-      visited.add(code);
-      const current = owner.get(code);
-      if (current === undefined || tryFill(current, visited)) {
-        owner.set(code, slot);
-        return true;
+  // Rules in the order their slots are filled, for comparing choices.
+  const exclusiveOrder = [
+    ...(breadthRule ? [breadthIndex] : []),
+    ...(depthRule ? [depthIndex] : []),
+    ...curriculum.requirements.flatMap((r, i) =>
+      r.type === "slots" ? [i] : []
+    ),
+  ];
+
+  const slotsNeeded: Record<number, number> = {};
+  fixedSlots.forEach((s) => {
+    slotsNeeded[s.ruleIndex] = (slotsNeeded[s.ruleIndex] || 0) + 1;
+  });
+  if (breadthRule) slotsNeeded[breadthIndex] = breadthRule.kernelAreas;
+  if (depthRule) {
+    slotsNeeded[depthIndex] = depthRule.depthAreas * depthRule.perArea;
+  }
+
+  // Fills the slots in order with Kuhn's algorithm. Augmenting paths never
+  // empty a filled slot, so earlier slots win: the result fills as many
+  // slots as possible, preferring earlier ones.
+  const fillSlots = (slots: Slot[]): (string | undefined)[] => {
+    const owner = new Map<string, number>(); // course code -> slot index
+    const tryFill = (slot: number, visited: Set<string>): boolean => {
+      for (const code of gridCourses) {
+        if (visited.has(code) || !matches(slots[slot].selector, code)) continue;
+        visited.add(code);
+        const current = owner.get(code);
+        if (current === undefined || tryFill(current, visited)) {
+          owner.set(code, slot);
+          return true;
+        }
       }
+      return false;
+    };
+    slots.forEach((_, slot) => tryFill(slot, new Set()));
+    const filledBy: (string | undefined)[] = slots.map(() => undefined);
+    owner.forEach((slot, code) => (filledBy[slot] = code));
+    return filledBy;
+  };
+
+  // A choice of areas: K = the breadth areas (one kernel each), D = the depth
+  // areas within K (`perArea` more courses each). Every choice is tried and
+  // the best fill kept; six areas give at most 15 x 6 = 90 choices. With
+  // fewer kernel areas than needed, K is all of them (the rest stay unmet).
+  const kernelAreas = areas.filter((g) => tally[g].hasKernel);
+  const choices: { K: string[]; D: string[] }[] = [];
+  if (hasAreaRules) {
+    const kSize = Math.min(breadthRule?.kernelAreas ?? 0, kernelAreas.length);
+    subsets(kernelAreas, kSize).forEach((K) => {
+      const dSize = Math.min(depthRule?.depthAreas ?? 0, K.length);
+      subsets(K, dSize).forEach((D) => choices.push({ K, D }));
+    });
+  } else {
+    choices.push({ K: [], D: [] });
+  }
+
+  type Outcome = {
+    K: string[];
+    D: string[];
+    slots: Slot[];
+    filledBy: (string | undefined)[];
+    filled: Record<number, number>;
+  };
+  const outcomes: Outcome[] = choices.map(({ K, D }) => {
+    const slots: Slot[] = [
+      ...K.map((area) => ({
+        ruleIndex: breadthIndex,
+        selector: { group: area, kernel: true as const },
+        area,
+      })),
+      ...D.flatMap((area) =>
+        Array.from({ length: depthRule?.perArea ?? 0 }, () => ({
+          ruleIndex: depthIndex,
+          selector: { group: area },
+          area,
+        }))
+      ),
+      ...fixedSlots,
+    ];
+    const filledBy = fillSlots(slots);
+    const filled: Record<number, number> = {};
+    filledBy.forEach((code, slot) => {
+      if (code === undefined) return;
+      const r = slots[slot].ruleIndex;
+      filled[r] = (filled[r] || 0) + 1;
+    });
+    return { K, D, slots, filledBy, filled };
+  });
+
+  // Best choice: most breadth slots filled, then depth, then each "slots"
+  // rule in order. The first of equals wins, so the result is deterministic.
+  const better = (a: Outcome, b: Outcome): boolean => {
+    for (const r of exclusiveOrder) {
+      const diff = (a.filled[r] || 0) - (b.filled[r] || 0);
+      if (diff !== 0) return diff > 0;
     }
     return false;
   };
-  slots.forEach((_, slot) => tryFill(slot, new Set()));
-  const slotsNeeded: Record<number, number> = {};
-  const slotsFilled: Record<number, number> = {};
-  slots.forEach((s) => {
-    slotsNeeded[s.ruleIndex] = (slotsNeeded[s.ruleIndex] || 0) + 1;
-  });
-  owner.forEach((slot) => {
-    const r = slots[slot].ruleIndex;
-    slotsFilled[r] = (slotsFilled[r] || 0) + 1;
-  });
+  const best = outcomes.reduce((acc, o) => (better(o, acc) ? o : acc));
+  const slotsFilled = best.filled;
+
+  // Choices that meet breadth and depth. Science/math and electives are left
+  // out on purpose: the calendar defines the designation from these alone.
+  const areaRulesMet = (o: Outcome) =>
+    hasAreaRules &&
+    (!breadthRule ||
+      (o.filled[breadthIndex] || 0) === slotsNeeded[breadthIndex]) &&
+    (!depthRule || (o.filled[depthIndex] || 0) === slotsNeeded[depthIndex]);
+  const valid = outcomes.filter(areaRulesMet);
+
+  const inAreaOrder = (set: Set<string>) => areas.filter((g) => set.has(g));
+  let depthGroups: string[] = [];
+  let breadthGroups: string[] = [];
+  if (valid.length > 0) {
+    const depth = new Set(valid.flatMap((o) => o.D));
+    const kernel = new Set(valid.flatMap((o) => o.K));
+    depthGroups = inAreaOrder(depth);
+    breadthGroups = inAreaOrder(kernel).filter((g) => !depth.has(g));
+  } else if (hasAreaRules) {
+    // Best partial choice: a kernel area counts once its kernel slot is
+    // filled, a depth area once its kernel and all its depth slots are.
+    const full = (area: string, ruleIndex: number) =>
+      best.slots.every(
+        (s, i) =>
+          s.area !== area ||
+          s.ruleIndex !== ruleIndex ||
+          best.filledBy[i] !== undefined
+      );
+    const kernel = new Set(best.K.filter((g) => full(g, breadthIndex)));
+    const depth = new Set(
+      best.D.filter((g) => kernel.has(g) && full(g, depthIndex))
+    );
+    depthGroups = inAreaOrder(depth);
+    breadthGroups = inAreaOrder(kernel).filter((g) => !depth.has(g));
+  }
 
   const isCapstone = (a: string, b: string, year: string): boolean =>
     gridCourses.includes(a) &&
@@ -170,19 +303,8 @@ export function evaluate(
           have = met ? 1 : 0;
           need = 1;
           break;
+        case "areaBreadth":
         case "areaDepth":
-          have = depthGroups.length;
-          need = rule.minAreas;
-          met = have >= need;
-          break;
-        case "areaBreadth": {
-          const depthMin = depthRule?.minAreas ?? 0;
-          have =
-            breadthGroups.length + Math.max(0, depthGroups.length - depthMin);
-          need = rule.minAreas;
-          met = have >= need;
-          break;
-        }
         case "slots":
           have = slotsFilled[index] || 0;
           need = slotsNeeded[index] || 0;
@@ -202,35 +324,26 @@ export function evaluate(
     }
   );
 
-  const metByType = (type: Rule["type"]) =>
-    curriculum.requirements.every(
-      (rule, i) => rule.type !== type || results[i].met
-    ) && curriculum.requirements.some((rule) => rule.type === type);
-
   let designation: Designation | null = null;
   if (curriculum.designation.type === "fixed") {
     designation = curriculum.designation.value;
-  } else if (metByType("areaDepth") && metByType("areaBreadth")) {
-    const computer = curriculum.designation.computerGroups;
-    const numCEDepth = depthGroups.filter((g) => computer.includes(g)).length;
-    const numEEDepth = depthGroups.length - numCEDepth;
-    const numCEBreadth = breadthGroups.filter((g) =>
-      computer.includes(g)
-    ).length;
-    const numEEBreadth = breadthGroups.length - numCEBreadth;
-
-    // Logic can't be based only on count due to possibility of many EE
-    // depths and need to differentiate depth and breadth
-    const countCE = numCEDepth * 3 + numCEBreadth;
-    if (countCE >= 4) {
-      if (numEEDepth === 0) designation = "CE";
-      else if (numEEDepth === 1) {
-        // 0 EE breadth not possible
-        designation = numEEBreadth === 1 ? "CE" : "ECE";
-      } else designation = "ECE";
-    } else {
-      designation = "EE";
-    }
+  } else if (valid.length > 0) {
+    // Each course counts in the group of the slot it fills, so the number of
+    // computer courses depends only on K and D.
+    const { computerGroups, ceMin, eeMin } = curriculum.designation;
+    const perArea = depthRule?.perArea ?? 0;
+    const total =
+      (slotsNeeded[breadthIndex] ?? 0) + (slotsNeeded[depthIndex] ?? 0);
+    let ce = false;
+    let ee = false;
+    valid.forEach(({ K, D }) => {
+      const computer =
+        K.filter((g) => computerGroups.includes(g)).length +
+        perArea * D.filter((g) => computerGroups.includes(g)).length;
+      if (computer >= ceMin) ce = true;
+      if (total - computer >= eeMin) ee = true;
+    });
+    designation = ce && ee ? "ECE" : ce ? "CE" : ee ? "EE" : null;
   }
 
   return {
