@@ -30,6 +30,8 @@ const CourseForm: FC<CourseFormProps> = ({
   } = useLayoutContext();
 
   const curriculum = useCurriculum();
+  // A code in the official lists gets its group from the calendar
+  const officialGroup = curriculum.membership?.[customInfo.code]?.group;
 
   const [errors, setErrors] = useState({
     code: false,
@@ -153,6 +155,14 @@ const CourseForm: FC<CourseFormProps> = ({
         }
         break;
       }
+      case "group":
+        setCustomInfo((prev) => {
+          // Never store group: undefined (Firestore rejects undefined values)
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          const { group: _, ...rest } = prev;
+          return value ? { ...rest, group: value } : rest;
+        });
+        break;
       case "term":
         setCustomInfo((prev) => ({
           ...prev,
@@ -228,6 +238,7 @@ const CourseForm: FC<CourseFormProps> = ({
     }
 
     const course = { ...customInfo, color: normalizeColor(customInfo.color) };
+    if (!course.group) delete course.group;
     setCourses((prev) => ({ ...prev, [customInfo.code]: course }));
     setCoursesUsed((prev) => ({ [customInfo.code]: "", ...prev }));
 
@@ -327,11 +338,45 @@ const CourseForm: FC<CourseFormProps> = ({
           </div>
         </div>
 
-        {/* Stream Flags */}
+        {/* Stream / Group Flags */}
         {curriculum.membership ? (
-          <p className="text-sm text-gray-500 dark:text-gray-300">
-            Custom courses can't be assigned to group A, B or C yet.
-          </p>
+          <div className="space-y-2">
+            <h3 className="font-semibold">Group</h3>
+            {officialGroup ? (
+              <p className="text-sm text-gray-500 dark:text-gray-300">
+                Group {officialGroup} (set by the calendar)
+              </p>
+            ) : (
+              <div className="flex gap-4">
+                {curriculum.groups.map((g) => (
+                  <label key={g.id} className="flex items-center gap-2">
+                    <input
+                      name="group"
+                      type="radio"
+                      value={g.id}
+                      data-testid={`group-${g.id}`}
+                      onChange={handleInputChange}
+                      checked={customInfo.group === g.id}
+                    />
+                    <span>{g.label}</span>
+                  </label>
+                ))}
+                <label className="flex items-center gap-2">
+                  <input
+                    name="group"
+                    type="radio"
+                    value=""
+                    data-testid="group-none"
+                    onChange={handleInputChange}
+                    checked={
+                      !curriculum.groups.some((g) => g.id === customInfo.group)
+                    }
+                  />
+                  <span>None</span>
+                </label>
+              </div>
+            )}
+          </div>
         ) : (
           <div className="space-y-2">
             <h3 className="font-semibold">Streams</h3>

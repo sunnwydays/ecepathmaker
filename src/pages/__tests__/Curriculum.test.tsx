@@ -208,7 +208,8 @@ describe('Curriculum picker on the Maker page', () => {
         expect(screen.getByTestId('stream-1')).toBeInTheDocument();
         pick('cpe-2026');
         expect(screen.queryByTestId('stream-1')).not.toBeInTheDocument();
-        expect(screen.getByText("Custom courses can't be assigned to group A, B or C yet.")).toBeInTheDocument();
+        expect(screen.getByTestId('group-A')).toBeInTheDocument();
+        expect(screen.getByTestId('group-none')).toBeChecked();
     });
 });
 

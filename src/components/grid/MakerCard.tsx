@@ -38,6 +38,7 @@ const MakerCard: FC<MakerCardProps> = (props) => {
       preq: props.preq,
       coreq: props.coreq,
       streams: props.streams,
+      ...(props.group && { group: props.group }),
       color: props.color ?? "",
       isCS: props.isCS,
       isHSS: props.isHSS,
