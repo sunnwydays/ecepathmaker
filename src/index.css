@@ -42,6 +42,10 @@ background: rgb(106, 106, 106);
     :root {
         --radius: 0.5rem;
     }
+    :focus-visible {
+        outline: 2px solid theme('colors.green2');
+        outline-offset: 2px;
+    }
     label {
         @apply cursor-pointer;
     }
@@ -101,4 +105,15 @@ background: rgb(106, 106, 106);
         background-color: theme('colors.green3radio');
     }
     */
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
 }

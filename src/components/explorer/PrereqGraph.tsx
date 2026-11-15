@@ -109,7 +109,7 @@ const Node: FC<{
           : status.kind === "missing"
           ? "border-comp3"
           : "border-neutral3"
-      } bg-white dark:bg-gray-500 hover:border-green4 dark:hover:border-green1 focus-visible:outline focus-visible:outline-2 focus-visible:outline-green4`}
+      } bg-white dark:bg-gray-500 hover:border-green4 dark:hover:border-green1`}
     >
       {content}
     </button>
