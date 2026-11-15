@@ -1,5 +1,9 @@
 import "@testing-library/jest-dom";
 import type { ReactNode } from "react";
+import { TextDecoder, TextEncoder } from "util";
+
+// react-router needs these, and jsdom does not provide them
+Object.assign(globalThis, { TextEncoder, TextDecoder });
 
 // Stub every icon as a component that renders nothing
 jest.mock('lucide-react', () => new Proxy(

@@ -1,5 +1,6 @@
 import { FC, useCallback, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { CourseList } from "../../types/types";
+import { CourseList, CoursesOnGrid, CoursesUsed } from "../../types/types";
+import { CourseStatus, describeStatus, getCourseStatus } from "../../utils/courseStatus";
 import {
   EdgeKind,
   FocusGraph,
@@ -12,6 +13,8 @@ interface PrereqGraphProps {
   code: string;
   courses: CourseList;
   unlocks: Map<string, Unlock[]>;
+  coursesUsed: CoursesUsed;
+  coursesOnGrid: CoursesOnGrid;
   onSelect: (code: string) => void;
 }
 
@@ -31,15 +34,31 @@ const nodeBase =
 const Node: FC<{
   node: FocusNode;
   name?: string;
+  status: CourseStatus;
   focused: boolean;
   register: (id: string, el: HTMLElement | null) => void;
   onSelect: (code: string) => void;
   onHover: (id: string | null) => void;
-}> = ({ node, name, focused, register, onSelect, onHover }) => {
+}> = ({ node, name, status, focused, register, onSelect, onHover }) => {
+  const statusText = describeStatus(status);
+  const mark =
+    status.kind === "onGrid" || status.kind === "taken"
+      ? "✓ "
+      : status.kind === "canTake"
+      ? "→ "
+      : status.kind === "missing"
+      ? "! "
+      : "";
   const content = (
     <>
       <span className="block font-semibold">{node.code}</span>
       {name && <span className="block text-xs opacity-80">{name}</span>}
+      {statusText && (
+        <span className="mt-0.5 block text-xs font-medium">
+          {mark}
+          {statusText}
+        </span>
+      )}
     </>
   );
 
@@ -56,13 +75,17 @@ const Node: FC<{
       </div>
     );
   }
-  if (!node.inList) {
+  if (!node.inList || status.kind === "taken") {
     return (
       <div
         ref={(el) => register(node.id, el)}
         data-testid="graph-node"
         data-code={node.code}
-        title="Not in the course list"
+        title={
+          status.kind === "taken"
+            ? "First- or second-year course, assumed taken"
+            : "Not in the course list"
+        }
         className={`${nodeBase} ${NODE_WIDTH} border-dashed border-neutral3 bg-transparent text-gray-500 dark:text-gray-300`}
       >
         {content}
@@ -80,14 +103,27 @@ const Node: FC<{
       onMouseLeave={() => onHover(null)}
       onFocus={() => onHover(node.id)}
       onBlur={() => onHover(null)}
-      className={`${nodeBase} ${NODE_WIDTH} border-neutral3 bg-white dark:bg-gray-500 hover:border-green4 dark:hover:border-green1 focus-visible:outline focus-visible:outline-2 focus-visible:outline-green4`}
+      className={`${nodeBase} ${NODE_WIDTH} ${
+        status.kind === "onGrid"
+          ? "border-green4 dark:border-green1"
+          : status.kind === "missing"
+          ? "border-comp3"
+          : "border-neutral3"
+      } bg-white dark:bg-gray-500 hover:border-green4 dark:hover:border-green1 focus-visible:outline focus-visible:outline-2 focus-visible:outline-green4`}
     >
       {content}
     </button>
   );
 };
 
-const PrereqGraph: FC<PrereqGraphProps> = ({ code, courses, unlocks, onSelect }) => {
+const PrereqGraph: FC<PrereqGraphProps> = ({
+  code,
+  courses,
+  unlocks,
+  coursesUsed,
+  coursesOnGrid,
+  onSelect,
+}) => {
   const graph: FocusGraph = useMemo(
     () => buildFocusGraph(code, courses, unlocks),
     [code, courses, unlocks]
@@ -163,6 +199,7 @@ const PrereqGraph: FC<PrereqGraphProps> = ({ code, courses, unlocks, onSelect })
       key={node.id}
       node={node}
       name={courses[node.code]?.name}
+      status={getCourseStatus(node.code, courses, coursesUsed, coursesOnGrid)}
       focused={node.id === `0:${code}`}
       register={register}
       onSelect={onSelect}

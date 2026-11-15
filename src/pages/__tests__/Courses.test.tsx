@@ -2,13 +2,19 @@ import { render, screen, fireEvent, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Courses } from '../../utils/pageImports';
 import { Layout } from '../../utils/componentImports';
+import { MemoryRouter, useLocation } from 'react-router-dom';
 import mockCourses from '../../data/mockCourses';
 
-const renderPage = () =>
+const Location = () => <span data-testid="location">{useLocation().search}</span>;
+
+const renderPage = (url = '/courses') =>
     render(
-        <Layout>
-            <Courses/>
-        </Layout>
+        <MemoryRouter initialEntries={[url]}>
+            <Layout>
+                <Courses/>
+                <Location/>
+            </Layout>
+        </MemoryRouter>
     );
 
 const getRow = (code: string) =>
@@ -141,5 +147,40 @@ describe('Courses page', () => {
         fireEvent.change(screen.getByTestId('curriculum-picker'), { target: { value: 'ele-2026' } });
         const after = screen.getAllByTestId('group-pill').map((p) => p.textContent);
         expect(after).not.toEqual(before);
+    });
+
+    it('opens with the course in the URL selected', () => {
+        renderPage('/courses?c=ECE302');
+        expect(screen.getByTestId('detail-code')).toHaveTextContent('ECE302');
+        expect(getRow('ECE302')).toHaveAttribute('aria-current', 'true');
+    });
+
+    it('shows a note for an unknown code in the URL', () => {
+        renderPage('/courses?c=ECE999');
+        expect(screen.getByText('ECE999 is not in the course list')).toBeInTheDocument();
+        expect(screen.getByTestId('group-overview')).toBeInTheDocument();
+        expect(screen.queryByTestId('course-detail')).not.toBeInTheDocument();
+    });
+
+    it('updates the URL when a course is selected', () => {
+        renderPage();
+        expect(screen.getByTestId('location')).toHaveTextContent('');
+        fireEvent.click(getRow('ECE464'));
+        expect(screen.getByTestId('location')).toHaveTextContent('?c=ECE464');
+        fireEvent.click(screen.getByRole('button', { name: 'Back to all courses' }));
+        expect(screen.getByTestId('group-overview')).toBeInTheDocument();
+    });
+
+    it('shows the overview of groups when nothing is selected and selects from a chip', () => {
+        renderPage();
+        const overview = screen.getByTestId('group-overview');
+        expect(within(overview).getByRole('heading', { name: /Group 1/ })).toBeInTheDocument();
+        fireEvent.click(within(overview).getAllByRole('button', { name: /^ECE302/ })[0]);
+        expect(screen.getByTestId('detail-code')).toHaveTextContent('ECE302');
+    });
+
+    it('names the earliest term a course can be taken in the details', () => {
+        renderPage('/courses?c=ECE330');
+        expect(within(screen.getByTestId('course-detail')).getByText(/Can take from 3S/)).toBeInTheDocument();
     });
 });

@@ -1,6 +1,7 @@
 import { render, screen, fireEvent, within, cleanup } from '@testing-library/react';
 import { Maker, Courses } from '../../utils/pageImports';
 import { Layout } from '../../utils/componentImports';
+import { MemoryRouter } from 'react-router-dom';
 
 // Same strings as in Maker.test.tsx (pre-2026 layouts that carry their own streams)
 const preLayouts = {
@@ -286,9 +287,11 @@ describe('Curriculum picker on the Courses page', () => {
     beforeEach(() => {
         localStorage.clear();
         render(
-            <Layout>
-                <Courses />
-            </Layout>
+            <MemoryRouter>
+                <Layout>
+                    <Courses />
+                </Layout>
+            </MemoryRouter>
         );
     });
 

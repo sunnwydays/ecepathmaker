@@ -2,6 +2,7 @@ import { fireEvent, render, screen, within } from "@testing-library/react";
 import PrereqGraph from "../explorer/PrereqGraph";
 import mockCourses from "../../data/mockCourses";
 import { buildUnlocks } from "../../utils/prereqGraph";
+import { emptyGrid } from "../../utils/emptyGrid";
 
 const unlocks = buildUnlocks(mockCourses);
 
@@ -11,6 +12,8 @@ const renderGraph = (code: string, onSelect = jest.fn()) => {
       code={code}
       courses={mockCourses}
       unlocks={unlocks}
+      coursesUsed={{}}
+      coursesOnGrid={emptyGrid}
       onSelect={onSelect}
     />
   );
@@ -54,11 +57,11 @@ describe("PrereqGraph", () => {
   it("draws corequisite edges dashed and says when there are no links", () => {
     const courses = { A: { name: "a" }, B: { name: "b", coreq: ["A"] }, C: { name: "c" } };
     const { rerender } = render(
-      <PrereqGraph code="B" courses={courses} unlocks={buildUnlocks(courses)} onSelect={jest.fn()} />
+      <PrereqGraph code="B" courses={courses} unlocks={buildUnlocks(courses)} coursesUsed={{}} coursesOnGrid={emptyGrid} onSelect={jest.fn()} />
     );
     expect(screen.getByTestId("graph-edge")).toHaveAttribute("data-kind", "coreq");
     rerender(
-      <PrereqGraph code="C" courses={courses} unlocks={buildUnlocks(courses)} onSelect={jest.fn()} />
+      <PrereqGraph code="C" courses={courses} unlocks={buildUnlocks(courses)} coursesUsed={{}} coursesOnGrid={emptyGrid} onSelect={jest.fn()} />
     );
     expect(screen.getByText(/No prerequisites, and not a prerequisite/)).toBeInTheDocument();
   });

@@ -1,7 +1,6 @@
 import { Dispatch, FC, SetStateAction, useEffect, useMemo, useRef } from "react";
 import { CourseList as CourseListType, CoursesUsed, FilterState } from "../../types/types";
 import Filter from "../forms/Filter";
-import { filterCourses } from "../../utils/filterCourses";
 import { getMembership } from "../../requirements/evaluate";
 import { getYearTerm } from "../../utils/getYearTerm";
 import { useCurriculum } from "../layout/Layout";
@@ -11,6 +10,8 @@ export type SortKey = "group" | "code" | "term";
 
 interface CourseListProps {
   courses: CourseListType;
+  // codes that pass the filters and the hide toggle
+  matching: string[];
   coursesUsed: CoursesUsed;
   filters: FilterState;
   setFilters: Dispatch<SetStateAction<FilterState>>;
@@ -27,6 +28,7 @@ const termRank = (course: CourseListType[string]) =>
 
 const CourseList: FC<CourseListProps> = ({
   courses,
+  matching,
   coursesUsed,
   filters,
   setFilters,
@@ -48,12 +50,7 @@ const CourseList: FC<CourseListProps> = ({
     const kernelRank = (code: string) =>
       getMembership(curriculum, code, courses[code]).kernel ? 0 : 1;
 
-    const codes = Object.keys(courses).filter(
-      (code) =>
-        filterCourses(filters, code, courses[code], curriculum) &&
-        !(hideOnGrid && coursesUsed[code])
-    );
-    return codes.sort((a, b) => {
+    return [...matching].sort((a, b) => {
       if (sort === "group") {
         return (
           groupOrder(a) - groupOrder(b) ||
@@ -66,7 +63,7 @@ const CourseList: FC<CourseListProps> = ({
       }
       return a.localeCompare(b);
     });
-  }, [courses, coursesUsed, filters, sort, hideOnGrid, curriculum]);
+  }, [courses, matching, sort, curriculum]);
 
   // Keep the selected row in view, e.g. when it was picked from the details
   const listRef = useRef<HTMLUListElement>(null);

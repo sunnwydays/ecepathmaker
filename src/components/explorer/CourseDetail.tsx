@@ -1,6 +1,7 @@
 import { FC, ReactNode } from "react";
-import { CourseList, CoursesUsed } from "../../types/types";
-import { getYearTerm } from "../../utils/getYearTerm";
+import { CourseList, CoursesOnGrid, CoursesUsed } from "../../types/types";
+import { coreCourses } from "../../data/coreCourses";
+import { describeStatus, getCourseStatus } from "../../utils/courseStatus";
 import { getRequirements, Requirement, Unlock } from "../../utils/prereqGraph";
 import CoursePills from "./CoursePills";
 
@@ -17,6 +18,13 @@ const CodeLink: FC<{
     >
       {code}
     </button>
+  ) : coreCourses.has(code) ? (
+    <span
+      className="text-gray-500 dark:text-gray-300"
+      title="First- or second-year course, assumed taken"
+    >
+      ✓ {code}
+    </span>
   ) : (
     <span className="text-gray-500 dark:text-gray-300">{code}</span>
   );
@@ -35,15 +43,17 @@ const CourseDetail: FC<{
   code: string;
   courses: CourseList;
   coursesUsed: CoursesUsed;
+  coursesOnGrid: CoursesOnGrid;
   unlocks: Map<string, Unlock[]>;
   onSelect: (code: string) => void;
-}> = ({ code, courses, coursesUsed, unlocks, onSelect }) => {
+}> = ({ code, courses, coursesUsed, coursesOnGrid, unlocks, onSelect }) => {
   const course = courses[code];
   const requirements = getRequirements(course);
   const preqs = requirements.filter((r) => r.kind === "preq");
   const coreqs = requirements.filter((r) => r.kind === "coreq");
   const unlocked = unlocks.get(code) ?? [];
-  const slot = coursesUsed[code];
+  const status = getCourseStatus(code, courses, coursesUsed, coursesOnGrid);
+  const statusText = describeStatus(status);
 
   const renderList = (list: Requirement[]) => (
     <ul className="flex flex-wrap gap-x-4 gap-y-1">
@@ -72,7 +82,9 @@ const CourseDetail: FC<{
       </h3>
       <CoursePills code={code} course={course} />
       <p className="text-sm">
-        {slot ? `✓ In ${getYearTerm(slot)} on your grid` : "Not on your grid"}
+        {status.kind === "onGrid"
+          ? `✓ ${statusText}`
+          : `Not on your grid · ${statusText}`}
         {course.onlyF && " · Fall term only"}
         {course.onlyS && " · Winter term only"}
       </p>
