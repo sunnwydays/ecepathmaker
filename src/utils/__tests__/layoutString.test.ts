@@ -163,3 +163,49 @@ describe("serializeLayout", () => {
     );
   });
 });
+
+describe("colours", () => {
+  const parse = (s: string) => parseString(s).courses["AAA111"];
+
+  test("6-digit colour is unchanged", () => {
+    expect(isValidString("AAA111a%%k#ffd699pBBB222")).toBe(true);
+    const c = parse("AAA111a%%k#ffd699pBBB222");
+    expect(c.color).toBe("ffd699");
+    expect(c.kernel).toBe(true);
+    expect(c.preq).toEqual(["BBB222"]);
+  });
+
+  test("3-digit colour followed by prerequisites", () => {
+    expect(isValidString("AAA111a%%#abcpBBB222,CCC333|DDD444")).toBe(true);
+    const c = parse("AAA111a%%#abcpBBB222,CCC333|DDD444");
+    expect(c.color).toBe("aabbcc");
+    expect(c.preq).toEqual(["BBB222", ["CCC333", "DDD444"]]);
+  });
+
+  test("legacy ##rrggbb", () => {
+    expect(parse("AAA111a%%##ffd699pBBB222").color).toBe("ffd699");
+    expect(parse("AAA111a%%##ffd699pBBB222").preq).toEqual(["BBB222"]);
+  });
+
+  test("colour stored with a leading # is written once", () => {
+    const g = grid({ "3F.1": "AAA111" });
+    const c = { AAA111: course("a", { color: "#ffd699", preq: ["BBB222"] }) };
+    const str = serializeLayout(g, c);
+    expect(str).toBe("AAA111a%%#ffd699pBBB222$$@@@@@@@@");
+    expect(parseString(str).courses["AAA111"].color).toBe("ffd699");
+  });
+
+  test("3-digit colour is written as 6 digits and round-trips", () => {
+    const g = grid({ "3F.1": "AAA111" });
+    const c = { AAA111: course("a", { color: "abc", preq: ["BBB222"] }) };
+    const str = serializeLayout(g, c);
+    expect(str).toBe("AAA111a%%#aabbccpBBB222$$@@@@@@@@");
+    expect(parseString(str).courses["AAA111"].preq).toEqual(["BBB222"]);
+  });
+
+  test("an invalid colour is not written", () => {
+    const g = grid({ "3F.1": "AAA111" });
+    const c = { AAA111: course("a", { color: "abcd", preq: ["BBB222"] }) };
+    expect(serializeLayout(g, c)).toBe("AAA111a%%pBBB222$$@@@@@@@@");
+  });
+});

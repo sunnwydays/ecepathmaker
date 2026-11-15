@@ -1,4 +1,5 @@
 import { CourseList, CoursesOnGrid, GridPositionBase } from "../types/types";
+import { normalizeColor } from "./normalizeColor";
 
 const serializeReqs = (label: string, reqs?: (string | string[])[]) => {
   if (!reqs?.length) return "";
@@ -19,7 +20,8 @@ const serializeCourse = (code: string, course: CourseList[string]): string => {
   else if (course.isCS) str += "c";
   if (course.isSciMath) str += "m";
   if (course.isArtSci) str += "a";
-  if (course.color) str += "#" + course.color;
+  const color = normalizeColor(course.color);
+  if (color) str += "#" + color;
 
   const hasPreq = course.preq?.length;
   const hasCoreq = course.coreq?.length;

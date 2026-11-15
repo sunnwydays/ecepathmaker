@@ -1,4 +1,5 @@
 import { HexColorPicker, HexColorInput } from "react-colorful";
+import { normalizeColor } from "../../utils/normalizeColor";
 import { FC, useEffect, useRef, useState } from "react";
 import { CourseFormProps } from "../../types/types";
 import {
@@ -226,7 +227,8 @@ const CourseForm: FC<CourseFormProps> = ({
       return;
     }
 
-    setCourses((prev) => ({ ...prev, [customInfo.code]: customInfo }));
+    const course = { ...customInfo, color: normalizeColor(customInfo.color) };
+    setCourses((prev) => ({ ...prev, [customInfo.code]: course }));
     setCoursesUsed((prev) => ({ [customInfo.code]: "", ...prev }));
 
     setPreqString("");
