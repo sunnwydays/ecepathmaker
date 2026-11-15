@@ -114,3 +114,23 @@ describe('Sixth column', () => {
         expect(card()).toHaveClass('size-32');
     });
 });
+
+describe('Grid row order', () => {
+    beforeEach(() => {
+        localStorage.clear();
+    });
+
+    it('shows the XX row first and the terms after it in order', () => {
+        renderMaker();
+        const labels = Array.from(grid().children).map((c) => c.textContent);
+        expect(labels.slice(0, 5)).toEqual(['XX.1', 'XX.2', 'XX.3', 'XX.4', 'XX.5']);
+        expect(labels.slice(5, 10)).toEqual(['3F.1', '3F.2', '3F.3', '3F.4', '3F.5']);
+        expect(labels.slice(20)).toEqual(['4S.1', '4S.2', '4S.3', '4S.4', '4S.5']);
+    });
+
+    it('still writes XX last in the layout string', () => {
+        renderMaker();
+        loadString('AAA111One%%@@@@@@@@BBB222Two%%');
+        expect(within(grid()).getAllByText(/^(AAA111|BBB222)$/)[0]).toHaveTextContent('BBB222');
+    });
+});

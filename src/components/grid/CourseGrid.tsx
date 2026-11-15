@@ -37,8 +37,9 @@ import { evaluate, getMembership, hasFlag } from "../../requirements/evaluate";
 import { useCurriculum, useLayoutContext } from "../layout/Layout";
 import { clearExtra, toggleExtra } from "../../utils/extraCourses";
 
-// Display order of the grid. The XX row moves to the top in a later commit.
-const ROWS = ["3F", "3S", "4F", "4S", "XX"] as const;
+// Display order of the grid only: XX (courses taken before third year) is
+// first. The layout string and the grid's key order still end with XX.
+const ROWS = ["XX", "3F", "3S", "4F", "4S"] as const;
 const FIVE_COLUMNS = [1, 2, 3, 4, 5];
 const SIX_COLUMNS = [1, 2, 3, 4, 5, 6];
 
