@@ -86,13 +86,13 @@ describe('Planner page', () => {
         Object.defineProperty(navigator, 'clipboard', { value: { writeText }, configurable: true });
         renderPage();
         loadPlan('3F: ECE302\n4S: ECE444');
-        expect(screen.getByText(/ECE444 is F only but is in 4S/)).toBeInTheDocument();
+        expect(screen.getByText(/ECE444 is F only, so it was not loaded into 4S/)).toBeInTheDocument();
         expect(screen.queryByTestId('plan-meets')).not.toBeInTheDocument();
         expect(screen.getByTestId('plan-unmet')).toHaveTextContent(/Economics/);
         fireEvent.click(screen.getByTestId('copy-fix'));
         await waitFor(() => expect(writeText).toHaveBeenCalled());
         const message = writeText.mock.calls[0][0];
-        expect(message).toContain('- ECE444 is F only but is in 4S');
+        expect(message).toContain('- ECE444 is F only, so it was not loaded into 4S');
         expect(message).toContain('- Not met: Economics');
         expect(message).toContain('corrected plan');
     });
@@ -117,8 +117,10 @@ describe('Planner page', () => {
             '4F: ECE496, ECE410, ECE430, ECE421, TEP343',
             '4S: ECE497, ECE390, ECE344, TEP442, JRE300',
         ].join('\n'));
-        expect(screen.getByText(/ECE342 is S only but is in 3F/)).toBeInTheDocument();
-        expect(screen.getByTestId('plan-meets')).toHaveTextContent(/fix the problems above first/);
+        expect(screen.getByText(/ECE342 is S only, so it was not loaded into 3F/)).toBeInTheDocument();
+        expect(screen.getByTestId('plan-unmet')).toHaveTextContent(/Course count/);
+        const grid = JSON.parse(localStorage.getItem('coursesOnGrid')!);
+        expect(Object.values(grid)).not.toContain('ECE342');
     });
 
     it('flags a plan with fewer than 20 courses', () => {
@@ -160,5 +162,38 @@ describe('Planner page', () => {
             'href',
             '/plan'
         );
+    });
+});
+
+describe('Planner share link', () => {
+    beforeEach(() => {
+        localStorage.clear();
+    });
+
+    it('restores the short answers from the link', () => {
+        render(
+            <MemoryRouter initialEntries={['/plan?c=ele-2026&i=A&w=lightThird&m=ECE345&n=robotics']}>
+                <Layout>
+                    <Planner/>
+                </Layout>
+            </MemoryRouter>
+        );
+        expect(screen.getByTestId('interest-A')).toBeChecked();
+        expect(screen.getByTestId('workload-lightThird')).toBeChecked();
+        expect(screen.getByTestId('must-take')).toHaveValue('ECE345');
+        expect(screen.getByTestId('interest-notes')).toHaveValue('robotics');
+        expect(prompt()).toContain('Admitted Fall 2026+ · Electrical');
+    });
+
+    it('ignores unknown values in the link', () => {
+        render(
+            <MemoryRouter initialEntries={['/plan?c=nope&i=zzz&w=bad&d=bad']}>
+                <Layout>
+                    <Planner/>
+                </Layout>
+            </MemoryRouter>
+        );
+        expect(screen.getByTestId('workload-even')).toBeChecked();
+        expect(prompt()).toContain('Admitted before Fall 2026');
     });
 });

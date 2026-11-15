@@ -1,5 +1,5 @@
-import { ReactNode, useEffect, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { ReactNode, useEffect, useMemo, useRef, useState } from "react";
+import { Link, useSearchParams } from "react-router-dom";
 
 import { useCurriculum, useLayoutContext } from "../components/layout/Layout";
 import { CurriculumPicker } from "../utils/componentImports";
@@ -17,6 +17,8 @@ import {
 import { parsePlan, PlanTerm } from "../utils/planner/parsePlan";
 import { applyPlan } from "../utils/planner/applyPlan";
 import { evaluate } from "../requirements/evaluate";
+import { getCurriculum } from "../requirements/curricula";
+import { readShared, writeShared } from "../utils/planner/shareParams";
 
 const plannerJsonLd: Record<string, unknown> = {
   "@context": "https://schema.org",
@@ -65,7 +67,11 @@ const Field = ({ label, children }: { label: string; children: ReactNode }) => (
 
 const Planner = () => {
   const curriculum = useCurriculum();
+  const [searchParams, setSearchParams] = useSearchParams();
+  // What the link carried, read once when the page opens
+  const [shared] = useState(() => readShared(searchParams));
   const {
+    setCurriculumId,
     courses,
     setCourses,
     setCoursesUsed,
@@ -74,16 +80,23 @@ const Planner = () => {
     setDependencies,
   } = useLayoutContext();
 
-  const [interests, setInterests] = useState<string[]>([]);
-  const [interestNotes, setInterestNotes] = useState("");
-  const [designation, setDesignation] =
-    useState<PlannerAnswers["designation"]>("none");
+  const [interests, setInterests] = useState<string[]>(() =>
+    shared.interests.filter((id) =>
+      getCurriculum(shared.curriculum ?? curriculum.id).groups.some(
+        (g) => g.id === id
+      )
+    )
+  );
+  const [interestNotes, setInterestNotes] = useState(shared.interestNotes);
+  const [designation, setDesignation] = useState<PlannerAnswers["designation"]>(
+    shared.designation
+  );
   const [useGrid, setUseGrid] = useState(true);
   const [lockedTerms, setLockedTerms] = useState<PlanTerm[]>([]);
-  const [taken, setTaken] = useState("");
-  const [workload, setWorkload] = useState<Workload>("even");
-  const [mustTake, setMustTake] = useState("");
-  const [avoid, setAvoid] = useState("");
+  const [taken, setTaken] = useState(shared.taken);
+  const [workload, setWorkload] = useState<Workload>(shared.workload);
+  const [mustTake, setMustTake] = useState(shared.mustTake);
+  const [avoid, setAvoid] = useState(shared.avoid);
   const [notes, setNotes] = useState("");
 
   const [copied, setCopied] = useState(false);
@@ -114,10 +127,67 @@ const Planner = () => {
     }
   };
 
-  // Group ids differ between curricula, so ticked interests cannot carry over
+  // A curriculum from the link is applied once; it must not clear the ticks
+  const pendingCurriculum = useRef(
+    shared.curriculum && shared.curriculum !== curriculum.id
+      ? shared.curriculum
+      : null
+  );
   useEffect(() => {
+    if (pendingCurriculum.current) setCurriculumId(pendingCurriculum.current);
+  }, [setCurriculumId]);
+
+  // Group ids differ between curricula, so ticked interests cannot carry over
+  const lastCurriculum = useRef(curriculum.id);
+  useEffect(() => {
+    if (lastCurriculum.current === curriculum.id) return;
+    lastCurriculum.current = curriculum.id;
+    if (pendingCurriculum.current === curriculum.id) {
+      pendingCurriculum.current = null;
+      return;
+    }
+    pendingCurriculum.current = null;
     setInterests((prev) => (prev.length ? [] : prev));
   }, [curriculum.id]);
+
+  // Keep the short answers in the address so the page can be shared
+  useEffect(() => {
+    if (pendingCurriculum.current) return;
+    setSearchParams(
+      writeShared({
+        curriculum: curriculum.id,
+        interests,
+        interestNotes,
+        designation,
+        workload,
+        taken,
+        mustTake,
+        avoid,
+      }),
+      { replace: true }
+    );
+  }, [
+    curriculum.id,
+    interests,
+    interestNotes,
+    designation,
+    workload,
+    taken,
+    mustTake,
+    avoid,
+    setSearchParams,
+  ]);
+
+  const [linkCopied, setLinkCopied] = useState(false);
+  const handleCopyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      setLinkCopied(true);
+      setTimeout(() => setLinkCopied(false), 2000);
+    } catch (err) {
+      console.error("Failed to copy:", err);
+    }
+  };
 
   const gridHasCourses = Object.values(coursesOnGrid).some(Boolean);
   const includeGrid = gridHasCourses && useGrid;
@@ -240,6 +310,17 @@ const Planner = () => {
       <div className="flex flex-col gap-6">
         <Step step={1} title="About you">
           <CurriculumPicker />
+          <div className="flex flex-wrap items-center gap-3 text-sm">
+            <button
+              type="button"
+              onClick={handleCopyLink}
+              className={buttonSecondary}
+              data-testid="copy-link"
+            >
+              {linkCopied ? "Link copied!" : "Copy link to these answers"}
+            </button>
+            <span>Your answers (not the notes box) are saved in the link.</span>
+          </div>
 
           <fieldset className="flex flex-col gap-2">
             <legend className="mb-1 text-sm font-medium">
@@ -511,7 +592,7 @@ const Planner = () => {
               ) : (
                 <p className="font-medium" data-testid="plan-meets">
                   {result.warnings.length
-                    ? "The graduation requirements are met, but fix the problems above first: the Maker greys out those courses."
+                    ? "The graduation requirements are met, but fix the problems above first: those courses were not loaded."
                     : "Meets every requirement the site checks."}{" "}
                   Still check: {curriculum.manualChecks}
                 </p>
