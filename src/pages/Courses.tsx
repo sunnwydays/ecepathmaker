@@ -108,6 +108,7 @@ const Courses = () => {
           {selected && courses[selected] ? (
             <>
               <CourseDetail
+                key={selected}
                 code={selected}
                 courses={courses}
                 coursesUsed={coursesUsed}

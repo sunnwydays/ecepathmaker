@@ -1,6 +1,7 @@
-import { FC, ReactNode } from "react";
+import { FC, ReactNode, useState } from "react";
 import { CourseList, CoursesOnGrid, CoursesUsed } from "../../types/types";
 import { coreCourses } from "../../data/coreCourses";
+import { useAddToGrid } from "../../utils/useAddToGrid";
 import { describeStatus, getCourseStatus } from "../../utils/courseStatus";
 import { getRequirements, Requirement, Unlock } from "../../utils/prereqGraph";
 import CoursePills from "./CoursePills";
@@ -54,6 +55,8 @@ const CourseDetail: FC<{
   const unlocked = unlocks.get(code) ?? [];
   const status = getCourseStatus(code, courses, coursesUsed, coursesOnGrid);
   const statusText = describeStatus(status);
+  const addToGrid = useAddToGrid();
+  const [added, setAdded] = useState<string | null>(null);
 
   const renderList = (list: Requirement[]) => (
     <ul className="flex flex-wrap gap-x-4 gap-y-1">
@@ -88,6 +91,25 @@ const CourseDetail: FC<{
         {course.onlyF && " · Fall term only"}
         {course.onlyS && " · Winter term only"}
       </p>
+      {status.kind === "canTake" && (
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={() => {
+              const pos = addToGrid(code);
+              setAdded(pos ? `Added to ${pos}` : "No valid slots left");
+            }}
+            className="rounded bg-green3 px-3 py-1 text-sm font-medium text-white hover:bg-green4"
+          >
+            Add to Grid
+          </button>
+          {added && (
+            <span role="status" className="text-sm">
+              {added}
+            </span>
+          )}
+        </div>
+      )}
       {preqs.length > 0 && (
         <Section title="Prerequisites">{renderList(preqs)}</Section>
       )}

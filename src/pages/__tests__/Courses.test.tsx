@@ -183,4 +183,15 @@ describe('Courses page', () => {
         renderPage('/courses?c=ECE330');
         expect(within(screen.getByTestId('course-detail')).getByText(/Can take from 3S/)).toBeInTheDocument();
     });
+
+    it('adds a course to the grid with the button, only when it can be taken', () => {
+        renderPage('/courses?c=ECE464');
+        expect(screen.queryByRole('button', { name: 'Add to Grid' })).not.toBeInTheDocument();
+
+        fireEvent.click(getRow('ECE302'));
+        fireEvent.click(screen.getByRole('button', { name: 'Add to Grid' }));
+        expect(screen.queryByRole('button', { name: 'Add to Grid' })).not.toBeInTheDocument();
+        expect(within(screen.getByTestId('course-detail')).getByText(/In 3F on your grid/)).toBeInTheDocument();
+        expect(within(getRow('ECE302')).getByText(/In 3F/)).toBeInTheDocument();
+    });
 });

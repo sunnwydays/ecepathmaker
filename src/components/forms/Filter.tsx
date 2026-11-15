@@ -1,8 +1,9 @@
 import { FC, useEffect, useRef, useState } from "react";
-import { FilterState, GridPosition, YearTerm } from "../../types/types";
+import { FilterState } from "../../types/types";
 import TextInput from "./TextInput";
 import { useCurriculum, useLayoutContext } from "../layout/Layout";
-import { addDependencies, filterCourses, getValidYearTerms } from "../../utils/utilImports";
+import { filterCourses } from "../../utils/utilImports";
+import { useAddToGrid } from "../../utils/useAddToGrid";
 import { UniqueIdentifier } from "@dnd-kit/core";
 import Announcement from "../info/Announcement";
 
@@ -51,50 +52,9 @@ const Filter: FC<{
     };
   }, [submitMessage]);
 
-  const {
-    courses,
-    coursesUsed,
-    setCoursesUsed,
-    coursesOnGrid,
-    setCoursesOnGrid,
-    dependencies,
-    setDependencies,
-  } = useLayoutContext();
+  const { courses, coursesUsed } = useLayoutContext();
 
-  // Puts the course on the earliest available slot
-  const putCourseOnAvailable = (code: UniqueIdentifier): GridPosition => {
-    const course = courses[code];
-
-    const ValidYearTermsProps = {
-      coursesOnGrid,
-      coursesUsed,
-      course
-    };
-    const validYearTerms = getValidYearTerms(ValidYearTermsProps);
-
-    let targetPos: GridPosition = '';
-    for (const [pos, course] of Object.entries(coursesOnGrid)) {
-      // The sixth column is only for courses the student drags there
-      if (!course && !pos.endsWith('.6') && validYearTerms[(pos.slice(0, 2) as YearTerm)]) {
-        targetPos = pos as GridPosition;
-        break;
-      }
-    }
-
-    if (!targetPos) return '';
-
-    addDependencies({code, courses, dependencies, setDependencies});
-    setCoursesUsed((prev) => ({
-      ...prev,
-      [code]: targetPos as GridPosition,
-    }));
-    setCoursesOnGrid((prev) => ({
-      ...prev,
-      [targetPos]: code,
-    }));
-
-    return targetPos;
-  }
+  const putCourseOnAvailable = useAddToGrid();
 
   // If only 1 course in search result, then add that to the earliest empty slot
   const handleSubmit = (e: React.FormEvent) => {
