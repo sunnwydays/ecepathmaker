@@ -19,6 +19,7 @@ const SaveLayout: FC = () => {
 
   const [str, setStr] = useState("");
   const [copied, setCopied] = useState(false);
+  const [copyFailed, setCopyFailed] = useState(false);
 
   const handleCopy = async () => {
     try {
@@ -27,6 +28,8 @@ const SaveLayout: FC = () => {
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
       console.error("Failed to copy:", err);
+      setCopyFailed(true);
+      setTimeout(() => setCopyFailed(false), 2000);
     }
   };
 
@@ -143,6 +146,8 @@ const SaveLayout: FC = () => {
           Save current layout in slot {saveIndex + 1}
         </SubmitButton>
       </form>
+
+      {copyFailed && <Announcement>Could not copy. Select the text and copy it yourself</Announcement>}
 
       {save === Save.SUCCESS && (<Announcement success>
         Layout saved!

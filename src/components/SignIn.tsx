@@ -1,4 +1,5 @@
-import { FC } from "react";
+import { FC, useState } from "react";
+import Announcement from "./info/Announcement";
 import { LogIn, LogOut } from "lucide-react";
 import { iconButton } from "../styles/ui";
 import { signInGoogle, signOut } from "../firebase/auth";
@@ -23,12 +24,18 @@ const SignIn: FC = () => {
     setCoursesVersion,
   } = useLayoutContext();
 
+  const [failed, setFailed] = useState(false);
+  const fail = () => {
+    setFailed(true);
+    setTimeout(() => setFailed(false), 2000);
+  };
+
   const signIn = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    const result = await signInGoogle();
-    const user = result.user;
-    
+
     try {
+      const result = await signInGoogle();
+      const user = result.user;
       // Fetch everything in parallel
       const [
         remoteSavedLayouts,
@@ -87,7 +94,8 @@ const SignIn: FC = () => {
       }
 
     } catch (err) {
-      console.error("Failed to load user data:", err);
+      console.error("Failed to sign in or load user data:", err);
+      fail();
     }
   };
 
@@ -100,6 +108,7 @@ const SignIn: FC = () => {
       >
         {signedIn ? <LogOut className="size-5" /> : <LogIn className="size-5" />}
       </button>
+      {failed && <Announcement>Could not sign in</Announcement>}
     </div>
   );
 };
