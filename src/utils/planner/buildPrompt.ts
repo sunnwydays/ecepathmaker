@@ -45,6 +45,9 @@ export const groupText = (curriculum: Curriculum, id: string) => {
   return hint ? `${base} (${hint})` : base;
 };
 
+// Stand-in cards from the default course list; they are not real courses
+const PLACEHOLDERS = new Set(["AAA000", "CST000", "HSS000"]);
+
 const formatReqs = (reqs: (string | string[])[]) =>
   reqs
     .map((req) => (Array.isArray(req) ? `(${req.join(" or ")})` : req))
@@ -120,12 +123,17 @@ Otherwise go straight to the plan.`
 - First- and second-year core ECE courses are already done. Prerequisites they cover have been removed from the catalogue below.
 - A prerequisite must be in an earlier term than the course. A corequisite must be in the same term or earlier. "(A or B)" means any one of them.
 - If a prerequisite code is not in the catalogue, I cannot add it. Pick another option from its "or" group, or avoid the course, unless I say I have taken it.
-- "F only" / "S only" courses can only go in fall / winter terms.`
+- "F only" / "S only" courses can only go in fall / winter terms.
+- The catalogue has only a few complementary studies (CS / HSS) electives. If the plan needs more than it offers, leave those slots out of the final block and tell me how many CS and HSS courses I still have to add myself.`
   );
 
-  const reqLines = curriculum.requirements.map(
-    (rule) => `- ${rule.label}: ${rule.tooltip}`
-  );
+  const reqLines = curriculum.requirements.map((rule) => {
+    const line = `- ${rule.label}: ${rule.tooltip}`;
+    if (rule.type !== "capstone") return line;
+    // The tooltip does not name the courses or the timing
+    const pairs = rule.pairs.map(([h1, h2]) => `${h1} + ${h2}`).join(", or ");
+    return `${line}: ${pairs}. Put the two halves in different terms of year ${rule.year}. The site lists the second half as its own entry.`;
+  });
   if (
     curriculum.requirements.some((r) =>
       ["slots", "areaBreadth", "areaDepth"].includes(r.type)
@@ -173,6 +181,7 @@ Not covered by this data, remind me to check them myself: ${curriculum.manualChe
 Format: CODE | name | group | terms | type | prereq | coreq
 ` +
       Object.keys(courses)
+        .filter((code) => !PLACEHOLDERS.has(code))
         .sort()
         .map((code) => catalogueLine(curriculum, code, courses))
         .join("\n")
