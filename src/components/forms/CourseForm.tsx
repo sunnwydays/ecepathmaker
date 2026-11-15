@@ -338,7 +338,8 @@ const CourseForm: FC<CourseFormProps> = ({
             <button
               type="button"
               className="
-                bg-neutral3 text-white px-4 py-2 rounded hover:bg-neutral2 transition-all
+                rounded-lg bg-neutral3 px-4 text-sm font-medium text-white
+                hover:bg-neutral2 transition-colors duration-200
                 dark:bg-gray-500 dark:hover:bg-gray-600"
               onClick={resetColor}
             >
@@ -508,7 +509,7 @@ const CourseForm: FC<CourseFormProps> = ({
         onBlur={(e) => {
           if (!e.currentTarget.contains(e.relatedTarget)) disarmDelete();
         }}
-        className="flex flex-col lg:flex-row items-stretch lg:items-start gap-2"
+        className="flex flex-col lg:flex-row items-stretch gap-2"
         data-testid="course-delete-form"
       >
         <div className="flex-1">
