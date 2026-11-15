@@ -152,7 +152,7 @@ describe('Curriculum picker on the Maker page', () => {
         renderMaker();
         pick('ele-2026');
         loadString(elePlan);
-        expect(screen.getByText(/Custom courses can't be assigned to group A, B or C yet$/)).toBeInTheDocument();
+        expect(screen.getByText(/Custom courses placed in a group are not checked against the calendar's lists$/)).toBeInTheDocument();
         expect(screen.queryByText(/A course in multiple streams/)).not.toBeInTheDocument();
         expect(screen.queryByText(/No courses in any stream yet/)).not.toBeInTheDocument();
     });

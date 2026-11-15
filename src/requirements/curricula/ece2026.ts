@@ -81,7 +81,7 @@ const rulesFor = (main: string): Rule[] => [
     showProgress: true,
     label: "Technical electives",
     tooltip:
-      "3 more courses from any group. One may come from another department with ECE approval (not checked here)",
+      "3 more courses from any group. One may come from another department with ECE approval (not checked here; add it as a custom course with a group)",
     section: "groups",
     type: "slots",
     pools: [{ where: { group: "any" }, count: 3 }],

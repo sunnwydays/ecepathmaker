@@ -163,7 +163,7 @@ const WillYouGraduate: FC<WillYouGraduateProps> = ({ result, curriculum }) => {
             Known concerns:{" "}
             <b className="font-medium">
               {curriculum.membership
-                ? "Custom courses can't be assigned to group A, B or C yet"
+                ? "Custom courses placed in a group are not checked against the calendar's lists"
                 : "A course in multiple streams will in all of those streams which may affect your depth and breadth calculation"}
             </b>
             , dragging a course with prereq then removing prereq, no minor/cert

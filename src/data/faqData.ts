@@ -47,7 +47,7 @@ export const siteFaqData: FAQ = [
     },
     {
         question: "Which curriculum should I pick?",
-        answer: "If you were admitted before Fall 2026, use the six-area option. If you were admitted in Fall 2026 or later, pick Electrical or Computer, matching the program you are registered in. The choice changes the stream filter, the card colours and the graduation check. Custom courses can't be assigned to group A, B or C yet."
+        answer: "If you were admitted before Fall 2026, use the six-area option. If you were admitted in Fall 2026 or later, pick Electrical or Computer, matching the program you are registered in. The choice changes the stream filter, the card colours and the graduation check. Custom courses can be given a group in the course form."
     },
     {
         question: "What are the XX slots for?",
