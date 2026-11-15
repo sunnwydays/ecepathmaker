@@ -4,7 +4,8 @@ import { signInGoogle, signOut } from "../firebase/auth";
 import { useAuth } from "../contexts/AuthContext";
 import { useLayoutContext } from "./layout/Layout";
 import { getCurriculum } from "../requirements/curricula";
-import { loadCourses, loadCoursesOnGrid, loadCurriculum, loadCoursesUsed, loadDependencies, loadLayouts, loadTheme } from "../firebase/firestore";
+import { applyCourseUpdates, refreshDependencies } from "../utils/applyCourseUpdates";
+import { loadCourses, loadCoursesOnGrid, loadCoursesVersion, loadCurriculum, loadCoursesUsed, loadDependencies, loadLayouts, loadTheme } from "../firebase/firestore";
 
 const SignIn: FC = () => {
   const { signedIn } = useAuth();
@@ -16,6 +17,7 @@ const SignIn: FC = () => {
     setCoursesOnGrid,
     setDependencies,
     setCurriculumId,
+    setCoursesVersion,
   } = useLayoutContext();
 
   const signIn = async (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -33,6 +35,7 @@ const SignIn: FC = () => {
         remoteDependencies,
         remoteTheme,
         remoteCurriculum,
+        remoteCoursesVersion,
       ] = await Promise.all([
         loadLayouts(user.uid),
         loadCourses(user.uid),
@@ -41,14 +44,31 @@ const SignIn: FC = () => {
         loadDependencies(user.uid),
         loadTheme(user.uid),
         loadCurriculum(user.uid),
+        loadCoursesVersion(user.uid),
       ]);
 
       // Apply loaded data only if available
       if (remoteSavedLayouts?.length) setSavedLayouts(remoteSavedLayouts);
-      if (Object.keys(remoteCourses ?? {}).length) setCourses(remoteCourses);
-      if (Object.keys(remoteCoursesUsed ?? {}).length) setCoursesUsed(remoteCoursesUsed);
+      // Remote courses go through any course list updates they have not received
+      let dependencies = remoteDependencies;
+      if (Object.keys(remoteCourses ?? {}).length) {
+        const updated = applyCourseUpdates({
+          courses: remoteCourses,
+          coursesUsed: remoteCoursesUsed ?? {},
+          version: remoteCoursesVersion || 0,
+        });
+        setCourses(updated.courses);
+        if (Object.keys(remoteCoursesUsed ?? {}).length) setCoursesUsed(updated.coursesUsed);
+        setCoursesVersion(updated.version);
+        dependencies = refreshDependencies(
+          updated.upserted,
+          updated.courses,
+          updated.coursesUsed,
+          remoteDependencies ?? new Map()
+        );
+      }
       if (Object.keys(remoteCoursesOnGrid ?? {}).length) setCoursesOnGrid(remoteCoursesOnGrid);
-      if (remoteDependencies?.size) setDependencies(remoteDependencies);
+      if (dependencies?.size) setDependencies(dependencies);
       if (remoteCurriculum) setCurriculumId(getCurriculum(remoteCurriculum).id);
       if (remoteTheme) {
         if (remoteTheme == 'dark') {

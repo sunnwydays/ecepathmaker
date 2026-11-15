@@ -59,6 +59,9 @@ export interface LayoutContextType {
 
   curriculumId: string;
   setCurriculumId: React.Dispatch<React.SetStateAction<string>>;
+
+  coursesVersion: number;
+  setCoursesVersion: React.Dispatch<React.SetStateAction<number>>;
 }
 
 interface CourseIdentifierWithoutCode {

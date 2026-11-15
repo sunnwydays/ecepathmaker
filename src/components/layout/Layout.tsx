@@ -9,11 +9,13 @@ import {
 } from "react";
 import { Analytics } from "@vercel/analytics/react";
 import { Footer, Navbar } from "../../utils/componentImports";
-import { CoursesOnGrid, CoursesUsed, LayoutContextType, savedLayout } from "../../types/types";
+import { CourseList, CoursesOnGrid, CoursesUsed, LayoutContextType, savedLayout } from "../../types/types";
 import { UniqueIdentifier } from "@dnd-kit/core";
 import { emptyGrid } from "../../utils/emptyGrid";
 import mockCourses from "../../data/mockCourses";
-import { saveCourses, saveCoursesOnGrid, saveCoursesUsed, saveCurriculum, saveDependencies, saveLayouts } from "../../firebase/firestore";
+import { COURSE_DATA_VERSION } from "../../data/courseUpdates";
+import { applyCourseUpdates, refreshDependencies } from "../../utils/applyCourseUpdates";
+import { saveCourses, saveCoursesOnGrid, saveCoursesVersion, saveCoursesUsed, saveCurriculum, saveDependencies, saveLayouts } from "../../firebase/firestore";
 import { auth } from "../../firebase/firebase";
 import Seo from "../seo/Seo";
 import { getCurriculum } from "../../requirements/curricula";
@@ -48,14 +50,42 @@ export const LayoutContext = createContext<LayoutContextType | undefined>(
   undefined
 );
 
+// Reads stored course data and applies any course list updates it has not
+// received yet. With nothing stored (first run) it uses the default list.
+function initCourseData() {
+  const savedCourses = localStorage.getItem("courses");
+  if (!savedCourses) {
+    const coursesUsed: CoursesUsed = {};
+    Object.keys(mockCourses).forEach((code) => (coursesUsed[code] = ""));
+    return {
+      courses: mockCourses as CourseList,
+      coursesUsed,
+      version: COURSE_DATA_VERSION,
+      upserted: [] as string[],
+    };
+  }
+
+  const courses: CourseList = JSON.parse(savedCourses);
+  const savedCoursesUsed = localStorage.getItem("coursesUsed");
+  let coursesUsed: CoursesUsed;
+  if (savedCoursesUsed) {
+    coursesUsed = JSON.parse(savedCoursesUsed);
+  } else {
+    coursesUsed = {};
+    Object.keys(courses).forEach((code) => (coursesUsed[code] = ""));
+  }
+  const version = Number(localStorage.getItem("coursesVersion")) || 0;
+  return applyCourseUpdates({ courses, coursesUsed, version });
+}
+
 const Layout: FC<LayoutProps> = ({ children }) => {
   
+  // courses, coursesUsed and coursesVersion are loaded together so stored
+  // data can be brought up to date with the default course list
+  const [initial] = useState(initCourseData);
+
   // courses
-  const [courses, setCourses] = useState(() => {
-  const savedCourses = localStorage.getItem("courses");
-    if (savedCourses) return JSON.parse(savedCourses);
-    return mockCourses;
-  });
+  const [courses, setCourses] = useState<CourseList>(initial.courses);
   useEffect(() => {
     localStorage.setItem("courses", JSON.stringify(courses));
     const user = auth.currentUser;
@@ -63,21 +93,24 @@ const Layout: FC<LayoutProps> = ({ children }) => {
   }, [courses]);
 
   // coursesUsed
-  const initialCoursesUsed = useMemo<CoursesUsed>(() => {
-    const savedCoursesUsed = localStorage.getItem("coursesUsed");
-    if (savedCoursesUsed) return JSON.parse(savedCoursesUsed);
-
-    const posMap: CoursesUsed = {};
-    Object.keys(courses).forEach((courseCode) => (posMap[courseCode] = ""));
-    return posMap;
-  }, [courses]);
-  const [coursesUsed, setCoursesUsed] =
-    useState<CoursesUsed>(initialCoursesUsed);
-    useEffect(() => {
+  const [coursesUsed, setCoursesUsed] = useState<CoursesUsed>(
+    initial.coursesUsed
+  );
+  useEffect(() => {
     localStorage.setItem("coursesUsed", JSON.stringify(coursesUsed));
     const user = auth.currentUser;
     if (user) saveCoursesUsed(user.uid, coursesUsed);
   }, [coursesUsed]);
+
+  // coursesVersion (which course list updates this user has received)
+  const [coursesVersion, setCoursesVersion] = useState<number>(
+    initial.version
+  );
+  useEffect(() => {
+    localStorage.setItem("coursesVersion", String(coursesVersion));
+    const user = auth.currentUser;
+    if (user) saveCoursesVersion(user.uid, coursesVersion);
+  }, [coursesVersion]);
 
   // coursesOnGrid
   const initialCoursesOnGrid = useMemo<CoursesOnGrid>(() => {
@@ -98,15 +131,23 @@ const Layout: FC<LayoutProps> = ({ children }) => {
     Map<UniqueIdentifier, Set<UniqueIdentifier>>
   >(() => {
     const saved = localStorage.getItem("dependencies");
-    if (!saved) return new Map();
-
-    try {
-      const parsed: [string, string[]][] = JSON.parse(saved);
-      return new Map(parsed.map(([key, values]) => [key, new Set(values)]));
-    } catch {
-      return new Map();
+    let map = new Map<UniqueIdentifier, Set<UniqueIdentifier>>();
+    if (saved) {
+      try {
+        const parsed: [string, string[]][] = JSON.parse(saved);
+        map = new Map(parsed.map(([key, values]) => [key, new Set(values)]));
+      } catch {
+        map = new Map();
+      }
     }
-  }, []);
+    // courses refreshed by an update may have new prerequisites
+    return refreshDependencies(
+      initial.upserted,
+      initial.courses,
+      initial.coursesUsed,
+      map
+    );
+  }, [initial]);
   const [dependencies, setDependencies] =
     useState<Map<UniqueIdentifier, Set<UniqueIdentifier>>>(initialDependencies);
   useEffect(() => {
@@ -154,6 +195,8 @@ const Layout: FC<LayoutProps> = ({ children }) => {
         setSavedLayouts,
         curriculumId,
         setCurriculumId,
+        coursesVersion,
+        setCoursesVersion,
       }}
     >
       <Seo jsonLd={siteJsonLd} />

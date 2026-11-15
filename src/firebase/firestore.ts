@@ -148,3 +148,10 @@ export async function saveCurriculum(uid: string, curriculumId: string) {
 export async function loadCurriculum(uid: string) {
   return loadUserData(uid, "curriculum", "");
 }
+
+export async function saveCoursesVersion(uid: string, version: number) {
+  return saveUserData(uid, "coursesVersion", version);
+}
+export async function loadCoursesVersion(uid: string) {
+  return loadUserData<number>(uid, "coursesVersion", 0);
+}
