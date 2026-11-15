@@ -9,7 +9,7 @@ export default defineConfig({
     react(),
     sitemap({
       hostname: "https://ecepathmaker.com",
-      dynamicRoutes: ["/courses", "/faq"],
+      dynamicRoutes: ["/courses", "/plan", "/faq"],
       readable: true,
       // Keep our hand-written public/robots.txt instead of generating one.
       generateRobotsTxt: false,

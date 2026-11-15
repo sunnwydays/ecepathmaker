@@ -9,6 +9,7 @@ import { iconButton, navPill, navPillActive, navPillIdle } from "../../styles/ui
 const links = [
     { to: "/", label: "Maker", end: true },
     { to: "/courses", label: "Course Explorer", end: false },
+    { to: "/plan", label: "AI Planner", end: false },
     { to: "/faq", label: "FAQs", end: false },
 ];
 
