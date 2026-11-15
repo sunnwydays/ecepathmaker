@@ -1,9 +1,23 @@
-type FAQItem = {
+export type FAQItem = {
     question: string;
     answer: string;
+    /** Optional checklist shown under the answer */
+    bullets?: string[];
+    /** Optional closing line shown after the bullets */
+    footnote?: string;
 };
 
 type FAQ = FAQItem[];
+
+export type FAQSectionIcon = 'start' | 'maker' | 'account' | 'check' | 'help' | 'office';
+
+export type FAQSection = {
+    id: string;
+    title: string;
+    blurb: string;
+    icon: FAQSectionIcon;
+    items: FAQ;
+};
 
 export const courseFaqData: FAQ = [
     {
@@ -28,14 +42,10 @@ export const courseFaqData: FAQ = [
     },
 ]
 
-export const siteFaqData: FAQ = [
+const gettingStarted: FAQ = [
     {
         question: "What is ECE Pathmaker?",
         answer: "ECE Pathmaker is a UI-based drag-and-drop course planner for UofT electrical and computer engineering students. As an unofficial companion tool to UofT ECE's Magellan, it simplifies the planning process before finalizing your pre-registration."
-    },
-    {
-        question: "How do I use this?",
-        answer: "On the Maker page, drag courses onto the grid, which contains slots for your third and fourth years. All the courses from Magellan are available as well as custom courses. Save your progress by: logging in / using one of the 4 layout slots / copying the layout string."
     },
     {
         question: "Why did you make this?",
@@ -50,16 +60,19 @@ export const siteFaqData: FAQ = [
         answer: "If you were admitted before Fall 2026, use the six-area option. If you were admitted in Fall 2026 or later, pick Electrical or Computer, matching the program you are registered in. The choice changes the stream filter, the card colours and the graduation check. Custom courses can be given a group in the course form."
     },
     {
+        question: "Does this tool work on mobile?",
+        answer: "Yes! The site is responsive and works on mobile devices. I suggest zooming out by pinching to see the whole width of the grid. To prevent unwanted movement, I designed it so that you must hold a tile momentarily before dragging."
+    },
+];
+
+const usingTheMaker: FAQ = [
+    {
+        question: "How do I use this?",
+        answer: "On the Maker page, drag courses onto the grid, which contains slots for your third and fourth years. All the courses from Magellan are available as well as custom courses. Save your progress by: logging in / using one of the 4 layout slots / copying the layout string."
+    },
+    {
         question: "What are the XX slots for?",
         answer: "The fifth row is for extra courses taken in the first two years or for overloading. XX courses will be considered as early prerequisites, and also have their prerequisites waived."
-    },
-    {
-        question: "What does signing in do?",
-        answer: "When you sign in using your Google account, your grid, saved layouts, custom courses, and light/dark theme preference are saved so you can access your changes on any device."
-    },
-    {
-        question: "What should I do if my prerequisites aren't working or some info isn't consistent?",
-        answer: "To regenerate the dependencies of your courses on grid, you can save your current layout to one of the four saved layout slots, then immediately load that layout again. New and corrected courses now arrive automatically, so you shouldn't need to reset for updates. If the info is still inconsistent because of your own edits, the 'Reset all changes' button in the footer undoes them (make sure to have a backup screenshot of your layout)."
     },
     {
         question: "Can I add courses using the keyboard? / How can I quickly add courses copying another format (e.g. Magellan)?",
@@ -77,20 +90,92 @@ export const siteFaqData: FAQ = [
         question: "What does it mean by 'not a real course'?",
         answer: "Capstone courses are full year courses, but the grid implements half term slots, so the capstone courses are split into two half-term courses. The 'not a real course' text is a reminder that the course is the second half of the capstone course."
     },
+];
+
+const savingAndAccounts: FAQ = [
+    {
+        question: "What does signing in do?",
+        answer: "When you sign in using your Google account, your grid, saved layouts, custom courses, and light/dark theme preference are saved so you can access your changes on any device."
+    },
+];
+
+const requirements: FAQ = [
     {
         question: "Does this check for minors or certificates?",
         answer: "No, minor/certificate check is not yet implemented, although I am considering adding it in the future."
     },
     {
         question: "Anything else that I should know when course planning?",
-        answer: "While ECE Pathmaker checks most major requirements, some things are not checked. Ensure that you have your natural sciences, free elective & technical elective (easy), PEY / 600h technical XP (not part of course planning but required for graduation), CEAB credits (likely fulfilled if you fulfilled the other requirements), no exclusion violation (if you take certain courses, you may not take another similar one), within 1.5 credit ArtSci -300/-400 limit. You will see possible issues after entering your courses into Magellan. Lastly, remember that this tool is unofficial and although I have done plenty of testing, it may contain errors."
+        answer: "While ECE Pathmaker checks most major requirements, some things are not checked. Make sure you also have:",
+        bullets: [
+            "Natural sciences",
+            "Free elective & technical elective (easy)",
+            "PEY / 600h technical XP (not part of course planning but required for graduation)",
+            "CEAB credits (likely fulfilled if you fulfilled the other requirements)",
+            "No exclusion violation (if you take certain courses, you may not take another similar one)",
+            "Within the 1.5 credit ArtSci -300/-400 limit",
+        ],
+        footnote: "You will see possible issues after entering your courses into Magellan. Lastly, remember that this tool is unofficial and although I have done plenty of testing, it may contain errors."
     },
+];
+
+const troubleshooting: FAQ = [
     {
-        question: "Does this tool work on mobile?",
-        answer: "Yes! The site is responsive and works on mobile devices. I suggest zooming out by pinching to see the whole width of the grid. To prevent unwanted movement, I designed it so that you must hold a tile momentarily before dragging."
+        question: "What should I do if my prerequisites aren't working or some info isn't consistent?",
+        answer: "To regenerate the dependencies of your courses on grid, you can save your current layout to one of the four saved layout slots, then immediately load that layout again. New and corrected courses now arrive automatically, so you shouldn't need to reset for updates. If the info is still inconsistent because of your own edits, the 'Reset all changes' button in the footer undoes them (make sure to have a backup screenshot of your layout)."
     },
     {
         question: "How do I report a bug or suggest a feature?",
         answer: "Create an issue on the GitHub repo or fill out the Google Form, both linked in the footer."
     },
 ];
+
+export const siteFaqSections: FAQSection[] = [
+    {
+        id: 'getting-started',
+        title: 'Getting started',
+        blurb: 'What Pathmaker is and whether it fits you.',
+        icon: 'start',
+        items: gettingStarted,
+    },
+    {
+        id: 'using-the-maker',
+        title: 'Using the Maker',
+        blurb: 'Dragging, editing and reading the grid.',
+        icon: 'maker',
+        items: usingTheMaker,
+    },
+    {
+        id: 'saving',
+        title: 'Saving & accounts',
+        blurb: 'Keeping your plan across devices.',
+        icon: 'account',
+        items: savingAndAccounts,
+    },
+    {
+        id: 'requirements',
+        title: 'Requirements & checks',
+        blurb: 'What the graduation check covers, and what it doesn\'t.',
+        icon: 'check',
+        items: requirements,
+    },
+    {
+        id: 'troubleshooting',
+        title: 'Troubleshooting & feedback',
+        blurb: 'When something looks off.',
+        icon: 'help',
+        items: troubleshooting,
+    },
+];
+
+export const courseFaqSection: FAQSection = {
+    id: 'course-selection',
+    title: 'Course selection',
+    blurb: 'I asked the ECE undergrad office in the SF basement (SFB540) these questions. Here are their answers.',
+    icon: 'office',
+    items: courseFaqData,
+};
+
+export const faqSections: FAQSection[] = [...siteFaqSections, courseFaqSection];
+
+export const siteFaqData: FAQ = siteFaqSections.flatMap((section) => section.items);
