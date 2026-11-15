@@ -94,6 +94,7 @@ const SignIn: FC = () => {
     <div>
       <button
         onClick={signedIn ? signOut : signIn}
+        aria-label={signedIn ? "Sign out" : "Sign in with Google"}
         className="px-1 py-2 text-2xl flex items-center"
       >
         {signedIn ? <CiLogout /> : <CiLogin />}

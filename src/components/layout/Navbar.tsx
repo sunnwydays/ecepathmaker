@@ -35,7 +35,7 @@ const Navbar:FC = () => {
         <nav className={`
             fixed z-40 top-0 w-full 
             transition-all ${isScrolled ? 'h-14' : 'h-24'} 
-            bg-white bg-opacity-95 shadow border-b-1 
+            bg-white bg-opacity-95 shadow 
             dark:bg-gray-800 dark:bg-opacity-95 dark:text-white
         `}>
             <div className="
@@ -118,6 +118,8 @@ const Navbar:FC = () => {
                     </ul>
                     <button 
                         onClick={() => setIsMenuOpen(!isMenuOpen)}
+                        aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+                        aria-expanded={isMenuOpen}
                         className="
                             z-50 md:hidden text-3xl cursor-pointer 
                             flex items-center

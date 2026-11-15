@@ -101,7 +101,7 @@ const MakerCard: FC<MakerCardProps> = (props) => {
                 : compact
                   ? "w-[5.5rem] line-clamp-2 text-xs leading-tight"
                   : "w-28 line-clamp-2 text-sm"
-            } text-center transition-width]`}
+            } text-center`}
           >
             {props.name}
           </p>
@@ -152,11 +152,17 @@ const MakerCard: FC<MakerCardProps> = (props) => {
           )}
           {isExpanded && (
             <div // because button cannot be a child of a button
-              className="absolute top-0 right-4 text-xs rouned-full p-1"
+              className="absolute top-0 right-4 text-xs rounded-full p-1"
               onClick={handleEdit}
-              onKeyDown={handleEdit}
+              onKeyDown={(e) => {
+                if (e.key !== "Enter" && e.key !== " ") return;
+                e.preventDefault();
+                e.stopPropagation();
+                handleEdit();
+              }}
               tabIndex={0}
               role="button"
+              aria-label={`Edit ${props.code}`}
             >
               ✏️
             </div>

@@ -20,6 +20,7 @@ const ThemeToggle = () => {
   return (
     <button
       onClick={toggleDarkMode}
+      aria-label={isDarkMode ? "Switch to light theme" : "Switch to dark theme"}
       className="px-1 py-2 text-black dark:text-white text-2xl flex items-center"
     >
       {isDarkMode ? <CiDark /> : <CiLight />}
