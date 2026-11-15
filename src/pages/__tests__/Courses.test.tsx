@@ -209,7 +209,7 @@ describe('Courses page', () => {
         expect(localStorage.getItem('showSixth')).not.toBe('true');
 
         fireEvent.change(screen.getByLabelText('Term to add to'), { target: { value: '3F' } });
-        fireEvent.click(screen.getByRole('button', { name: 'Add to 3F (6th column)' }));
+        fireEvent.click(screen.getByRole('button', { name: 'Add to 3F (overload)' }));
 
         expect(JSON.parse(localStorage.getItem('coursesOnGrid') as string)['3F.6']).toBe('ECE302');
         expect(localStorage.getItem('showSixth')).toBe('true');

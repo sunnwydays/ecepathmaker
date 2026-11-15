@@ -122,7 +122,7 @@ const CourseDetail: FC<{
               {openTerms.map((t) => (
                 <option key={t} value={t}>
                   {t}
-                  {isOverload(t) ? " (6th column)" : ""}
+                  {isOverload(t) ? " (overload)" : ""}
                 </option>
               ))}
             </select>
@@ -137,7 +137,7 @@ const CourseDetail: FC<{
             className="rounded bg-green3 px-3 py-1 text-sm font-medium text-white hover:bg-green4 disabled:opacity-50"
           >
             {term
-              ? `Add to ${term}${isOverload(term) ? " (6th column)" : ""}`
+              ? `Add to ${term}${isOverload(term) ? " (overload)" : ""}`
               : "No free slots"}
           </button>
           {added && (
