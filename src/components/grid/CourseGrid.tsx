@@ -402,7 +402,7 @@ const CourseGrid: FC<CourseGridProps> = ({
           ref={screenshotRef}
           data-testid="grid"
         >
-          {Object.keys(emptyGrid).map((slot) => {
+          {Object.keys(emptyGrid).filter((slot) => !slot.endsWith(".6")).map((slot) => {
               const courseCode: string = coursesOnGrid[slot as GridPositionBase];
               return (
                 <Droppable

@@ -74,7 +74,8 @@ const Filter: FC<{
 
     let targetPos: GridPosition = '';
     for (const [pos, course] of Object.entries(coursesOnGrid)) {
-      if (!course && validYearTerms[(pos.slice(0, 2) as YearTerm)]) {
+      // The sixth column is only for courses the student drags there
+      if (!course && !pos.endsWith('.6') && validYearTerms[(pos.slice(0, 2) as YearTerm)]) {
         targetPos = pos as GridPosition;
         break;
       }

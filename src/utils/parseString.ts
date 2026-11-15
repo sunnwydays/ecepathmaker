@@ -50,7 +50,7 @@ export const isValidString = (str: string): boolean => {
   return terms.every((term) => {
     // Check each term
     const courses = term.split("$$");
-    if (courses.length > 5) return false;
+    if (courses.length > 6) return false;
 
     return courses.every((course) => {
       if (!course) return true; // Empty slots are allowed
@@ -127,7 +127,7 @@ export const parseString = (str: string): ParseString => {
     if (termIndex > 4) return;
     const coursesInTerm = term.split("$$");
     coursesInTerm.forEach((courseStr, slotIndex) => {
-      if (!courseStr || slotIndex > 4) return;
+      if (!courseStr || slotIndex > 5) return;
 
       const [codeAndName, optionsWithPreq] = courseStr.split("%%");
       const code = codeAndName.substring(0, 6);

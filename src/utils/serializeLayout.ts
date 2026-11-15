@@ -8,7 +8,7 @@ const serializeReqs = (label: string, reqs?: (string | string[])[]) => {
 };
 
 const TERMS = ["3F", "3S", "4F", "4S", "XX"];
-const SLOTS = 5;
+const SLOTS = 6;
 
 const serializeCourse = (code: string, course: CourseList[string]): string => {
   let str = code + course.name + "%%";
@@ -44,8 +44,13 @@ export const serializeLayout = (
     });
     // Keep empty slots before the last course so positions survive a reload
     const last = slots.map((s) => s !== "").lastIndexOf(true);
+    // Slots 1-4 are followed by $$. Slot 5 only is when slot 6 is used, so a
+    // term without a sixth course is written as before the sixth slot existed.
+    // Slot 6 has no trailer.
+    const noTrailer = (i: number) =>
+      i === SLOTS - 1 || (i === SLOTS - 2 && last === SLOTS - 2);
     return slots
       .slice(0, last + 1)
-      .map((s, i) => (i === SLOTS - 1 ? s : s + "$$"))
+      .map((s, i) => (noTrailer(i) ? s : s + "$$"))
       .join("");
   }).join("@@");

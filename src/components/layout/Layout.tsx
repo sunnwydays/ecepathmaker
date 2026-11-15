@@ -115,7 +115,8 @@ const Layout: FC<LayoutProps> = ({ children }) => {
   // coursesOnGrid
   const initialCoursesOnGrid = useMemo<CoursesOnGrid>(() => {
     const savedCoursesOnGrid = localStorage.getItem("coursesOnGrid");
-    if (savedCoursesOnGrid) return JSON.parse(savedCoursesOnGrid);
+    // Grids saved before the sixth column have no .6 keys
+    if (savedCoursesOnGrid) return { ...emptyGrid, ...JSON.parse(savedCoursesOnGrid) };
     return emptyGrid;
   }, []);
   const [coursesOnGrid, setCoursesOnGrid] =
