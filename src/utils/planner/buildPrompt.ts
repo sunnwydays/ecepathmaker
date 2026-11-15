@@ -10,6 +10,7 @@ export interface PlannerAnswers {
   designation: "CE" | "EE" | "none"; // only used when designation is derived
   includeGrid: boolean; // send the current grid as the starting point
   lockedTerms: PlanTerm[]; // of 3F/3S/4F/4S; only used with includeGrid
+  taken: string; // courses beyond the core taken before third year (XX)
   mustTake: string;
   avoid: string;
   notes: string;
@@ -203,13 +204,27 @@ Format: CODE | name | group | terms | type | prereq | coreq
       `- Goal: graduate as ${answers.designation === "CE" ? "Computer" : "Electrical"} engineering`
     );
   }
+  // Always say what is in XX, so the AI does not have to ask
+  const gridEmpty = Object.values(coursesOnGrid).every((code) => !code);
+  const showGrid = answers.includeGrid && !gridEmpty;
+  const xxOnGrid = [1, 2, 3, 4, 5, 6].some(
+    (slot) => coursesOnGrid[`XX.${slot}` as GridPositionBase]
+  );
+  if (answers.taken.trim()) {
+    about.push(
+      `- Taken before third year (XX, these count toward the 20 and toward CS/HSS if they are CS/HSS): ${answers.taken.trim()}. Nothing else beyond the first- and second-year core.`
+    );
+  } else if (!(showGrid && xxOnGrid)) {
+    about.push(
+      "- Taken before third year (XX): nothing beyond the first- and second-year core, so 0 courses toward the 20 and 0 CS/HSS electives so far"
+    );
+  }
   if (answers.mustTake.trim()) about.push(`- Must take: ${answers.mustTake.trim()}`);
   if (answers.avoid.trim()) about.push(`- Avoid: ${answers.avoid.trim()}`);
   if (answers.notes.trim()) about.push(`- Other notes: ${answers.notes.trim()}`);
   if (about.length) sections.push(`## About me\n${about.join("\n")}`);
 
-  const gridEmpty = Object.values(coursesOnGrid).every((code) => !code);
-  if (answers.includeGrid && !gridEmpty) {
+  if (showGrid) {
     const locked = answers.lockedTerms.filter((t) => t !== "XX");
     const keep = locked.length
       ? `Keep these terms exactly as they are: ${locked.join(", ")}. Always keep XX. You may change the other terms.`

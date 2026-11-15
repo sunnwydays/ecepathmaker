@@ -153,6 +153,7 @@ describe("buildPrompt", () => {
     designation: "none",
     includeGrid: false,
     lockedTerms: [],
+    taken: "",
     mustTake: "",
     avoid: "",
     notes: "",
@@ -222,12 +223,24 @@ describe("buildPrompt", () => {
     );
   });
 
-  it("leaves out empty answers and the About me section", () => {
+  it("always says what was taken before third year", () => {
+    expect(build()).toContain(
+      "- Taken before third year (XX): nothing beyond the first- and second-year core, so 0 courses toward the 20 and 0 CS/HSS electives so far"
+    );
+    expect(build(pre2026, { taken: "JRE300" })).toContain(
+      "): JRE300. Nothing else beyond"
+    );
+    const grid = { ...emptyGrid, "XX.1": "ECE302" };
+    expect(build(pre2026, { includeGrid: true }, grid)).not.toContain(
+      "Taken before third year"
+    );
+  });
+
+  it("leaves out empty answers", () => {
     const prompt = build();
     expect(prompt).not.toContain("Must take");
     expect(prompt).not.toContain("Avoid:");
     expect(prompt).not.toContain("Other notes");
-    expect(prompt).not.toContain("## About me");
     expect(build(pre2026, { mustTake: "ECE345" })).toContain(
       "- Must take: ECE345"
     );

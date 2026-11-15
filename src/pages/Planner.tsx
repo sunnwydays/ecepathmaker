@@ -78,6 +78,7 @@ const Planner = () => {
     useState<PlannerAnswers["designation"]>("none");
   const [useGrid, setUseGrid] = useState(true);
   const [lockedTerms, setLockedTerms] = useState<PlanTerm[]>([]);
+  const [taken, setTaken] = useState("");
   const [mustTake, setMustTake] = useState("");
   const [avoid, setAvoid] = useState("");
   const [notes, setNotes] = useState("");
@@ -105,6 +106,7 @@ const Planner = () => {
           designation,
           includeGrid,
           lockedTerms,
+          taken,
           mustTake,
           avoid,
           notes,
@@ -119,6 +121,7 @@ const Planner = () => {
       designation,
       includeGrid,
       lockedTerms,
+      taken,
       mustTake,
       avoid,
       notes,
@@ -279,6 +282,15 @@ const Planner = () => {
             </div>
           )}
 
+          <Field label="Courses you took before third year that count toward the degree, like CS or HSS electives (leave empty if none)">
+            <input
+              type="text"
+              value={taken}
+              onChange={(e) => setTaken(e.target.value)}
+              className={input}
+              data-testid="taken"
+            />
+          </Field>
           <Field label="Courses you must take">
             <input
               type="text"
