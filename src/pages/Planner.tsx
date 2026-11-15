@@ -5,7 +5,7 @@ import { useCurriculum, useLayoutContext } from "../components/layout/Layout";
 import { CurriculumPicker } from "../utils/componentImports";
 import Seo from "../components/seo/Seo";
 import { SITE_URL } from "../lib/site";
-import { buttonPrimary, eyebrow, input, panel, textLink } from "../styles/ui";
+import { buttonPrimary, buttonSecondary, eyebrow, input, panel, textLink } from "../styles/ui";
 import { clearExtra } from "../utils/extraCourses";
 import {
   buildPrompt,
@@ -15,6 +15,7 @@ import {
 } from "../utils/planner/buildPrompt";
 import { parsePlan, PlanTerm } from "../utils/planner/parsePlan";
 import { applyPlan } from "../utils/planner/applyPlan";
+import { evaluate } from "../requirements/evaluate";
 
 const plannerJsonLd: Record<string, unknown> = {
   "@context": "https://schema.org",
@@ -34,7 +35,7 @@ const LOCKABLE_TERMS: PlanTerm[] = ["3F", "3S", "4F", "4S"];
 
 type LoadResult =
   | { kind: "error" }
-  | { kind: "loaded"; placed: number; warnings: string[] };
+  | { kind: "loaded"; placed: number; warnings: string[]; unmet: string[] };
 
 const Step = ({
   step,
@@ -88,6 +89,28 @@ const Planner = () => {
 
   const [planText, setPlanText] = useState("");
   const [result, setResult] = useState<LoadResult | null>(null);
+  const [fixCopied, setFixCopied] = useState(false);
+
+  // A message to paste back into the same chat so the AI fixes its plan
+  const fixMessage =
+    result?.kind === "loaded" && (result.warnings.length || result.unmet.length)
+      ? [
+          "ecepathmaker.com checked your plan and found these problems:",
+          ...result.warnings.map((w) => `- ${w}`),
+          ...result.unmet.map((u) => `- Not met: ${u}`),
+          "",
+          "Please fix them and give me the corrected plan in the same format, all four terms in one code block.",
+        ].join("\n")
+      : "";
+
+  const handleCopyFix = async () => {
+    try {
+      await navigator.clipboard.writeText(fixMessage);
+      setFixCopied(true);
+    } catch (err) {
+      console.error("Failed to copy:", err);
+    }
+  };
 
   // Group ids differ between curricula, so ticked interests cannot carry over
   useEffect(() => {
@@ -162,12 +185,22 @@ const Planner = () => {
     setCoursesUsed(applied.coursesUsed);
     setDependencies(applied.dependencies);
     // A course that left the grid must not keep its extra flag
-    setCourses(clearExtra(courses, removed));
+    const nextCourses = clearExtra(courses, removed);
+    setCourses(nextCourses);
+    const check = evaluate(curriculum, {
+      courses: nextCourses,
+      coursesOnGrid: applied.coursesOnGrid,
+      coursesUsed: applied.coursesUsed,
+    });
     setResult({
       kind: "loaded",
       placed: applied.placed,
       warnings: applied.warnings,
+      unmet: check.results
+        .filter((r) => !r.met)
+        .map((r) => `${r.label} (${r.have}/${r.need}): ${r.tooltip}`),
     });
+    setFixCopied(false);
   };
 
   const checkbox = "flex items-center gap-2";
@@ -394,6 +427,38 @@ const Planner = () => {
                     <li key={i}>{warning}</li>
                   ))}
                 </ul>
+              )}
+              {result.unmet.length ? (
+                <>
+                  <p className="font-medium">Requirements not met yet:</p>
+                  <ul className="list-disc pl-5" data-testid="plan-unmet">
+                    {result.unmet.map((line, i) => (
+                      <li key={i}>{line}</li>
+                    ))}
+                  </ul>
+                </>
+              ) : (
+                <p className="font-medium" data-testid="plan-meets">
+                  Meets every requirement the site checks. Still check:{" "}
+                  {curriculum.manualChecks}
+                </p>
+              )}
+              {fixMessage && (
+                <div className="flex flex-wrap items-center gap-3">
+                  <button
+                    type="button"
+                    onClick={handleCopyFix}
+                    className={buttonSecondary}
+                    data-testid="copy-fix"
+                  >
+                    Copy problems for the AI
+                  </button>
+                  <span>
+                    {fixCopied
+                      ? "Copied. Paste it into the same chat."
+                      : "Paste them into the same chat to get a fixed plan."}
+                  </span>
+                </div>
               )}
             </div>
           )}

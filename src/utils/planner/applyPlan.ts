@@ -6,6 +6,7 @@ import {
   GridPositionBase,
 } from "../../types/types";
 import { addDependencies } from "../addDependencies";
+import { getValidYearTerms } from "../getValidYearTerms";
 import { PLAN_TERMS, PlanTerms } from "./parsePlan";
 
 const SLOTS = [1, 2, 3, 4, 5, 6];
@@ -77,6 +78,25 @@ export const applyPlan = ({
     if (!code || !courses[code]) return;
     coursesUsed[code] = position;
     addDependencies({ code, courses, dependencies });
+  });
+
+  // The same term and prerequisite check the Maker uses to grey out a card
+  PLAN_TERMS.forEach((term) => {
+    if (!plan[term] || term === "XX") return;
+    SLOTS.forEach((slot) => {
+      const code = grid[slotKey(term, slot)];
+      if (!code) return;
+      const course = courses[code];
+      const valid = getValidYearTerms({ coursesOnGrid: grid, coursesUsed, course });
+      if (valid[term]) return;
+      const fall = term.endsWith("F");
+      if (course.onlyF && !fall) warnings.push(`${code} is F only but is in ${term}`);
+      else if (course.onlyS && fall) warnings.push(`${code} is S only but is in ${term}`);
+      else
+        warnings.push(
+          `${code} is in ${term} without its prerequisites or corequisites in time`
+        );
+    });
   });
 
   return { coursesOnGrid: grid, coursesUsed, dependencies, placed, warnings };

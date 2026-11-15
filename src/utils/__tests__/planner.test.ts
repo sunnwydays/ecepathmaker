@@ -105,7 +105,7 @@ describe("applyPlan", () => {
     const result = applyPlan({
       plan: {
         "3F": [
-          "ECE302", "ECE345", "ECE311", "ECE334", "ECE342", "ECE344", "ECE361",
+          "ECE302", "ECE345", "ECE311", "ECE334", "ECE316", "ECE344", "ECE361",
         ],
         "3S": ["ECE302", "ZZZ999"],
       },
@@ -119,6 +119,19 @@ describe("applyPlan", () => {
       "ZZZ999 is not in your course list (add it as a custom course in the Maker, then load again)",
     ]);
     expect(result.placed).toBe(6);
+  });
+
+  it("warns about a course in the wrong term or before its prerequisites", () => {
+    const result = applyPlan({
+      plan: { "3F": ["ECE410"], "3S": ["ECE311"], "4S": ["ECE444"] },
+      courses,
+      coursesOnGrid: emptyGrid,
+    });
+    expect(result.placed).toBe(3);
+    expect(result.warnings).toEqual([
+      "ECE410 is in 3F without its prerequisites or corequisites in time",
+      "ECE444 is F only but is in 4S",
+    ]);
   });
 
   it("builds coursesUsed and dependencies", () => {

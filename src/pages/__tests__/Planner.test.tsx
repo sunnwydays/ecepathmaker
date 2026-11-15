@@ -81,6 +81,33 @@ describe('Planner page', () => {
         expect(grid['3F.2']).toBe('ECE345');
     });
 
+    it('checks the requirements and copies the problems for the AI', async () => {
+        const writeText = jest.fn().mockResolvedValue(undefined);
+        Object.defineProperty(navigator, 'clipboard', { value: { writeText }, configurable: true });
+        renderPage();
+        loadPlan('3F: ECE302\n4S: ECE444');
+        expect(screen.getByText(/ECE444 is F only but is in 4S/)).toBeInTheDocument();
+        expect(screen.getByTestId('plan-unmet')).toHaveTextContent(/Economics/);
+        fireEvent.click(screen.getByTestId('copy-fix'));
+        await waitFor(() => expect(writeText).toHaveBeenCalled());
+        const message = writeText.mock.calls[0][0];
+        expect(message).toContain('- ECE444 is F only but is in 4S');
+        expect(message).toContain('- Not met: Economics');
+        expect(message).toContain('corrected plan');
+    });
+
+    it('says when a plan meets every checked requirement', () => {
+        renderPage();
+        loadPlan([
+            '3F: ECE302, ECE311, ECE331, ECE345, TEP444',
+            '3S: ECE342, ECE361, ECE412, ECE470, ECE472',
+            '4F: ECE496, ECE410, ECE430, ECE421, TEP343',
+            '4S: ECE497, ECE390, ECE344, TEP442, JRE300',
+        ].join('\n'));
+        expect(screen.getByTestId('plan-meets')).toBeInTheDocument();
+        expect(screen.queryByTestId('copy-fix')).not.toBeInTheDocument();
+    });
+
     it('warns about an unknown code', () => {
         renderPage();
         loadPlan('3F: ECE302, ZZZ999');
