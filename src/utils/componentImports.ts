@@ -1,5 +1,6 @@
 // Form Components
 export { default as CourseForm } from "../components/forms/CourseForm";
+export { default as CurriculumPicker } from "../components/forms/CurriculumPicker";
 export { default as Filter } from "../components/forms/Filter";
 export { default as LoadLayout } from "../components/forms/LoadLayout";
 

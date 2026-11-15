@@ -17,7 +17,7 @@ import { FilterState } from "../types/types";
 import { mockCourses } from "../utils/dataImports";
 import { filterCourses } from "../utils/filterCourses";
 import { useCurriculum } from "../components/layout/Layout";
-import { CourseCard, Filter } from "../utils/componentImports";
+import { CourseCard, CurriculumPicker, Filter } from "../utils/componentImports";
 import Seo from "../components/seo/Seo";
 import { SITE_URL } from "../lib/site";
 
@@ -104,6 +104,7 @@ const Courses = () => {
       <h2 className="mb-8 text-2xl font-medium dark:text-gray-50">
         🗂️ Explore and rearrange courses (all the courses on Magellan and more)!
       </h2>
+      <CurriculumPicker />
       <Filter filters={filters} setFilters={setFilters} />
       <DndContext
         onDragStart={handleDragStart}
