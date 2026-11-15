@@ -55,7 +55,7 @@ const CourseDetail: FC<{
   const unlocked = unlocks.get(code) ?? [];
   const status = getCourseStatus(code, courses, coursesUsed, coursesOnGrid);
   const statusText = describeStatus(status);
-  const addToGrid = useAddToGrid();
+  const addToGrid = useAddToGrid({ allowSixth: true });
   const [added, setAdded] = useState<string | null>(null);
   const [pickedTerm, setPickedTerm] = useState<string>("");
 
@@ -64,10 +64,15 @@ const CourseDetail: FC<{
     status.kind === "canTake"
       ? getTakeTerms(course, coursesUsed, coursesOnGrid).filter((term) =>
           Object.entries(coursesOnGrid).some(
-            ([pos, c]) => !c && pos.startsWith(term) && !pos.endsWith(".6")
+            ([pos, c]) => !c && pos.startsWith(term)
           )
         )
       : [];
+  // true when the term's first five columns are full
+  const isOverload = (t: string) =>
+    !Object.entries(coursesOnGrid).some(
+      ([pos, c]) => !c && pos.startsWith(t) && !pos.endsWith(".6")
+    );
   const term = (openTerms as string[]).includes(pickedTerm)
     ? (pickedTerm as YearTerm)
     : openTerms[0];
@@ -117,6 +122,7 @@ const CourseDetail: FC<{
               {openTerms.map((t) => (
                 <option key={t} value={t}>
                   {t}
+                  {isOverload(t) ? " (6th column)" : ""}
                 </option>
               ))}
             </select>
@@ -130,7 +136,9 @@ const CourseDetail: FC<{
             }}
             className="rounded bg-green3 px-3 py-1 text-sm font-medium text-white hover:bg-green4 disabled:opacity-50"
           >
-            {term ? `Add to ${term}` : "No free slots"}
+            {term
+              ? `Add to ${term}${isOverload(term) ? " (6th column)" : ""}`
+              : "No free slots"}
           </button>
           {added && (
             <span role="status" className="text-sm">
