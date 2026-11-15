@@ -5,6 +5,7 @@ import { buildUnlocks } from "../utils/prereqGraph";
 import { useCurriculum, useLayoutContext, useWidePage } from "../components/layout/Layout";
 import CourseList, { SortKey } from "../components/explorer/CourseList";
 import CourseDetail from "../components/explorer/CourseDetail";
+import PrereqGraph from "../components/explorer/PrereqGraph";
 import { CurriculumPicker } from "../utils/componentImports";
 import Seo from "../components/seo/Seo";
 import { SITE_URL } from "../lib/site";
@@ -80,15 +81,23 @@ const Courses = () => {
           selected={selected}
           onSelect={setSelected}
         />
-        <div className="lg:sticky lg:top-28">
+        <div className="flex flex-col gap-4 min-w-0">
           {selected && courses[selected] ? (
-            <CourseDetail
-              code={selected}
-              courses={courses}
-              coursesUsed={coursesUsed}
-              unlocks={unlocks}
-              onSelect={setSelected}
-            />
+            <>
+              <CourseDetail
+                code={selected}
+                courses={courses}
+                coursesUsed={coursesUsed}
+                unlocks={unlocks}
+                onSelect={setSelected}
+              />
+              <PrereqGraph
+                code={selected}
+                courses={courses}
+                unlocks={unlocks}
+                onSelect={setSelected}
+              />
+            </>
           ) : (
             <p className="rounded-md bg-neutral1 dark:bg-gray-600 dark:text-gray-50 p-4 italic">
               Select a course to see its details
