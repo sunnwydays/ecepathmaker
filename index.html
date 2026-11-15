@@ -19,6 +19,14 @@
     <meta name="twitter:image" content="https://ecepathmaker.com/og/default.png" />
     <link rel="manifest" href="/manifest.json" />
     <meta name="theme-color" content="#379683" />
+    <script>
+      try {
+        var t = localStorage.getItem('theme');
+        if (t === 'dark' || (!t && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+          document.documentElement.classList.add('dark');
+        }
+      } catch (e) {}
+    </script>
   </head>
   <body>
     <div id="root"></div>
