@@ -1,4 +1,5 @@
 import { ValidYearTermsProps, ValidYearTerms, YearTerm } from "../types/types";
+import { withoutCoreCourses } from "../data/coreCourses";
 import { getNextYearTerm, getPrevYearTerm, getYearTerm } from "./getYearTerm";
 
 export const getValidYearTerms = ({
@@ -22,7 +23,11 @@ export const getValidYearTerms = ({
     validYearTerms["4F"] = false;
   }
 
-  if (!course.preq?.length && !course.coreq?.length) return validYearTerms;
+  // first- and second-year courses are assumed taken
+  const preqs = withoutCoreCourses(course.preq);
+  const coreqs = withoutCoreCourses(course.coreq);
+
+  if (!preqs.length && !coreqs.length) return validYearTerms;
 
   const ALL_FALSE: ValidYearTerms = {
     "3F": false,
@@ -38,9 +43,9 @@ export const getValidYearTerms = ({
   
   let latestYearTerm = "";
 
-  if (course.coreq?.length) {
+  if (coreqs.length) {
     // check AND coreqs
-    for (const coreq of course.coreq) {
+    for (const coreq of coreqs) {
       if (Array.isArray(coreq)) {
         if (!coreq.some((p) => gridCourses.includes(p))) {
           return ALL_FALSE;
@@ -53,7 +58,7 @@ export const getValidYearTerms = ({
     }
 
     // locate the latest coreq course on the grid 
-    for (const coreq of course.coreq) {
+    for (const coreq of coreqs) {
       if (Array.isArray(coreq)) {
         // earliest of the OR coreqs
         let earliestYearTerm = "";
@@ -86,9 +91,9 @@ export const getValidYearTerms = ({
     latestYearTerm = getPrevYearTerm(latestYearTerm as YearTerm);
   }
 
-  if (course.preq?.length) {
+  if (preqs.length) {
     // check AND prereqs
-    for (const preq of course.preq) {
+    for (const preq of preqs) {
       if (Array.isArray(preq)) {
         if (!preq.some((p) => gridCourses.includes(p))) {
           return ALL_FALSE;
@@ -101,7 +106,7 @@ export const getValidYearTerms = ({
     }
 
     // locate the latest preq course on the grid
-    for (const preq of course.preq) {
+    for (const preq of preqs) {
       if (Array.isArray(preq)) {
         // earliest of the OR prereqs
         let earliestYearTerm = "";
