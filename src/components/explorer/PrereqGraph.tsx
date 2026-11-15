@@ -8,6 +8,7 @@ import {
   Unlock,
   buildFocusGraph,
 } from "../../utils/prereqGraph";
+import { eyebrow } from "../../styles/ui";
 
 interface PrereqGraphProps {
   code: string;
@@ -29,7 +30,7 @@ interface DrawnEdge {
 const NODE_WIDTH = "w-44";
 
 const nodeBase =
-  "rounded-md border-2 px-2 py-1.5 text-left text-sm leading-tight dark:text-gray-50";
+  "rounded-lg border-2 px-2 py-1.5 text-left text-sm leading-tight dark:text-gray-50";
 
 const Node: FC<{
   node: FocusNode;
@@ -236,7 +237,7 @@ const PrereqGraph: FC<PrereqGraphProps> = ({
   return (
     <div className="flex flex-col gap-2" data-testid="prereq-graph">
       <div className="flex items-center justify-between gap-4 flex-wrap">
-        <h4 className="font-semibold dark:text-gray-50">Prerequisite graph</h4>
+        <h4 className={eyebrow}>Prerequisite graph</h4>
         <span className="flex items-center gap-4 text-xs dark:text-gray-50">
           <span className="flex items-center gap-1">
             <svg width="28" height="6" aria-hidden="true">
@@ -283,7 +284,7 @@ const PrereqGraph: FC<PrereqGraphProps> = ({
                 stroke="currentColor"
                 strokeWidth={touching(edge) ? 3 : 1.5}
                 strokeDasharray={edge.kind === "coreq" ? "6 4" : undefined}
-                className={`transition-all ${
+                className={`transition-[stroke-width,color,opacity] duration-200 ${
                   touching(edge)
                     ? "text-green4 dark:text-green1"
                     : hovered

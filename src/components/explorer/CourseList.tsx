@@ -5,6 +5,9 @@ import { getMembership } from "../../requirements/evaluate";
 import { getYearTerm } from "../../utils/getYearTerm";
 import { useCurriculum } from "../layout/Layout";
 import CourseRow from "./CourseRow";
+import NoCourses from "../info/NoCourses";
+import { defaultFilters } from "../../utils/defaultFilters";
+import { input } from "../../styles/ui";
 
 export type SortKey = "group" | "code" | "term";
 
@@ -97,7 +100,7 @@ const CourseList: FC<CourseListProps> = ({
             value={sort}
             onChange={(e) => setSort(e.target.value as SortKey)}
             data-testid="sort-select"
-            className="rounded border border-neutral3 px-1 py-0.5 text-black"
+            className={`${input} py-0.5 pr-1`}
           >
             <option value="group">Group</option>
             <option value="code">Code</option>
@@ -125,9 +128,7 @@ const CourseList: FC<CourseListProps> = ({
           })}
         </ul>
       ) : (
-        <div className="w-full text-center text-neutral3 italic select-none">
-          No courses match the current filter
-        </div>
+        <NoCourses onReset={() => setFilters({ ...defaultFilters })} />
       )}
     </div>
   );

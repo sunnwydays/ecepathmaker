@@ -3,6 +3,7 @@ import { CourseList } from "../../types/types";
 import { getMembership } from "../../requirements/evaluate";
 import { getTextColor } from "../../utils/getTextColor";
 import { useCurriculum } from "../layout/Layout";
+import { panel } from "../../styles/ui";
 
 interface Section {
   id: string;
@@ -47,7 +48,7 @@ const GroupOverview: FC<{
   return (
     <div
       data-testid="group-overview"
-      className="flex flex-col gap-4 rounded-md bg-neutral1 dark:bg-gray-600 dark:text-gray-50 p-4"
+      className={`flex flex-col gap-4 ${panel} dark:text-gray-50 p-4`}
     >
       <p className="italic">Select a course to see its prerequisites</p>
       {sections.map((section) => (
@@ -72,7 +73,7 @@ const GroupOverview: FC<{
                     type="button"
                     title={courses[code].name}
                     onClick={() => onSelect(code)}
-                    className={`rounded px-2 py-0.5 text-sm hover:underline ${
+                    className={`rounded px-2 py-0.5 text-sm hover:underline transition-colors ${
                       section.color
                         ? getTextColor(section.color.replace("#", ""))
                         : "text-black"

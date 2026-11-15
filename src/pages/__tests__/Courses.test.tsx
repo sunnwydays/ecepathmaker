@@ -193,6 +193,8 @@ describe('Courses page', () => {
         expect(screen.queryByRole('button', { name: /^Add to / })).not.toBeInTheDocument();
         expect(within(screen.getByTestId('course-detail')).getByText(/In 3F on your grid/)).toBeInTheDocument();
         expect(within(getRow('ECE302')).getByText(/In 3F/)).toBeInTheDocument();
+        // the confirmation stays after the button is gone
+        expect(within(screen.getByTestId('course-detail')).getByRole('status')).toHaveTextContent(/^Added to 3F\.\d$/);
     });
 
     it('lets you pick the term to add a course to', () => {

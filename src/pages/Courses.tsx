@@ -12,6 +12,7 @@ import GroupOverview from "../components/explorer/GroupOverview";
 import { CurriculumPicker } from "../utils/componentImports";
 import Seo from "../components/seo/Seo";
 import { SITE_URL } from "../lib/site";
+import { textLink } from "../styles/ui";
 
 const coursesJsonLd: Record<string, unknown> = {
   "@context": "https://schema.org",
@@ -127,7 +128,7 @@ const Courses = () => {
               <button
                 type="button"
                 onClick={() => setSearchParams({})}
-                className="self-start text-sm underline dark:text-gray-50"
+                className={`self-start text-sm ${textLink}`}
               >
                 Back to all courses
               </button>
@@ -137,9 +138,16 @@ const Courses = () => {
               {unknownCode && (
                 <p
                   role="status"
-                  className="rounded-md bg-comp1 bg-opacity-50 p-3 text-sm dark:text-gray-50"
+                  className="rounded-lg bg-comp1 bg-opacity-50 p-3 text-sm dark:text-gray-50"
                 >
                   {unknownCode} is not in the course list
+                  <button
+                    type="button"
+                    onClick={() => setSearchParams({})}
+                    className={`ml-3 ${textLink}`}
+                  >
+                    Back to all courses
+                  </button>
                 </p>
               )}
               <GroupOverview

@@ -5,6 +5,7 @@ import { useAddToGrid } from "../../utils/useAddToGrid";
 import { describeStatus, getCourseStatus, getTakeTerms } from "../../utils/courseStatus";
 import { getRequirements, Requirement, Unlock } from "../../utils/prereqGraph";
 import CoursePills from "./CoursePills";
+import { buttonPrimary, eyebrow, input, panel, textLink } from "../../styles/ui";
 
 const CodeLink: FC<{
   code: string;
@@ -15,7 +16,7 @@ const CodeLink: FC<{
     <button
       type="button"
       onClick={() => onSelect(code)}
-      className="font-medium underline decoration-dotted underline-offset-2 hover:text-green4 dark:hover:text-green1"
+      className={`font-medium ${textLink}`}
     >
       {code}
     </button>
@@ -35,7 +36,7 @@ const Section: FC<{ title: string; children: ReactNode }> = ({
   children,
 }) => (
   <div>
-    <h4 className="font-semibold">{title}</h4>
+    <h4 className={`mb-1 ${eyebrow}`}>{title}</h4>
     {children}
   </div>
 );
@@ -96,7 +97,7 @@ const CourseDetail: FC<{
   return (
     <section
       data-testid="course-detail"
-      className="flex flex-col gap-3 rounded-md bg-neutral1 dark:bg-gray-600 dark:text-gray-50 p-4"
+      className={`flex flex-col gap-3 ${panel} dark:text-gray-50 p-4`}
     >
       <h3 className="text-xl font-medium">
         <span data-testid="detail-code">{code}</span>
@@ -117,7 +118,7 @@ const CourseDetail: FC<{
               aria-label="Term to add to"
               value={term}
               onChange={(e) => setPickedTerm(e.target.value)}
-              className="rounded border border-neutral3 px-1 py-1 text-sm text-black"
+              className={`${input} py-1 pr-1 text-sm`}
             >
               {openTerms.map((t) => (
                 <option key={t} value={t}>
@@ -134,18 +135,18 @@ const CourseDetail: FC<{
               const pos = addToGrid(code, term);
               setAdded(pos ? `Added to ${pos}` : "No valid slots left");
             }}
-            className="rounded bg-green3 px-3 py-1 text-sm font-medium text-white hover:bg-green4 disabled:opacity-50"
+            className={`${buttonPrimary} disabled:opacity-50 disabled:active:scale-100`}
           >
             {term
               ? `Add to ${term}${isOverload(term) ? " (overload)" : ""}`
               : "No free slots"}
           </button>
-          {added && (
-            <span role="status" className="text-sm">
-              {added}
-            </span>
-          )}
         </div>
+      )}
+      {added && (
+        <p role="status" className="text-sm font-medium text-green4 dark:text-green1">
+          {added}
+        </p>
       )}
       {preqs.length > 0 && (
         <Section title="Prerequisites">{renderList(preqs)}</Section>

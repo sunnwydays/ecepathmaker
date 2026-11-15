@@ -18,12 +18,12 @@ const CourseRow: FC<{
       aria-current={selected ? "true" : undefined}
       onClick={() => onSelect(code)}
       className={`
-        w-full text-left px-3 py-2 rounded-md border-l-4 flex flex-col gap-1
-        dark:text-gray-50
+        w-full text-left px-3 py-2 rounded-lg border flex flex-col gap-1
+        transition-colors dark:text-gray-50
         ${
           selected
-            ? "bg-green1 dark:bg-green3 border-green4 dark:border-green1"
-            : "bg-neutral1 dark:bg-gray-600 border-transparent hover:bg-neutral2 dark:hover:bg-gray-500"
+            ? "bg-green1/40 border-green2 dark:bg-green4/50"
+            : "bg-white border-neutral2 hover:border-green2 dark:bg-gray-600/50 dark:border-gray-500"
         }
       `}
     >
