@@ -16,3 +16,5 @@ jest.mock('react-helmet-async', () => ({
     Helmet: () => null,
     HelmetProvider: ({ children }: { children: ReactNode }) => children,
 }));
+// jsdom does not implement scrolling
+window.scrollTo = jest.fn();
