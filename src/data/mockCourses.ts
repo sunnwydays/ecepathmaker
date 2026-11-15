@@ -142,6 +142,7 @@ const courses: CourseList = {
     name: "Analog Signal Processing Circuits",
     streams: [3],
     onlyS: true,
+    preq: [["ECE331", "ECE354"]],
   },
   // area 4
   ECE311: {
@@ -487,10 +488,6 @@ const courses: CourseList = {
     isSciMath: true,
   },
   // Science/math only under the 2026 curriculum (via its flag override)
-  ECE357: {
-    name: "Electromagnetic Fields",
-    onlyF: true,
-  },
   ESC384: {
     name: "Partial Differential Equations",
     onlyF: true,
