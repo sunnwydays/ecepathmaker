@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { doc, deleteDoc } from "firebase/firestore";
 import { db, auth } from '../../firebase/firebase';
 import { eyebrow } from '../../styles/ui';
+import { useArmed } from '../../utils/useArmed';
 
 const footerLink = "hover:text-green3 hover:underline dark:hover:text-green1";
 
@@ -18,32 +19,36 @@ const Footer: FC<{ wide?: boolean }> = ({ wide = false }) => {
         }
     };
 
+    // Reset asks twice: the first click turns the button into "Sure?"
+    const { armed, arm, disarm } = useArmed();
+
     const resetChanges = async () => {
-        if (window.confirm(`Are you sure you want to reset all saved data in local storage and cloud (if signed in)? 
-This will remove your custom courses, undo your edits, and clear your layout. This will also allow updates to take effect.`)) {
-            const user = auth.currentUser;
-
-            if (user) {
-            try {
-                // Nuke the cloud record entirely
-                await nukeCloudData(user.uid); 
-            } catch (error) {
-                console.error("Firebase nuke failed:", error);
-            }
-            }
-
-            // Theme, curriculum and the sixth column are settings, not layout data, so keep them
-            const savedTheme = localStorage.getItem('theme');
-            const savedCurriculum = localStorage.getItem('curriculum');
-            const savedShowSixth = localStorage.getItem('showSixth');
-            localStorage.clear();
-
-            if (savedTheme) localStorage.setItem('theme', savedTheme);
-            if (savedCurriculum) localStorage.setItem('curriculum', savedCurriculum);
-            if (savedShowSixth) localStorage.setItem('showSixth', savedShowSixth);
-            window.location.reload();
-            
+        if (!armed) {
+            arm();
+            return;
         }
+        disarm();
+        const user = auth.currentUser;
+
+        if (user) {
+        try {
+            // Nuke the cloud record entirely
+            await nukeCloudData(user.uid); 
+        } catch (error) {
+            console.error("Firebase nuke failed:", error);
+        }
+        }
+
+        // Theme, curriculum and the sixth column are settings, not layout data, so keep them
+        const savedTheme = localStorage.getItem('theme');
+        const savedCurriculum = localStorage.getItem('curriculum');
+        const savedShowSixth = localStorage.getItem('showSixth');
+        localStorage.clear();
+
+        if (savedTheme) localStorage.setItem('theme', savedTheme);
+        if (savedCurriculum) localStorage.setItem('curriculum', savedCurriculum);
+        if (savedShowSixth) localStorage.setItem('showSixth', savedShowSixth);
+        window.location.reload();
     }
 
     const nukeCloudData = async (uid: string) => {
@@ -98,9 +103,18 @@ This will remove your custom courses, undo your edits, and clear your layout. Th
                         </a>
                     </p>
                     <p className="leading-7">
-                        <button onClick={resetChanges} className={footerLink}>
-                            Reset all changes
+                        <button
+                            onClick={resetChanges}
+                            onBlur={disarm}
+                            className={armed ? "font-medium text-comp3 dark:text-comp1" : footerLink}
+                        >
+                            {armed ? "Sure?" : "Reset all changes"}
                         </button>
+                        {armed && (
+                            <span className="ml-2 text-xs">
+                                Wipes your layout, custom courses and edits, here and in the cloud
+                            </span>
+                        )}
                     </p>
                 </div>
             </div>

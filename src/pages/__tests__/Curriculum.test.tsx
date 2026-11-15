@@ -1,6 +1,7 @@
 import { render, screen, fireEvent, within, cleanup } from '@testing-library/react';
 import { Maker, Courses } from '../../utils/pageImports';
 import { Layout } from '../../utils/componentImports';
+import { getRow } from '../../test-utils/getRow';
 import { MemoryRouter } from 'react-router-dom';
 
 // Same strings as in Maker.test.tsx (pre-2026 layouts that carry their own streams)
@@ -138,15 +139,15 @@ describe('Curriculum picker on the Maker page', () => {
         loadString(elePlan);
 
         expect(screen.getByText(/You graduate/)).toBeInTheDocument();
-        expect(screen.getByText(/Breadth: ✅ \(4\/4\)/)).toBeInTheDocument();
-        expect(screen.getByText(/Depth: ✅ \(4\/4\)/)).toBeInTheDocument();
-        expect(screen.getByText(/Technical electives: ✅ \(3\/3\)/)).toBeInTheDocument();
-        expect(screen.getByText(/Sci\/Math: ✅/)).toBeInTheDocument();
+        expect(getRow(/Breadth: ✅ \(4\/4\)/)).toBeInTheDocument();
+        expect(getRow(/Depth: ✅ \(4\/4\)/)).toBeInTheDocument();
+        expect(getRow(/Technical electives: ✅ \(3\/3\)/)).toBeInTheDocument();
+        expect(getRow(/Sci\/Math: ✅/)).toBeInTheDocument();
 
         pick('cpe-2026');
         expect(screen.getByText(/You are not graduating with this one/)).toBeInTheDocument();
-        expect(screen.getByText(/Breadth: ❌ \(3\/4\)/)).toBeInTheDocument();
-        expect(screen.getByText(/Depth: ❌/)).toBeInTheDocument();
+        expect(getRow(/Breadth: ❌ \(3\/4\)/)).toBeInTheDocument();
+        expect(getRow(/Depth: ❌/)).toBeInTheDocument();
     });
 
     it('shows the 2026 known-concerns text and group chart under a 2026 curriculum', () => {
@@ -256,11 +257,11 @@ describe('Custom courses with a group', () => {
         pick('ele-2026');
         // elePlan with ECE342 (a technical elective) replaced by a custom Group B course
         loadString(elePlan.replace('ECE342Computer Hardware%%s', 'XYZ123Custom%%sB'));
-        expect(screen.getByText(/Technical electives: ✅ \(3\/3\)/)).toBeInTheDocument();
+        expect(getRow(/Technical electives: ✅ \(3\/3\)/)).toBeInTheDocument();
 
         // Without the group the same course no longer counts
         loadString(elePlan.replace('ECE342Computer Hardware%%s', 'XYZ123Custom%%s'));
-        expect(screen.getByText(/Technical electives: ❌ \(2\/3\)/)).toBeInTheDocument();
+        expect(getRow(/Technical electives: ❌ \(2\/3\)/)).toBeInTheDocument();
     });
 
     it('streams come back after switching to the pre-2026 curriculum, and the group is ignored', () => {

@@ -1,4 +1,4 @@
-import { FC, Fragment } from "react";
+import { FC, Fragment, useEffect, useRef, useState } from "react";
 import { BarChart } from "@mui/x-charts/BarChart";
 import {
   Curriculum,
@@ -20,6 +20,25 @@ const DESIGNATION_TEXT: Record<Designation, string> = {
   EE: "EE 🔌",
 };
 
+// ✅/❌ that pops in when its value flips, not when it first appears
+const Tick: FC<{ met: boolean }> = ({ met }) => {
+  const first = useRef(true);
+  const [flips, setFlips] = useState(0);
+  useEffect(() => {
+    if (first.current) {
+      first.current = false;
+      return;
+    }
+    setFlips((n) => n + 1);
+  }, [met]);
+
+  return (
+    <span key={flips} className={flips ? "animate-in zoom-in-75 duration-150" : undefined}>
+      {met ? "✅" : "❌"}
+    </span>
+  );
+};
+
 const WillYouGraduate: FC<WillYouGraduateProps> = ({ result, curriculum }) => {
   const basics = result.results.filter((r) => r.section === "basics");
   const groupResults = result.results.filter((r) => r.section === "groups");
@@ -28,7 +47,7 @@ const WillYouGraduate: FC<WillYouGraduateProps> = ({ result, curriculum }) => {
     <li key={r.id} className="flex items-center">
       {r.label}
       <ClickableTooltip>{r.tooltip}</ClickableTooltip>:{" "}
-      {r.met ? "✅" : "❌"}
+      <Tick met={r.met} />
       {r.showProgress && ` (${r.have}/${r.need})`}
     </li>
   );

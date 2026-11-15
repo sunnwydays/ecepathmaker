@@ -11,6 +11,7 @@ import Announcement from "../info/Announcement";
 import TextInput from "./TextInput";
 import SubmitButton from "../SubmitButton";
 import { useCurriculum, useLayoutContext } from "../layout/Layout";
+import { useArmed } from "../../utils/useArmed";
 
 const CourseForm: FC<CourseFormProps> = ({
   customInfo,
@@ -53,7 +54,11 @@ const CourseForm: FC<CourseFormProps> = ({
     const { value } = e.target;
     setErrors((prev) => ({ ...prev, deleteCode: false, courseNotFound: false }));
     setDeleteCourse(value.toUpperCase());
+    disarmDelete();
   }
+
+  // Delete asks twice: the first press turns the button into "Sure?"
+  const { armed: deleteArmed, arm: armDelete, disarm: disarmDelete } = useArmed();
 
   const handleDelete = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -65,6 +70,11 @@ const CourseForm: FC<CourseFormProps> = ({
       setErrors((prev) => ({ ...prev, deleteCode: false, courseNotFound: true }));
       return;
     }
+    if (!deleteArmed) {
+      armDelete();
+      return;
+    }
+    disarmDelete();
 
     const positionToDelete = coursesUsed[deleteCourseCode];
     if (positionToDelete) {
@@ -87,7 +97,7 @@ const CourseForm: FC<CourseFormProps> = ({
       return newMap;
     });
 
-    setJustSubmitted(true);
+    setNotice("Course deleted!");
     setDeleteCourse("");
     setErrors((prev) => ({ ...prev, deleteCode: false, courseNotFound: false }));
   };
@@ -204,13 +214,13 @@ const CourseForm: FC<CourseFormProps> = ({
     });
   };
 
-  const [justSubmitted, setJustSubmitted] = useState(false);
+  const [notice, setNotice] = useState("");
   const timeoutRef = useRef<ReturnType<typeof setTimeout>>();
 
   useEffect(() => {
-    if (justSubmitted) {
+    if (notice) {
       timeoutRef.current = setTimeout(() => {
-        setJustSubmitted(false);
+        setNotice("");
       }, 2000);
     }
 
@@ -219,7 +229,7 @@ const CourseForm: FC<CourseFormProps> = ({
         clearTimeout(timeoutRef.current);
       }
     };
-  }, [justSubmitted]);
+  }, [notice]);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -260,7 +270,7 @@ const CourseForm: FC<CourseFormProps> = ({
       onlyS: false,
     });
 
-    setJustSubmitted(true);
+    setNotice("Course updated!");
   };
 
   return (
@@ -496,6 +506,9 @@ const CourseForm: FC<CourseFormProps> = ({
 
       <form
         onSubmit={handleDelete}
+        onBlur={(e) => {
+          if (!e.currentTarget.contains(e.relatedTarget)) disarmDelete();
+        }}
         className="flex flex-col lg:flex-row items-stretch lg:items-start gap-2"
         data-testid="course-delete-form"
       >
@@ -510,7 +523,12 @@ const CourseForm: FC<CourseFormProps> = ({
           />
         </div>
         
-        <SubmitButton variant="danger">Delete Course</SubmitButton>
+        <SubmitButton
+          variant="danger"
+          additionalStyles={deleteArmed ? "!bg-comp3 dark:!bg-comp4" : ""}
+        >
+          {deleteArmed ? "Sure?" : "Delete Course"}
+        </SubmitButton>
       </form>
       {errors.deleteCode && (
         <p className="text-comp3 text-sm">{errorMessages.code}</p>
@@ -519,9 +537,7 @@ const CourseForm: FC<CourseFormProps> = ({
         <p className="text-comp3 text-sm">{errorMessages.courseNotFound}</p>
       )}
 
-      {justSubmitted && (
-        <Announcement success={true}>Course updated!</Announcement>
-      )}
+      {notice && <Announcement success={true}>{notice}</Announcement>}
     </section>
   );
 };

@@ -1,6 +1,7 @@
 import { render, screen, fireEvent, prettyDOM, within, cleanup } from '@testing-library/react';
 import { Maker } from '../../utils/pageImports';
 import { Layout } from '../../utils/componentImports';
+import { getRow } from '../../test-utils/getRow';
 import { MemoryRouter } from 'react-router-dom';
 
 const mockCourse = {
@@ -148,10 +149,10 @@ describe('Maker', () => {
         fireEvent.click(loadLayout);
         
         expect(screen.getByText(/You are not graduating with this one/)).toBeInTheDocument();
-        expect(screen.getByText(/CS: ❌/)).toBeInTheDocument();
-        expect(screen.getByText(/Sci\/Math: ❌/)).toBeInTheDocument();
-        expect(screen.getByText(/Capstone: ✅/)).toBeInTheDocument();
-        expect(screen.getByText(/Economics: ✅/)).toBeInTheDocument();
+        expect(getRow(/CS: ❌/)).toBeInTheDocument();
+        expect(getRow(/Sci\/Math: ❌/)).toBeInTheDocument();
+        expect(getRow(/Capstone: ✅/)).toBeInTheDocument();
+        expect(getRow(/Economics: ✅/)).toBeInTheDocument();
     });
     
     it('evaluates successful graduation', () => {
@@ -163,9 +164,6 @@ describe('Maker', () => {
     });
     
     it('prevents invalid layouts from being loaded', () => {
-        // Mock clicking true on the alert window
-        const confirmSpy = jest.spyOn(window, 'confirm').mockImplementation(() => true);
-                
         // Clear layout
         const clearButton = screen.getByTestId('clear-grid');
         fireEvent.click(clearButton);
@@ -173,15 +171,12 @@ describe('Maker', () => {
         fireEvent.change(stringInput, { target: { value: 'something@@' } });
         fireEvent.click(loadLayout);
 
-        expect(confirmSpy).toHaveBeenCalled();
-
         expect(screen.getByText(/No courses in any stream yet/)).toBeInTheDocument();
         expect(stringInput).toHaveValue('something@@');
     });
 
-    it('clears the grid when the reset button is clicked and confirmed', () => {
-        // Mock clicking true on the alert window
-        const confirmSpy = jest.spyOn(window, 'confirm').mockImplementation(() => true);
+    it('clears the grid straight away and offers Undo', () => {
+        const confirmSpy = jest.spyOn(window, 'confirm');
 
         // Load a layout
         fireEvent.change(stringInput, { target: { value: mockLayouts.sampleGrad } });
@@ -191,33 +186,23 @@ describe('Maker', () => {
         const clearButton = screen.getByTestId('clear-grid');
         fireEvent.click(clearButton);
 
-        // Verify the confirm dialog was shown
-        expect(confirmSpy).toHaveBeenCalled();
-        expect(confirmSpy).toHaveBeenCalledWith("Are you sure you want to clear your layout? This will remove all courses from the grid.");
-
+        expect(confirmSpy).not.toHaveBeenCalled();
         expect(screen.getByText(/No courses in any stream yet/)).toBeInTheDocument();
+        expect(screen.getByText('Grid cleared')).toBeInTheDocument();
+        confirmSpy.mockRestore();
     });
 
-    it('does not clear the grid when user cancels the confirmation', () => {
-        // Mock window.confirm to return false (user clicks "Cancel")
-        const confirmSpy = jest.spyOn(window, 'confirm').mockImplementation(() => false);
-        
-        // Load a layout
+    it('puts the courses back when Undo is clicked after clearing', () => {
         fireEvent.change(stringInput, { target: { value: 'ECE331Analog Electronics%%3kf#b3e6b3$$' } });
         fireEvent.click(loadLayout);
-        
-        // Attempt to clear the grid but cancel
-        const clearButton = screen.getByTestId('clear-grid');
-        fireEvent.click(clearButton);
-        
-        // Verify the confirm dialog was shown
-        expect(confirmSpy).toHaveBeenCalled();
-        
-        // Verify the grid was NOT cleared - course should still be visible
         expect(screen.queryByText(/No courses in any stream yet/)).not.toBeInTheDocument();
-        
-        // Clean up the mock
-        confirmSpy.mockRestore();
+
+        fireEvent.click(screen.getByTestId('clear-grid'));
+        expect(screen.getByText(/No courses in any stream yet/)).toBeInTheDocument();
+
+        fireEvent.click(screen.getByText('Undo'));
+        expect(screen.queryByText(/No courses in any stream yet/)).not.toBeInTheDocument();
+        expect(screen.queryByText('Grid cleared')).not.toBeInTheDocument();
     });
 
     it('filters courses by course code and name', () => {
@@ -351,10 +336,8 @@ describe('Maker', () => {
         expect(screen.queryByText(/Layout 2/)).not.toBeInTheDocument();
 
         // Clear the grid
-        const confirmSpy = jest.spyOn(window, 'confirm').mockImplementation(() => true);
         const clearButton = screen.getByTestId('clear-grid');
         fireEvent.click(clearButton);
-        expect(confirmSpy).toHaveBeenCalled();
         expect(screen.getByText(/No courses in any stream yet/)).toBeInTheDocument();
 
         // Load slot 2 again (CE layout)
@@ -418,10 +401,14 @@ describe('Maker', () => {
 
         expect(screen.getByText(/ECE334/)).toBeInTheDocument();
 
-        const formSubmit = screen.getByText('Delete Course');
-        fireEvent.click(formSubmit);
+        // The first press only asks "Sure?"
+        fireEvent.click(screen.getByText('Delete Course'));
+        expect(screen.getByText(/Digital Electronics/)).toBeInTheDocument();
+
+        fireEvent.click(screen.getByText('Sure?'));
 
         expect(screen.queryByText(/ECE334/)).not.toBeInTheDocument();
         expect(screen.queryByText(/Digital Electronics/)).not.toBeInTheDocument();
+        expect(screen.getByText('Course deleted!')).toBeInTheDocument();
     });
 });

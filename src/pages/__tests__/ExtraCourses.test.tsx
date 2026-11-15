@@ -1,6 +1,7 @@
 import { render, screen, fireEvent, within } from '@testing-library/react';
 import { Maker } from '../../utils/pageImports';
 import { Layout } from '../../utils/componentImports';
+import { getRow } from '../../test-utils/getRow';
 import { MemoryRouter } from 'react-router-dom';
 
 const loadString = (str: string) => {
@@ -35,17 +36,17 @@ describe('Extra (EXT) courses on the grid', () => {
 
     it('toggling changes a requirement and the course limit count', () => {
         loadString('ECE472Engineering Economics%%$$ABC123Other%%');
-        expect(screen.getByText(/Economics: ✅/)).toBeInTheDocument();
-        expect(screen.getByText(/Course limit: ✅ \(2\/20\)/)).toBeInTheDocument();
+        expect(getRow(/Economics: ✅/)).toBeInTheDocument();
+        expect(getRow(/Course limit: ✅ \(2\/20\)/)).toBeInTheDocument();
         expand('ECE472');
         fireEvent.click(within(grid()).getByTestId('toggle-ext'));
         expect(within(grid()).getByTestId('ext-badge')).toBeInTheDocument();
-        expect(screen.getByText(/Economics: ❌/)).toBeInTheDocument();
-        expect(screen.getByText(/Course limit: ✅ \(1\/20\)/)).toBeInTheDocument();
+        expect(getRow(/Economics: ❌/)).toBeInTheDocument();
+        expect(getRow(/Course limit: ✅ \(1\/20\)/)).toBeInTheDocument();
 
         fireEvent.click(within(grid()).getByTestId('toggle-ext'));
         expect(within(grid()).queryByTestId('ext-badge')).not.toBeInTheDocument();
-        expect(screen.getByText(/Economics: ✅/)).toBeInTheDocument();
+        expect(getRow(/Economics: ✅/)).toBeInTheDocument();
         // Unmarking deletes the key instead of storing false
         expect('isExtra' in storedCourse('ECE472')).toBe(false);
     });
@@ -68,7 +69,6 @@ describe('Extra (EXT) courses on the grid', () => {
     it('is cleared when the grid is cleared', () => {
         expand('CST000');
         fireEvent.click(within(grid()).getByTestId('toggle-ext'));
-        jest.spyOn(window, 'confirm').mockReturnValue(true);
         fireEvent.click(screen.getByTestId('clear-grid'));
         expect('isExtra' in storedCourse('CST000')).toBe(false);
     });

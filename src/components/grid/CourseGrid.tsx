@@ -335,9 +335,29 @@ const CourseGrid: FC<CourseGridProps> = ({
         hover:duration-100 active:scale-95
     `; // specify default text- color, hover:bg- color, and ring- color
 
+  // Clear goes straight through; the announcement offers Undo for a few seconds
+  const UNDO_MS = 5000;
+  const [undo, setUndo] = useState<{
+    courses: typeof courses;
+    coursesUsed: typeof coursesUsed;
+    coursesOnGrid: typeof coursesOnGrid;
+  } | null>(null);
+  useEffect(() => {
+    if (!undo) return;
+    const timer = setTimeout(() => setUndo(null), UNDO_MS);
+    return () => clearTimeout(timer);
+  }, [undo]);
+
+  const undoClear = () => {
+    if (!undo) return;
+    setCourses(undo.courses);
+    setCoursesUsed(undo.coursesUsed);
+    setCoursesOnGrid(undo.coursesOnGrid);
+    setUndo(null);
+  };
+
   const clearGrid = () => {
-    if (!window.confirm("Are you sure you want to clear your layout? This will remove all courses from the grid."))
-      return;
+    setUndo({ courses, coursesUsed, coursesOnGrid });
 
     setCoursesUsed(() => {
       const posMap: CoursesUsed = {};
@@ -349,6 +369,7 @@ const CourseGrid: FC<CourseGridProps> = ({
   };
 
   const screenshotRef = createRef<HTMLDivElement>();
+  const [screenshotFailed, setScreenshotFailed] = useState(false);
 
   const handleCapture = async () => {
     if (!screenshotRef.current) return;
@@ -362,6 +383,8 @@ const CourseGrid: FC<CourseGridProps> = ({
       link.click();
     } catch (error) {
       console.error('Could not generate layout screenshot', error);
+      setScreenshotFailed(true);
+      setTimeout(() => setScreenshotFailed(false), 2000);
     }
   };
 
@@ -596,6 +619,12 @@ const CourseGrid: FC<CourseGridProps> = ({
 
         return <Announcement>{message}</Announcement>;
       })()}
+      {undo && (
+        <Announcement success duration={UNDO_MS} action={{ label: "Undo", onClick: undoClear }}>
+          Grid cleared
+        </Announcement>
+      )}
+      {screenshotFailed && <Announcement>Could not take the screenshot</Announcement>}
       <Filter filters={filters} setFilters={setFilters} quickAdd />
       <WillYouGraduate result={result} curriculum={curriculum} />
     </DndContext>
