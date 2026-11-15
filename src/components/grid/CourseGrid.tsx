@@ -35,6 +35,7 @@ import { addDependencies } from "../../utils/utilImports";
 import { emptyGrid, filterCourses } from "../../utils/utilImports";
 import { evaluate, getMembership, hasFlag } from "../../requirements/evaluate";
 import { useCurriculum, useLayoutContext } from "../layout/Layout";
+import { clearExtra, toggleExtra } from "../../utils/extraCourses";
 
 enum DropError {
   NONE = "NONE",
@@ -51,6 +52,7 @@ const CourseGrid: FC<CourseGridProps> = ({
 }) => {
   const {
     courses,
+    setCourses,
     coursesUsed,
     setCoursesUsed,
     coursesOnGrid,
@@ -123,6 +125,7 @@ const CourseGrid: FC<CourseGridProps> = ({
       ...prev,
       [code]: "" as GridPosition,
     }));
+    setCourses((prev) => clearExtra(prev, [String(code)]));
     setCurrDeps(new Set());
     setDropError(DropError.NONE);
   }
@@ -327,6 +330,7 @@ const CourseGrid: FC<CourseGridProps> = ({
       return posMap;
     });
     setCoursesOnGrid(emptyGrid);
+    setCourses((prev) => clearExtra(prev, Object.keys(prev)));
   };
 
   const screenshotRef = createRef<HTMLDivElement>();
@@ -411,6 +415,9 @@ const CourseGrid: FC<CourseGridProps> = ({
                       valid={validYearTerms[getYearTerm(slot as GridPosition)]}
                       id={courseCode}
                       code={courseCode}
+                      onToggleExtra={() =>
+                        setCourses((prev) => toggleExtra(prev, courseCode))
+                      }
                       setCustomInfo={setCustomInfo}
                       setPreqString={setPreqString}
                       setCoreqString={setCoreqString}

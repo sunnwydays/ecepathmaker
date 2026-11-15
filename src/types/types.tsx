@@ -36,6 +36,8 @@ export interface DraggableCardProps extends CourseCardProps {
 
 export interface MakerCardProps extends DraggableCardProps {
     valid: boolean;
+    // Only for cards on the grid: switches the extra (EXT) flag
+    onToggleExtra?: () => void;
     setCustomInfo: React.Dispatch<React.SetStateAction<CourseCardProps>>;
     setPreqString: React.Dispatch<React.SetStateAction<string>>;
     setCoreqString: React.Dispatch<React.SetStateAction<string>>;

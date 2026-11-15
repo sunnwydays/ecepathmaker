@@ -40,6 +40,7 @@ const MakerCard: FC<MakerCardProps> = (props) => {
       streams: props.streams,
       ...(props.group && { group: props.group }),
       ...(props.kernel && { kernel: props.kernel }),
+      ...(props.isExtra && { isExtra: true }),
       color: props.color ?? "",
       isCS: props.isCS,
       isHSS: props.isHSS,
@@ -102,6 +103,29 @@ const MakerCard: FC<MakerCardProps> = (props) => {
           {isExpanded && props.coreq && props.coreq.length > 0 && (
             <p>Coreq: {getPreqLabels(props.coreq)}</p>
           )}
+          {isExpanded && props.onToggleExtra && (
+            <div
+              className={`absolute top-0 right-10 text-[10px] font-medium leading-none rounded-full p-1 border border-black border-opacity-30 ${
+                props.isExtra ? "bg-black bg-opacity-30" : "bg-white bg-opacity-20"
+              }`}
+              onClick={(e) => {
+                e.stopPropagation();
+                props.onToggleExtra?.();
+              }}
+              onKeyDown={(e) => {
+                if (e.key !== "Enter" && e.key !== " ") return;
+                e.stopPropagation();
+                props.onToggleExtra?.();
+              }}
+              tabIndex={0}
+              role="button"
+              aria-pressed={Boolean(props.isExtra)}
+              title="Extra course: not for degree credit"
+              data-testid="toggle-ext"
+            >
+              EXT
+            </div>
+          )}
           {isExpanded && (
             <div // because button cannot be a child of a button
               className="absolute top-0 right-4 text-xs rouned-full p-1"
@@ -112,6 +136,14 @@ const MakerCard: FC<MakerCardProps> = (props) => {
             >
               ✏️
             </div>
+          )}
+          {props.isExtra && (
+            <span
+              className="absolute top-0 left-0 text-xs bg-white bg-opacity-20 rounded-full p-1"
+              data-testid="ext-badge"
+            >
+              EXT
+            </span>
           )}
           {(() => {
             if (props.onlyF && props.onlyS) {
