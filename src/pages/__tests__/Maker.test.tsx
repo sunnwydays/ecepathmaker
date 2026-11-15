@@ -69,6 +69,23 @@ describe('Maker', () => {
         expect(within(bucket).getByText(/Preq: ECE987/)).toBeInTheDocument();
     });
     
+    it('keeps the kernel flag of a custom course after editing it', () => {
+        // jsdom has no scrollIntoView, which handleEdit calls
+        Element.prototype.scrollIntoView = jest.fn();
+        fireEvent.change(stringInput, { target: { value: 'XYZ123Custom Kernel%%1k$$' } });
+        fireEvent.click(loadLayout);
+
+        const grid = screen.getByTestId('grid');
+        expect(within(grid).getByText('Stream: 1 (k)')).toBeInTheDocument();
+
+        // Expand the card, edit it, and submit without touching anything
+        fireEvent.click(within(grid).getByText(/XYZ123/));
+        fireEvent.click(within(grid).getByText('✏️'));
+        fireEvent.click(screen.getByText('Add/Update Course'));
+
+        expect(within(grid).getByText('Stream: 1 (k)')).toBeInTheDocument();
+    });
+
     it('parses multiple prerequisites', () => {
         // Simulate user input
         const codeInput = screen.getByTestId('code-input')
