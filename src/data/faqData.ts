@@ -72,7 +72,19 @@ const usingTheMaker: FAQ = [
     },
     {
         question: "What are the XX slots for?",
-        answer: "The fifth row is for extra courses taken in the first two years or for overloading. XX courses will be considered as early prerequisites, and also have their prerequisites waived."
+        answer: "The top row is for courses you take before third year. XX courses count as early prerequisites, and they have their own prerequisites waived. They still count toward the 20 courses of the degree (see the course limit below)."
+    },
+    {
+        question: "How do I plan an overloaded term (6 courses)?",
+        answer: "Click \"Show 6th column\" next to the Screenshot button, then drag a course into the sixth slot of the term. Six courses (3.00 credits) is the calendar's maximum, and students in second year or higher need approval from their advisor to take more than the normal five. The column stays visible while it holds a course."
+    },
+    {
+        question: "Where do I put a summer course?",
+        answer: "There is no summer row. Put it in the sixth slot of the term before or after the summer."
+    },
+    {
+        question: "How do I mark a course as extra (EXT)?",
+        answer: "Click a course on the grid, then click EXT next to the pencil. An extra course does not count toward any degree requirement, but it still works as a prerequisite and still counts toward minors and certificates. The graduation check fails the course limit when more than 20 courses on the grid count for the degree; the app does not choose which ones are extra, so decide with your advisor and mark them. The flag is cleared when the course leaves the grid."
     },
     {
         question: "Can I add courses using the keyboard? / How can I quickly add courses copying another format (e.g. Magellan)?",
