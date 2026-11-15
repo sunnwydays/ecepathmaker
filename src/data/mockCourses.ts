@@ -138,6 +138,11 @@ const courses: CourseList = {
     onlyS: true,
     preq: [["ECE342", "ECE352"]],
   },
+  ECE412: {
+    name: "Analog Signal Processing Circuits",
+    streams: [3],
+    onlyS: true,
+  },
   // area 4
   ECE311: {
     name: "Introduction to Control Systems",
@@ -231,6 +236,11 @@ const courses: CourseList = {
   },
   ECE516: {
     name: "Intelligent Image Processing",
+    streams: [4],
+    onlyS: true,
+  },
+  ECE381: {
+    name: "Foundations and Frontiers in Cybersecurity",
     streams: [4],
     onlyS: true,
   },
@@ -475,6 +485,11 @@ const courses: CourseList = {
     name: "Matrix Algebra and Optimization",
     onlyF: true,
     isSciMath: true,
+  },
+  // Science/math only under the 2026 curriculum (via its flag override)
+  ECE357: {
+    name: "Electromagnetic Fields",
+    onlyF: true,
   },
   ESC384: {
     name: "Partial Differential Equations",
