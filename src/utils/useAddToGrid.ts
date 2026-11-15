@@ -4,8 +4,9 @@ import { GridPosition, YearTerm } from "../types/types";
 import { addDependencies } from "./addDependencies";
 import { getValidYearTerms } from "./getValidYearTerms";
 
-// Returns a function that puts a course on the earliest valid empty slot and
-// gives back that slot, or '' when there is none.
+// Returns a function that puts a course on an empty slot (the earliest valid
+// one, or the first empty slot of `term`) and gives back that slot, or ''
+// when there is none.
 export const useAddToGrid = () => {
   const {
     courses,
@@ -17,7 +18,7 @@ export const useAddToGrid = () => {
     setDependencies,
   } = useLayoutContext();
 
-  return (code: UniqueIdentifier): GridPosition => {
+  return (code: UniqueIdentifier, term?: YearTerm): GridPosition => {
     const validYearTerms = getValidYearTerms({
       coursesOnGrid,
       coursesUsed,
@@ -27,7 +28,12 @@ export const useAddToGrid = () => {
     let targetPos: GridPosition = "";
     for (const [pos, onGrid] of Object.entries(coursesOnGrid)) {
       // The sixth column is only for courses the student drags there
-      if (!onGrid && !pos.endsWith(".6") && validYearTerms[pos.slice(0, 2) as YearTerm]) {
+      if (
+        !onGrid &&
+        !pos.endsWith(".6") &&
+         validYearTerms[pos.slice(0, 2) as YearTerm] &&
+        (!term || pos.startsWith(term))
+      ) {
         targetPos = pos as GridPosition;
         break;
       }

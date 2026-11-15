@@ -186,12 +186,19 @@ describe('Courses page', () => {
 
     it('adds a course to the grid with the button, only when it can be taken', () => {
         renderPage('/courses?c=ECE464');
-        expect(screen.queryByRole('button', { name: 'Add to Grid' })).not.toBeInTheDocument();
+        expect(screen.queryByRole('button', { name: /^Add to / })).not.toBeInTheDocument();
 
         fireEvent.click(getRow('ECE302'));
-        fireEvent.click(screen.getByRole('button', { name: 'Add to Grid' }));
-        expect(screen.queryByRole('button', { name: 'Add to Grid' })).not.toBeInTheDocument();
+        fireEvent.click(screen.getByRole('button', { name: 'Add to 3F' }));
+        expect(screen.queryByRole('button', { name: /^Add to / })).not.toBeInTheDocument();
         expect(within(screen.getByTestId('course-detail')).getByText(/In 3F on your grid/)).toBeInTheDocument();
         expect(within(getRow('ECE302')).getByText(/In 3F/)).toBeInTheDocument();
+    });
+
+    it('lets you pick the term to add a course to', () => {
+        renderPage('/courses?c=ECE302');
+        fireEvent.change(screen.getByLabelText('Term to add to'), { target: { value: '4F' } });
+        fireEvent.click(screen.getByRole('button', { name: 'Add to 4F' }));
+        expect(within(screen.getByTestId('course-detail')).getByText(/In 4F on your grid/)).toBeInTheDocument();
     });
 });

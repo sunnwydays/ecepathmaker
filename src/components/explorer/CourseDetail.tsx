@@ -1,8 +1,8 @@
 import { FC, ReactNode, useState } from "react";
-import { CourseList, CoursesOnGrid, CoursesUsed } from "../../types/types";
+import { CourseList, CoursesOnGrid, CoursesUsed, YearTerm } from "../../types/types";
 import { coreCourses } from "../../data/coreCourses";
 import { useAddToGrid } from "../../utils/useAddToGrid";
-import { describeStatus, getCourseStatus } from "../../utils/courseStatus";
+import { describeStatus, getCourseStatus, getTakeTerms } from "../../utils/courseStatus";
 import { getRequirements, Requirement, Unlock } from "../../utils/prereqGraph";
 import CoursePills from "./CoursePills";
 
@@ -57,6 +57,20 @@ const CourseDetail: FC<{
   const statusText = describeStatus(status);
   const addToGrid = useAddToGrid();
   const [added, setAdded] = useState<string | null>(null);
+  const [pickedTerm, setPickedTerm] = useState<string>("");
+
+  // terms the course is valid in that still have an empty slot
+  const openTerms =
+    status.kind === "canTake"
+      ? getTakeTerms(course, coursesUsed, coursesOnGrid).filter((term) =>
+          Object.entries(coursesOnGrid).some(
+            ([pos, c]) => !c && pos.startsWith(term) && !pos.endsWith(".6")
+          )
+        )
+      : [];
+  const term = (openTerms as string[]).includes(pickedTerm)
+    ? (pickedTerm as YearTerm)
+    : openTerms[0];
 
   const renderList = (list: Requirement[]) => (
     <ul className="flex flex-wrap gap-x-4 gap-y-1">
@@ -93,15 +107,30 @@ const CourseDetail: FC<{
       </p>
       {status.kind === "canTake" && (
         <div className="flex items-center gap-3">
+          {openTerms.length > 1 && (
+            <select
+              aria-label="Term to add to"
+              value={term}
+              onChange={(e) => setPickedTerm(e.target.value)}
+              className="rounded border border-neutral3 px-1 py-1 text-sm text-black"
+            >
+              {openTerms.map((t) => (
+                <option key={t} value={t}>
+                  {t}
+                </option>
+              ))}
+            </select>
+          )}
           <button
             type="button"
+            disabled={!term}
             onClick={() => {
-              const pos = addToGrid(code);
+              const pos = addToGrid(code, term);
               setAdded(pos ? `Added to ${pos}` : "No valid slots left");
             }}
-            className="rounded bg-green3 px-3 py-1 text-sm font-medium text-white hover:bg-green4"
+            className="rounded bg-green3 px-3 py-1 text-sm font-medium text-white hover:bg-green4 disabled:opacity-50"
           >
-            Add to Grid
+            {term ? `Add to ${term}` : "No free slots"}
           </button>
           {added && (
             <span role="status" className="text-sm">

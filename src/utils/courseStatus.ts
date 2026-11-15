@@ -17,6 +17,16 @@ export type CourseStatus =
 
 const TERMS: YearTerm[] = ["3F", "3S", "4F", "4S"];
 
+// The terms from 3F to 4S the course can go in, earliest first
+export const getTakeTerms = (
+  course: CourseList[string],
+  coursesUsed: CoursesUsed,
+  coursesOnGrid: CoursesOnGrid
+): YearTerm[] => {
+  const valid = getValidYearTerms({ coursesOnGrid, coursesUsed, course });
+  return TERMS.filter((term) => valid[term]);
+};
+
 // Where a course stands for the user's current grid. Uses the same rules as
 // the Maker, so the explorer and the Maker agree.
 export const getCourseStatus = (
@@ -31,8 +41,7 @@ export const getCourseStatus = (
   const course = courses[code];
   if (!course) return { kind: "external" };
 
-  const valid = getValidYearTerms({ coursesOnGrid, coursesUsed, course });
-  const from = TERMS.find((term) => valid[term]);
+  const [from] = getTakeTerms(course, coursesUsed, coursesOnGrid);
   return from ? { kind: "canTake", from } : { kind: "missing" };
 };
 
