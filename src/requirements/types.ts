@@ -19,6 +19,8 @@ interface RuleBase {
   label: string;
   tooltip: string;
   section: RuleSection;
+  // Show "(have/need)" after the tick or cross.
+  showProgress?: true;
 }
 
 export type Rule = RuleBase &
@@ -78,6 +80,7 @@ export interface RequirementResult {
   label: string;
   tooltip: string;
   section: RuleSection;
+  showProgress?: true;
   met: boolean;
   have: number;
   need: number;

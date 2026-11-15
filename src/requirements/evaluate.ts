@@ -191,6 +191,7 @@ export function evaluate(
         label: rule.label,
         tooltip: rule.tooltip,
         section: rule.section,
+        ...(rule.showProgress && { showProgress: true as const }),
         met,
         have,
         need,

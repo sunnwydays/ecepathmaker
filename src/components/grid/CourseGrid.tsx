@@ -33,8 +33,8 @@ import { getYearTerm } from "../../utils/getYearTerm";
 import Announcement from "../info/Announcement";
 import { addDependencies } from "../../utils/utilImports";
 import { emptyGrid, filterCourses } from "../../utils/utilImports";
-import { computeConditions } from "../../utils/computeConditions";
-import { useLayoutContext } from "../layout/Layout";
+import { evaluate } from "../../requirements/evaluate";
+import { useCurriculum, useLayoutContext } from "../layout/Layout";
 
 enum DropError {
   NONE = "NONE",
@@ -86,9 +86,10 @@ const CourseGrid: FC<CourseGridProps> = ({
   const [validYearTerms, setValidYearTerms] = useState<ValidYearTerms>(initialValidYearTerms);
   const [activeCourse, setActiveCourse] = useState<UniqueIdentifier | null>(null);
 
-  const conditions = useMemo(
-    () => computeConditions({ coursesOnGrid, courses, coursesUsed }),
-    [coursesOnGrid, courses, coursesUsed]
+  const curriculum = useCurriculum();
+  const result = useMemo(
+    () => evaluate(curriculum, { courses, coursesOnGrid, coursesUsed }),
+    [curriculum, coursesOnGrid, courses, coursesUsed]
   );
 
   const sensors = useSensors(
@@ -548,7 +549,7 @@ const CourseGrid: FC<CourseGridProps> = ({
         return <Announcement>{message}</Announcement>;
       })()}
       <Filter filters={filters} setFilters={setFilters} />
-      <WillYouGraduate conditions={conditions} />
+      <WillYouGraduate result={result} curriculum={curriculum} />
     </DndContext>
   );
 };

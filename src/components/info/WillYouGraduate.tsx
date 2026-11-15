@@ -1,73 +1,44 @@
-import { FC } from "react";
+import { FC, Fragment } from "react";
 import { BarChart } from "@mui/x-charts/BarChart";
-import { StreamRequirements } from "../../types/types";
+import {
+  Curriculum,
+  Designation,
+  EvaluationResult,
+  RequirementResult,
+} from "../../requirements/types";
 import { ClickableTooltip } from "../../utils/componentImports";
 import { useDarkMode } from "../../utils/utilImports";
 
 interface WillYouGraduateProps {
-  conditions: StreamRequirements;
+  result: EvaluationResult;
+  curriculum: Curriculum;
 }
 
-const WillYouGraduate: FC<WillYouGraduateProps> = ({ conditions }) => {
-  interface Requirement {
-    label: string;
-    tooltip: string;
-    condition: keyof typeof conditions;
-  }
+const DESIGNATION_TEXT: Record<Designation, string> = {
+  CE: "CE 🖥",
+  ECE: "CE or EE ⚡",
+  EE: "EE 🔌",
+};
 
-  const GRADUATION_REQUIREMENTS: Requirement[] = [
-    {
-      label: "CS",
-      tooltip: "At least 4 complementary study electives (including HSS)",
-      condition: "hasCS",
-    },
-    {
-      label: "HSS",
-      tooltip: "At least 2 humanities/social science electives",
-      condition: "hasHSS",
-    },
-    {
-      label: "Economics",
-      tooltip: "ECE472 required",
-      condition: "hasEconomics",
-    },
-    {
-      label: "Capstone",
-      tooltip: "Both halves of the fourth-year capstone required",
-      condition: "hasCapstone",
-    },
-    {
-      label: "Sci/Math",
-      tooltip: "At least 1 course labelled as science/math (Area 7)",
-      condition: "hasSciMath",
-    },
-  ];
+const WillYouGraduate: FC<WillYouGraduateProps> = ({ result, curriculum }) => {
+  const basics = result.results.filter((r) => r.section === "basics");
+  const groupResults = result.results.filter((r) => r.section === "groups");
 
-  const graduation =
-    conditions.hasBreadth &&
-    conditions.hasDepth &&
-    conditions.hasCS &&
-    conditions.hasHSS &&
-    conditions.hasSciMath &&
-    conditions.hasEconomics &&
-    conditions.hasCapstone;
-
-  const graphColors = [
-    "#ffcc99",
-    "#99ccff",
-    "#b3e6b3",
-    "#e6b3ff",
-    "#ffb3b3",
-    "#ffd699",
-  ];
-
-  const streamData = Object.entries(conditions.streamCounts).filter(
-    ([, count]) => count > 0
+  const renderResult = (r: RequirementResult) => (
+    <li key={r.id} className="flex items-center">
+      {r.label}
+      <ClickableTooltip>{r.tooltip}</ClickableTooltip>:{" "}
+      {r.met ? "✅" : "❌"}
+      {r.showProgress && ` (${r.have}/${r.need})`}
+    </li>
   );
 
-  const streams = streamData.map(([stream]) => Number(stream));
-  const counts = streamData.map(([, count]) => count);
-  const colors = streams.map((stream) => graphColors[stream - 1]);
+  const chartGroups = curriculum.groups.filter(
+    (g) => result.groupCounts[g.id] > 0
+  );
+  const streams = chartGroups.map((g) => g.label);
+  const counts = chartGroups.map((g) => result.groupCounts[g.id]);
+  const colors = chartGroups.map((g) => g.chartColor);
 
   const isDarkMode = useDarkMode();
   const axisColor = isDarkMode ? '#f9fafb' : '#000000'; // gray-50 / black
@@ -85,52 +56,46 @@ const WillYouGraduate: FC<WillYouGraduateProps> = ({ conditions }) => {
         <div className="mb-4">
           <h3 className="text-lg font-semibold mb-1">Basics</h3>
           <ul className="space-y-1">
-            {GRADUATION_REQUIREMENTS.map(({ label, tooltip, condition }) => (
-              <li key={label} className="flex items-center">
-                {label}
-                <ClickableTooltip>{tooltip}</ClickableTooltip>:{" "}
-                {conditions[condition] ? "✅" : "❌"}
-              </li>
-            ))}
+            {basics.map(renderResult)}
           </ul>
         </div>
 
         <div>
           <h3 className="text-lg font-semibold mb-1">Depth and Breadth</h3>
           <ul className="space-y-1">
-            <li className="flex items-center">
-              Depth
-              <ClickableTooltip>
-                Has stream kernel + 2 other stream courses
-              </ClickableTooltip>
-              : {conditions.hasDepth ? "✅" : "❌"}
-            </li>
-            {conditions.depthStreams?.length > 0 && (
-              <li>Depth streams: {conditions.depthStreams?.join(", ")}</li>
-            )}
+            {groupResults.map((r) => (
+              <Fragment key={r.id}>
+                {renderResult(r)}
+                {r.id === "depth" && result.depthGroups.length > 0 && (
+                  <li>Depth streams: {result.depthGroups.join(", ")}</li>
+                )}
+                {r.id === "breadth" && result.breadthGroups.length > 0 && (
+                  <li>Breadth streams: {result.breadthGroups.join(", ")}</li>
+                )}
+              </Fragment>
+            ))}
 
-            <li className="flex items-center">
-              Breadth<ClickableTooltip>Has stream kernel</ClickableTooltip>:{" "}
-              {conditions.hasBreadth ? "✅" : "❌"}
-            </li>
-            {conditions.breadthStreams?.length > 0 && (
-              <li>Breadth streams: {conditions.breadthStreams?.join(", ")}</li>
+            {curriculum.designation.type === "derived" ? (
+              <li>
+                CE/EE:{" "}
+                {result.designation ? (
+                  <b className="font-semibold">
+                    {DESIGNATION_TEXT[result.designation]}
+                  </b>
+                ) : (
+                  "none"
+                )}
+              </li>
+            ) : (
+              <li>
+                Program:{" "}
+                {result.designation && (
+                  <b className="font-semibold">
+                    {DESIGNATION_TEXT[result.designation]}
+                  </b>
+                )}
+              </li>
             )}
-
-            <li>
-              CE/EE:{" "}
-              {conditions.ceOrEE ? (
-                <b className="font-semibold">
-                  {conditions.ceOrEE === "CE"
-                    ? "CE 🖥"
-                    : conditions.ceOrEE === "ECE"
-                    ? "CE or EE ⚡"
-                    : "EE 🔌"}
-                </b>
-              ) : (
-                "none"
-              )}
-            </li>
           </ul>
         </div>
 
@@ -183,7 +148,7 @@ const WillYouGraduate: FC<WillYouGraduateProps> = ({ conditions }) => {
                 mt-4 p-8 flex flex-col items-center justify-center 
                 w-full bg-neutral1 dark:bg-gray-800 rounded shadow"
       >
-        {graduation ? (
+        {result.graduates ? (
           <h2 className="text-2xl font-semibold text-green3">
             🎓 You graduate
           </h2>
@@ -193,16 +158,13 @@ const WillYouGraduate: FC<WillYouGraduateProps> = ({ conditions }) => {
           </h2>
         )}
         <div className="text-neutral-500 dark:text-gray-400 mt-4 text-sm">
-          <p>
-            Check on your own: Natural sciences, Free & technical elective, PEY
-            / 600h technical XP, CEAB, No exclusion violation, Within 1.5 credit
-            ArtSci -300/-400 limit
-          </p>
+          <p>Check on your own: {curriculum.manualChecks}</p>
           <p>
             Known concerns:{" "}
             <b className="font-medium">
-              A course in multiple streams will in all of those streams which
-              may affect your depth and breadth calculation
+              {curriculum.membership
+                ? "Custom courses can't be assigned to group A, B or C yet"
+                : "A course in multiple streams will in all of those streams which may affect your depth and breadth calculation"}
             </b>
             , dragging a course with prereq then removing prereq, no minor/cert
             check.

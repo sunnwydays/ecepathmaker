@@ -45,6 +45,7 @@ const rulesFor = (main: string): Rule[] => [
   ...commonRules,
   {
     id: "breadth",
+    showProgress: true,
     label: "Breadth",
     tooltip: `3 Group ${main} kernels + 1 Group B kernel`,
     section: "groups",
@@ -56,6 +57,7 @@ const rulesFor = (main: string): Rule[] => [
   },
   {
     id: "depth",
+    showProgress: true,
     label: "Depth",
     tooltip: `2 more Group ${main} courses + 2 more Group B courses (extra kernels count)`,
     section: "groups",
@@ -76,6 +78,7 @@ const rulesFor = (main: string): Rule[] => [
   },
   {
     id: "techElectives",
+    showProgress: true,
     label: "Technical electives",
     tooltip:
       "3 more courses from any group. One may come from another department with ECE approval (not checked here)",
