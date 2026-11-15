@@ -58,6 +58,18 @@ export const applyPlan = ({
         warnings.push(`${code} is already in ${current.split(".")[0]}`);
         return;
       }
+      // A course offered in only one term never goes into the other one
+      if (term !== "XX") {
+        const fall = term.endsWith("F");
+        if (courses[code].onlyF && !fall) {
+          warnings.push(`${code} is F only, so it was not loaded into ${term}`);
+          return;
+        }
+        if (courses[code].onlyS && fall) {
+          warnings.push(`${code} is S only, so it was not loaded into ${term}`);
+          return;
+        }
+      }
       const free = SLOTS.find((slot) => grid[slotKey(term, slot)] === "");
       if (free === undefined) {
         warnings.push(`${term} is full, ${code} was left out`);
@@ -69,34 +81,51 @@ export const applyPlan = ({
     });
   });
 
-  const coursesUsed: CoursesUsed = {};
-  Object.keys(courses).forEach((code) => (coursesUsed[code] = ""));
+  const buildUsed = () => {
+    const used: CoursesUsed = {};
+    Object.keys(courses).forEach((code) => (used[code] = ""));
+    (Object.keys(grid) as GridPositionBase[]).forEach((position) => {
+      const code = grid[position];
+      if (code && courses[code]) used[code] = position;
+    });
+    return used;
+  };
 
+  // The same prerequisite check the Maker uses to grey out a card. A course
+  // that fails it is removed, which can break a course that needs it, so repeat
+  for (;;) {
+    const used = buildUsed();
+    const bad: [GridPositionBase, string][] = [];
+    PLAN_TERMS.forEach((term) => {
+      if (!plan[term] || term === "XX") return;
+      SLOTS.forEach((slot) => {
+        const position = slotKey(term, slot);
+        const code = grid[position];
+        if (!code) return;
+        const valid = getValidYearTerms({
+          coursesOnGrid: grid,
+          coursesUsed: used,
+          course: courses[code],
+        });
+        if (!valid[term]) bad.push([position, code]);
+      });
+    });
+    if (!bad.length) break;
+    bad.forEach(([position, code]) => {
+      grid[position] = "";
+      placed--;
+      warnings.push(
+        `${code} was not loaded into ${position.split(".")[0]}: its prerequisites or corequisites are not in time`
+      );
+    });
+  }
+
+  const coursesUsed = buildUsed();
   const dependencies = new Map<UniqueIdentifier, Set<UniqueIdentifier>>();
   (Object.keys(grid) as GridPositionBase[]).forEach((position) => {
     const code = grid[position];
     if (!code || !courses[code]) return;
-    coursesUsed[code] = position;
     addDependencies({ code, courses, dependencies });
-  });
-
-  // The same term and prerequisite check the Maker uses to grey out a card
-  PLAN_TERMS.forEach((term) => {
-    if (!plan[term] || term === "XX") return;
-    SLOTS.forEach((slot) => {
-      const code = grid[slotKey(term, slot)];
-      if (!code) return;
-      const course = courses[code];
-      const valid = getValidYearTerms({ coursesOnGrid: grid, coursesUsed, course });
-      if (valid[term]) return;
-      const fall = term.endsWith("F");
-      if (course.onlyF && !fall) warnings.push(`${code} is F only but is in ${term}`);
-      else if (course.onlyS && fall) warnings.push(`${code} is S only but is in ${term}`);
-      else
-        warnings.push(
-          `${code} is in ${term} without its prerequisites or corequisites in time`
-        );
-    });
   });
 
   return { coursesOnGrid: grid, coursesUsed, dependencies, placed, warnings };

@@ -127,16 +127,21 @@ describe("applyPlan", () => {
     expect(result.placed).toBe(6);
   });
 
-  it("warns about a course in the wrong term or before its prerequisites", () => {
+  it("does not load a course into the wrong term or before its prerequisites", () => {
     const result = applyPlan({
-      plan: { "3F": ["ECE410"], "3S": ["ECE311"], "4S": ["ECE444"] },
+      plan: { "3F": ["ECE410", "ECE342"], "3S": ["ECE311"], "4S": ["ECE444"] },
       courses,
       coursesOnGrid: emptyGrid,
     });
-    expect(result.placed).toBe(3);
+    expect(result.placed).toBe(1);
+    expect(result.coursesOnGrid["3F.1"]).toBe("");
+    expect(result.coursesUsed.ECE342).toBe("");
+    expect(result.coursesUsed.ECE444).toBe("");
+    expect(result.coursesUsed.ECE311).toBe("3S.1");
     expect(result.warnings).toEqual([
-      "ECE410 is in 3F without its prerequisites or corequisites in time",
-      "ECE444 is F only but is in 4S",
+      "ECE342 is S only, so it was not loaded into 3F",
+      "ECE444 is F only, so it was not loaded into 4S",
+      "ECE410 was not loaded into 3F: its prerequisites or corequisites are not in time",
     ]);
   });
 
