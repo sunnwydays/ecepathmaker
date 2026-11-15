@@ -9,7 +9,7 @@ const Preset: FC<PresetProps> = ({ name, index, clicked, loadPreset }) => {
                         bg-green2 text-white px-1 py-2 rounded
                         hover:bg-green3 transition-all
                         dark:bg-green3 dark:hover:bg-green4
-                        ${clicked && "opacity-80"}
+                        ${clicked ? "opacity-80" : ""}
                     `}
             data-testid={`load-slot-${index + 1}`}
         >

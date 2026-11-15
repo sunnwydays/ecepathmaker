@@ -1,5 +1,3 @@
-import { green } from '@mui/material/colors';
-
 /** @type {import('tailwindcss').Config} */
 export default {
     darkMode: ["class"],
