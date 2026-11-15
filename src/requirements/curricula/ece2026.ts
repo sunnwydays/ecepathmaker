@@ -7,9 +7,9 @@ import { commonRules } from "./ecePre2026";
 // https://engineering.calendar.utoronto.ca/section/Electrical-and-Computer-Engineering
 
 const groups: GroupDef[] = [
-  { id: "A", label: "A", color: "#ff956b", chartColor: "#ffcc99" },
+  { id: "A", label: "A", color: "#fa7274", chartColor: "#ffcc99" },
   { id: "B", label: "B", color: "#79d675", chartColor: "#b3e6b3" },
-  { id: "C", label: "C", color: "#5db6ff", chartColor: "#99ccff" },
+  { id: "C", label: "C", color: "#ffdd46", chartColor: "#99ccff" },
 ];
 
 const kernels: Record<string, string[]> = {

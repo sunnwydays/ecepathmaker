@@ -184,14 +184,14 @@ describe('Curriculum picker on the Maker page', () => {
 
         pick('ele-2026');
         expect(within(card335()).getByText('Stream: A (k)')).toBeInTheDocument();
-        expect(card335()).toHaveStyle({ backgroundColor: '#ff956b' });
+        expect(card335()).toHaveStyle({ backgroundColor: '#fa7274' });
 
         // Group B and C colours
         const card302 = within(bucket).getByText('ECE302').closest('article') as HTMLElement;
         expect(within(card302).getByText('Stream: B (k)')).toBeInTheDocument();
         expect(card302).toHaveStyle({ backgroundColor: '#79d675' });
         const card334 = within(bucket).getByText('ECE334').closest('article') as HTMLElement;
-        expect(card334).toHaveStyle({ backgroundColor: '#5db6ff' });
+        expect(card334).toHaveStyle({ backgroundColor: '#ffdd46' });
     });
 
     it('filters the bucket by group', () => {
