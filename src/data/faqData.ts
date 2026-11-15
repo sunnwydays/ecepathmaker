@@ -46,6 +46,10 @@ export const siteFaqData: FAQ = [
         answer: "ECE Pathmaker is tailored for UofT Electrical and Computer Engineering students. Courses' prerequisites assume that you have taken the typical first- and second-year courses (still works if you transferred from TrackOne)."
     },
     {
+        question: "Which curriculum should I pick?",
+        answer: "If you were admitted before Fall 2026, use the six-area option. If you were admitted in Fall 2026 or later, pick Electrical or Computer, matching the program you are registered in. The choice changes the stream filter, the card colours and the graduation check. Custom courses can't be assigned to group A, B or C yet."
+    },
+    {
         question: "What are the XX slots for?",
         answer: "The fifth row is for extra courses taken in the first two years or for overloading. XX courses will be considered as early prerequisites, and also have their prerequisites waived."
     },

@@ -46,6 +46,7 @@ Contributions are welcome! Please fork the repository and submit a pull request.
 - [x] Dark mode
 - [x] Multiple saved layouts
 - [x] Google OAuth login (Firebase)
+- [x] Curriculum picker (six-area option for before Fall 2026, Electrical or Computer for Fall 2026+)
 - [ ] 6th column for overloading (in a different color)
 - [ ] Proper backend to store core course details and improve save/load functionality
 - [ ] Store data in the URL
