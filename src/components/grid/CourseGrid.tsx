@@ -28,6 +28,7 @@ import {
 import { createPortal } from "react-dom";
 import Filter from "../forms/Filter";
 import CurriculumPicker from "../forms/CurriculumPicker";
+import SixthToggle from "../forms/SixthToggle";
 import WillYouGraduate from "../info/WillYouGraduate";
 import { getValidYearTerms } from "../../utils/getValidYearTerms";
 import { getYearTerm } from "../../utils/getYearTerm";
@@ -412,7 +413,10 @@ const CourseGrid: FC<CourseGridProps> = ({
     >
       <section className="flex lg:flex-row flex-col gap-x-6 gap-y-4">
         <div className="flex flex-col flex-shrink-0">
-        <CurriculumPicker />
+        <div className="flex flex-wrap items-center justify-between gap-x-4 w-full">
+          <CurriculumPicker />
+          <SixthToggle />
+        </div>
         <div
           className={`grid ${
             sixthVisible ? "grid-cols-6" : "grid-cols-5"

@@ -1,13 +1,11 @@
 import { FC } from "react";
 import { curricula } from "../../requirements/curricula";
 import { useLayoutContext } from "../layout/Layout";
-import SixthToggle from "./SixthToggle";
 
 const CurriculumPicker: FC = () => {
   const { curriculumId, setCurriculumId } = useLayoutContext();
 
   return (
-    <div className="flex flex-wrap items-center justify-between gap-x-4 w-full">
     <label className="mb-4 flex flex-wrap items-center gap-2 dark:text-gray-50">
       <span className="font-medium">Curriculum</span>
       <select
@@ -25,8 +23,6 @@ const CurriculumPicker: FC = () => {
         ))}
       </select>
     </label>
-    <SixthToggle />
-    </div>
   );
 };
 
