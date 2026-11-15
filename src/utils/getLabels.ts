@@ -1,9 +1,12 @@
-import { DraggableCardProps } from "../types/types";
+import { CourseCardPropsWithoutCode } from "../types/types";
 import { getMembership, hasFlag } from "../requirements/evaluate";
 import { Curriculum } from "../requirements/types";
 
+// The course fields the label helpers read, plus its code
+type LabelProps = CourseCardPropsWithoutCode & { code: string };
+
 export const getStreamLabels = (
-  props: DraggableCardProps,
+  props: LabelProps,
   curriculum: Curriculum
 ) => {
   const { groups, kernel } = getMembership(curriculum, props.code, props);
@@ -13,7 +16,7 @@ export const getStreamLabels = (
 };
 
 export const getOtherLabels = (
-  props: DraggableCardProps,
+  props: LabelProps,
   curriculum: Curriculum
 ) => {
   const labels = [];

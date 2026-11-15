@@ -13,7 +13,6 @@ export { default as MakerCard } from "../components/grid/MakerCard";
 // Info Components
 export { default as Announcement } from "../components/info/Announcement";
 export { ClickableTooltip } from "../components/info/ClickableTooltip";
-export { default as CourseCard } from "../components/info/CourseCard";
 export { default as FAQCard } from "../components/info/FAQCard";
 export { default as WillYouGraduate } from "../components/info/WillYouGraduate";
 export { default as SaveLayout } from "../components/forms/SaveLayout";

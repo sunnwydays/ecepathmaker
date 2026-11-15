@@ -1,23 +1,11 @@
-import { useEffect, useState } from "react";
-import {
-  DndContext,
-  DragEndEvent,
-  DragOverlay,
-  DragStartEvent,
-  MouseSensor,
-  TouchSensor,
-  UniqueIdentifier,
-  useSensor,
-  useSensors,
-} from "@dnd-kit/core";
-import { arrayMove, SortableContext } from "@dnd-kit/sortable";
-import { createPortal } from "react-dom";
+import { useEffect, useMemo, useState } from "react";
 
 import { FilterState } from "../types/types";
-import { mockCourses } from "../utils/dataImports";
-import { filterCourses } from "../utils/filterCourses";
-import { useCurriculum } from "../components/layout/Layout";
-import { CourseCard, CurriculumPicker, Filter } from "../utils/componentImports";
+import { buildUnlocks } from "../utils/prereqGraph";
+import { useCurriculum, useLayoutContext, useWidePage } from "../components/layout/Layout";
+import CourseList, { SortKey } from "../components/explorer/CourseList";
+import CourseDetail from "../components/explorer/CourseDetail";
+import { CurriculumPicker } from "../utils/componentImports";
 import Seo from "../components/seo/Seo";
 import { SITE_URL } from "../lib/site";
 
@@ -36,19 +24,7 @@ const coursesJsonLd: Record<string, unknown> = {
 };
 
 const Courses = () => {
-  const sensors = useSensors(
-    useSensor(MouseSensor, {
-      activationConstraint: {
-        distance: 2,
-      },
-    }),
-    useSensor(TouchSensor, {
-      activationConstraint: {
-        delay: 100,
-        tolerance: 5,
-      },
-    })
-  );
+  useWidePage();
 
   const [filters, setFilters] = useState<FilterState>({
     searchTerm: "",
@@ -61,8 +37,12 @@ const Courses = () => {
     isArtSci: false,
     isEng: false,
   });
+  const [sort, setSort] = useState<SortKey>("group");
+  const [hideOnGrid, setHideOnGrid] = useState(false);
+  const [selected, setSelected] = useState<string | null>(null);
 
   const curriculum = useCurriculum();
+  const { courses, coursesUsed } = useLayoutContext();
 
   // Group ids differ between curricula, so a stream filter cannot carry over
   useEffect(() => {
@@ -71,82 +51,51 @@ const Courses = () => {
     );
   }, [curriculum.id]);
 
-  const [coursesId, setCoursesId] = useState<string[]>(
-    Object.keys(mockCourses)
-  );
-  const [activeCourse, setActiveCourse] = useState<UniqueIdentifier | null>(
-    null
-  );
-
-  const handleDragStart = (e: DragStartEvent) => {
-    setActiveCourse(e.active.id);
-  };
-  const handleDragEnd = (e: DragEndEvent) => {
-    setActiveCourse(null);
-
-    const { over, active } = e;
-    if (!over) return;
-    setCoursesId((coursesId) => {
-      const overIndex = coursesId.findIndex((id) => id === over.id);
-      const activeIndex = coursesId.findIndex((id) => id === active.id);
-      return arrayMove(coursesId, activeIndex, overIndex);
-    });
-  };
+  // The context's dependencies map only covers courses placed on the grid
+  const unlocks = useMemo(() => buildUnlocks(courses), [courses]);
 
   return (
     <div>
       <Seo
         title="Courses"
         path="/courses"
-        description="Browse and filter UofT ECE courses by stream, term, and category"
+        description="Explore UofT ECE courses: filter by group, term and type, and see each course's prerequisites and what it unlocks"
         jsonLd={coursesJsonLd}
       />
       <h2 className="mb-8 text-2xl font-medium dark:text-gray-50">
-        🗂️ Explore and rearrange courses (all the courses on Magellan and more)!
+        🗂️ Explore courses and their prerequisites (all the courses on Magellan
+        and more)!
       </h2>
       <CurriculumPicker />
-      <Filter filters={filters} setFilters={setFilters} />
-      <DndContext
-        onDragStart={handleDragStart}
-        onDragEnd={handleDragEnd}
-        sensors={sensors}
-      >
-        <SortableContext items={coursesId}>
-          {(() => {
-            const filteredCourses = coursesId.filter((code) =>
-              filterCourses(filters, code, mockCourses[code], curriculum)
-            );
-
-            return filteredCourses.length ? (
-              <div className="mt-6 grid xl:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4">
-                {filteredCourses.map((course) => (
-                  <CourseCard
-                    key={course}
-                    id={course}
-                    code={course}
-                    {...mockCourses[course]}
-                  />
-                ))}
-              </div>
-            ) : (
-              <div className="mt-6 w-full text-center text-neutral3 italic select-none">
-                No courses match the current filter
-              </div>
-            );
-          })()}
-        </SortableContext>
-        {activeCourse &&
-          createPortal(
-            <DragOverlay>
-              <CourseCard
-                id={activeCourse as string}
-                code={activeCourse as string}
-                {...mockCourses[activeCourse]}
-              />
-            </DragOverlay>,
-            document.body
+      <div className="mt-6 grid lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] grid-cols-1 gap-6 items-start">
+        <CourseList
+          courses={courses}
+          coursesUsed={coursesUsed}
+          filters={filters}
+          setFilters={setFilters}
+          sort={sort}
+          setSort={setSort}
+          hideOnGrid={hideOnGrid}
+          setHideOnGrid={setHideOnGrid}
+          selected={selected}
+          onSelect={setSelected}
+        />
+        <div className="lg:sticky lg:top-28">
+          {selected && courses[selected] ? (
+            <CourseDetail
+              code={selected}
+              courses={courses}
+              coursesUsed={coursesUsed}
+              unlocks={unlocks}
+              onSelect={setSelected}
+            />
+          ) : (
+            <p className="rounded-md bg-neutral1 dark:bg-gray-600 dark:text-gray-50 p-4 italic">
+              Select a course to see its details
+            </p>
           )}
-      </DndContext>
+        </div>
+      </div>
     </div>
   );
 };

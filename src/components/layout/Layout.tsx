@@ -45,6 +45,18 @@ interface LayoutProps {
   children: ReactNode;
 }
 
+// Lets a page ask for a wider main area while it is shown
+const WidePageContext = createContext<(wide: boolean) => void>(() => {});
+
+// eslint-disable-next-line react-refresh/only-export-components
+export function useWidePage() {
+  const setWide = useContext(WidePageContext);
+  useEffect(() => {
+    setWide(true);
+    return () => setWide(false);
+  }, [setWide]);
+}
+
 // eslint-disable-next-line react-refresh/only-export-components
 export const LayoutContext = createContext<LayoutContextType | undefined>(
   undefined
@@ -191,6 +203,8 @@ const Layout: FC<LayoutProps> = ({ children }) => {
     if (user) saveShowSixth(user.uid, showSixth);
   }, [showSixth]);
 
+  const [widePage, setWidePage] = useState(false);
+
   return (
     <LayoutContext.Provider
       value={{
@@ -216,8 +230,16 @@ const Layout: FC<LayoutProps> = ({ children }) => {
       <div className="min-h-screen flex flex-col w-max md:w-full dark:bg-gray-700">
         <div className="h-24" />
         <Navbar />
-        <main className="flex-grow md:mx-auto mx-3 xl:wp lg:w-wpl w-wps my-12">
-          {children}
+        <main
+          className={`flex-grow md:mx-auto mx-3 my-12 ${
+            widePage
+              ? "xl:w-[90%] lg:w-[92%] w-wps"
+              : "xl:wp lg:w-wpl w-wps"
+          }`}
+        >
+          <WidePageContext.Provider value={setWidePage}>
+            {children}
+          </WidePageContext.Provider>
           <Analytics />
         </main>
         <Footer />

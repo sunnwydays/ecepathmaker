@@ -299,19 +299,19 @@ describe('Curriculum picker on the Courses page', () => {
         expect(screen.queryByTestId('filter-stream-1')).not.toBeInTheDocument();
 
         fireEvent.click(screen.getByTestId('filter-stream-B'));
-        const codes = screen.getAllByTestId('course-code').map((el) => el.textContent);
+        const codes = screen.getAllByTestId('course-row').map((el) => el.getAttribute('data-code'));
         expect(codes).toContain('ECE302');
         expect(codes).toContain('ECE381');
         expect(codes).not.toContain('ECE335');
         expect(codes).not.toContain('ECE334');
 
-        // Cards show the group label, and the stream filter is cleared on switching back
-        expect(screen.getAllByText('Streams: B (k)').length).toBeGreaterThan(0);
+        // Rows show the group label, and the stream filter is cleared on switching back
+        expect(screen.getAllByText('B (k)').length).toBeGreaterThan(0);
         pick('ece-pre2026');
         expect(screen.queryByTestId('filter-stream-B')).not.toBeInTheDocument();
         [1, 2, 3, 4, 5, 6].forEach((n) => {
             expect(screen.getByTestId(`filter-stream-${n}`)).not.toBeChecked();
         });
-        expect(screen.getAllByTestId('course-code').map((el) => el.textContent)).toContain('ECE335');
+        expect(screen.getAllByTestId('course-row').map((el) => el.getAttribute('data-code'))).toContain('ECE335');
     });
 });
