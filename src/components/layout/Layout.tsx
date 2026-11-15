@@ -7,6 +7,7 @@ import {
   useMemo,
   useState,
 } from "react";
+import { useLocation } from "react-router-dom";
 import { Analytics } from "@vercel/analytics/react";
 import { Footer, Navbar } from "../../utils/componentImports";
 import { CourseList, CoursesOnGrid, CoursesUsed, LayoutContextType, savedLayout } from "../../types/types";
@@ -204,6 +205,15 @@ const Layout: FC<LayoutProps> = ({ children }) => {
   }, [showSixth]);
 
   const [widePage, setWidePage] = useState(false);
+
+  // Client-side navigation keeps the scroll position, so reset it on a page
+  // change. Keyed on pathname only (picking a course changes ?c= and must not
+  // jump the page) and skipped for #hash links such as /faq#question.
+  const { pathname, hash } = useLocation();
+  useEffect(() => {
+    if (!hash) window.scrollTo(0, 0);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname]);
 
   return (
     <LayoutContext.Provider

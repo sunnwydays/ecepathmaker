@@ -1,4 +1,5 @@
 import { IoIosMenu, IoIosClose } from "react-icons/io";
+import { Link, NavLink } from "react-router-dom";
 import { FC, useState, useEffect, useRef } from 'react';
 import { logo } from '../../utils/assetImports';
 import ThemeToggle from "../ThemeToggle";
@@ -42,12 +43,12 @@ const Navbar:FC = () => {
                 mx-auto xl:wp lg:w-wpl w-wps 
                 flex justify-between items-center py-2
             ">
-                <a 
-                    href="/" 
+                <Link 
+                    to="/" 
                     className={`${isScrolled ? 'w-24' : 'w-56' } transition-all`}
                 >
                     <img src={logo} alt="ECE Pathmaker logo" />
-                </a>
+                </Link>
                 <div className="z-30 flex items-center" ref={menuRef}>
                     <ul className={`
                         md:static fixed 
@@ -71,43 +72,43 @@ const Navbar:FC = () => {
                         md:px-0 px-5
                     `}>
                         <li>
-                            <a 
+                            <NavLink end 
                                 onClick={() => setIsMenuOpen(false)} 
                                 className="
                                     hover:text-green2 
                                     transition-all 
                                     mx-auto
                                 " 
-                                href="/"
+                                to="/"
                             >
                                 Maker
-                            </a>
+                            </NavLink>
                         </li>
                         <li>
-                            <a 
+                            <NavLink 
                                 onClick={() => setIsMenuOpen(false)} 
                                 className="
                                         hover:text-green2 
                                         transition-all 
                                         mx-auto
                                     " 
-                                href="/courses"
+                                to="/courses"
                             >
                                 Courses
-                            </a>
+                            </NavLink>
                         </li>
                         <li>
-                            <a 
+                            <NavLink 
                                 onClick={() => setIsMenuOpen(false)} 
                                 className="
                                     hover:text-green2 
                                     transition-all 
                                     mx-auto
                                 " 
-                                href="/faq"
+                                to="/faq"
                             >
                                 FAQs
-                            </a>
+                            </NavLink>
                         </li>
                         <li>
                             <SignIn />

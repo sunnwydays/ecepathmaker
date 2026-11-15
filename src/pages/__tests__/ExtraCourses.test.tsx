@@ -1,6 +1,7 @@
 import { render, screen, fireEvent, within } from '@testing-library/react';
 import { Maker } from '../../utils/pageImports';
 import { Layout } from '../../utils/componentImports';
+import { MemoryRouter } from 'react-router-dom';
 
 const loadString = (str: string) => {
     fireEvent.change(screen.getByPlaceholderText('Layout string'), { target: { value: str } });
@@ -15,9 +16,9 @@ describe('Extra (EXT) courses on the grid', () => {
         // jsdom has no scrollIntoView, which the edit button calls
         Element.prototype.scrollIntoView = jest.fn();
         render(
-            <Layout>
+            <MemoryRouter><Layout>
                 <Maker />
-            </Layout>
+            </Layout></MemoryRouter>
         );
         loadString('CST000Complementary%%c$$ABC123Other%%');
     });

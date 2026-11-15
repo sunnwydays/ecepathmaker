@@ -1,12 +1,13 @@
 import { render, screen, fireEvent, within, cleanup } from '@testing-library/react';
 import { Maker } from '../../utils/pageImports';
 import { Layout } from '../../utils/componentImports';
+import { MemoryRouter } from 'react-router-dom';
 
 const renderMaker = () =>
     render(
-        <Layout>
+        <MemoryRouter><Layout>
             <Maker />
-        </Layout>
+        </Layout></MemoryRouter>
     );
 
 const loadString = (str: string) => {

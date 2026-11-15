@@ -1,11 +1,15 @@
 import { FC } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { doc, deleteDoc } from "firebase/firestore";
 import { db, auth } from '../../firebase/firebase';
 
 const Footer:FC = () => {
+    const { pathname } = useLocation();
+    const navigate = useNavigate();
+
     const scrollToTop = () => {
-        if (window.location.pathname !== '/') {
-            window.location.href = '/';
+        if (pathname !== '/') {
+            navigate('/');
         } else {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }

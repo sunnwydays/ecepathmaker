@@ -1,14 +1,15 @@
 import { render, screen, within } from '@testing-library/react';
 import { Maker } from '../../utils/pageImports';
 import { Layout } from '../../utils/componentImports';
+import { MemoryRouter } from 'react-router-dom';
 import mockCourses from '../../data/mockCourses';
 import { COURSE_DATA_VERSION } from '../../data/courseUpdates';
 
 const renderMaker = () =>
     render(
-        <Layout>
+        <MemoryRouter><Layout>
             <Maker />
-        </Layout>
+        </Layout></MemoryRouter>
     );
 
 const seedWithoutECE381 = (version?: number) => {

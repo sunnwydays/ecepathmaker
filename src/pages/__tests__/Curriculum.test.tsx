@@ -48,9 +48,9 @@ const elePlan = [
 
 const renderMaker = () =>
     render(
-        <Layout>
+        <MemoryRouter><Layout>
             <Maker />
-        </Layout>
+        </Layout></MemoryRouter>
     );
 
 const pick = (id: string) =>
