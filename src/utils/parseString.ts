@@ -8,8 +8,28 @@ import {
 } from "../types/types";
 import { addDependencies } from "./addDependencies";
 import { emptyGrid } from "./utilImports";
+import { normalizeColor } from "./normalizeColor";
 import { validateCourseCode, validateCourseName } from "./validateCourse";
 import { UniqueIdentifier } from "@dnd-kit/core";
+
+/**
+ * Reads the colour that starts at options[i] === "#". Returns the colour
+ * ("" if none) and the index of the last character it consumed.
+ * 6+ hex digits: first 6 (as always). Exactly 3: expanded to 6. Else: none.
+ */
+const readColor = (
+  options: string,
+  i: number,
+): { color: string; end: number } => {
+  let start = i + 1;
+  if (options[start] === "#") start++;
+  const run = /^[0-9a-f]*/i.exec(options.substring(start))![0];
+  if (run.length >= 6) return { color: run.substring(0, 6), end: start + 5 };
+  if (run.length === 3) {
+    return { color: normalizeColor(run), end: start + 2 };
+  }
+  return { color: "", end: start + run.length - 1 };
+};
 
 export const isValidString = (str: string): boolean => {
   str = str.trim();
@@ -67,7 +87,7 @@ export const isValidString = (str: string): boolean => {
         const char = options[i];
         if (!validOptionChars.has(char)) {
           if (char !== "#") return false;
-          i += 6;
+          i = readColor(options, i).end;
         }
       }
 
@@ -103,9 +123,10 @@ export const parseString = (str: string): ParseString => {
   };
 
   terms.forEach((term, termIndex) => {
+    if (termIndex > 4) return;
     const coursesInTerm = term.split("$$");
     coursesInTerm.forEach((courseStr, slotIndex) => {
-      if (!courseStr) return;
+      if (!courseStr || slotIndex > 4) return;
 
       const [codeAndName, optionsWithPreq] = courseStr.split("%%");
       const code = codeAndName.substring(0, 6);
@@ -159,9 +180,9 @@ export const parseString = (str: string): ParseString => {
                 course.isArtSci = true;
                 break;
               case "#": {
-                if (options[i + 1] === "#") i++;
-                course.color = options.substring(i + 1, i + 7);
-                i += 6;
+                const { color, end } = readColor(options, i);
+                course.color = color;
+                i = end;
                 break;
               }
             }
