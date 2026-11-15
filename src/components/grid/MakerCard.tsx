@@ -1,16 +1,22 @@
 import { FC } from "react";
 import { MakerCardProps } from "../../types/types";
 import { Draggable } from "../../utils/componentImports";
+import { useCurriculum } from "../layout/Layout";
+import { hasFlag } from "../../requirements/evaluate";
 import {
   getTextColor,
   getBackgroundColor,
   getOtherLabels,
   getPreqLabels,
   getStreamLabels,
+  getGroupColor,
 } from "../../utils/utilImports";
 
 const MakerCard: FC<MakerCardProps> = (props) => {
+  const curriculum = useCurriculum();
   const textColor = getTextColor(props.color);
+  const streamLabels = getStreamLabels(props, curriculum);
+  const otherLabels = getOtherLabels(props, curriculum);
 
   const preqsToString = (preqs: (string | string[])[] | undefined): string => {
     if (!preqs) return "";
@@ -68,7 +74,13 @@ const MakerCard: FC<MakerCardProps> = (props) => {
                 `}
           style={{
             backgroundColor: props.valid
-              ? getBackgroundColor(props.color, props.streams?.[0], props.isSciMath, props.isCS, props.isHSS)
+              ? getBackgroundColor(
+                  props.color,
+                  getGroupColor(curriculum, props.code, props),
+                  hasFlag(curriculum, "isSciMath", props.code, props),
+                  props.isCS,
+                  props.isHSS
+                )
               : "rgba(255, 111, 97, 0.7)",
           }}
         >
@@ -80,8 +92,8 @@ const MakerCard: FC<MakerCardProps> = (props) => {
           >
             {props.name}
           </p>
-          {getStreamLabels(props) && <p>Stream: {getStreamLabels(props)}</p>}
-          {getOtherLabels(props) && <p>{getOtherLabels(props)}</p>}
+          {streamLabels && <p>Stream: {streamLabels}</p>}
+          {otherLabels && <p>{otherLabels}</p>}
           {isExpanded && props.preq && props.preq.length > 0 && (
             <p>Preq: {getPreqLabels(props.preq)}</p>
           )}

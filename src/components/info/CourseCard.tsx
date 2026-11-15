@@ -2,15 +2,21 @@ import { FC } from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { DraggableCardProps } from "../../types/types";
+import { useCurriculum } from "../layout/Layout";
+import { hasFlag } from "../../requirements/evaluate";
 import {
   getTextColor,
   getBackgroundColor,
   getOtherLabels,
   getPreqLabels,
   getStreamLabels,
+  getGroupColor,
 } from "../../utils/utilImports";
 
 const CourseCard: FC<DraggableCardProps> = (props) => {
+  const curriculum = useCurriculum();
+  const streamLabels = getStreamLabels(props, curriculum);
+  const otherLabels = getOtherLabels(props, curriculum);
   const {
     setNodeRef,
     attributes,
@@ -24,7 +30,13 @@ const CourseCard: FC<DraggableCardProps> = (props) => {
   const style = {
     transition,
     transform: CSS.Transform.toString(transform),
-    backgroundColor: getBackgroundColor(props.color, props.streams?.[0], props.isSciMath, props.isCS, props.isHSS),
+    backgroundColor: getBackgroundColor(
+      props.color,
+      getGroupColor(curriculum, props.code, props),
+      hasFlag(curriculum, "isSciMath", props.code, props),
+      props.isCS,
+      props.isHSS
+    ),
   };
 
   if (isDragging) {
@@ -62,8 +74,8 @@ const CourseCard: FC<DraggableCardProps> = (props) => {
         <span data-testid="course-code">{props.code}</span>
         <span>: {props.name}</span>
       </h1>
-      {getStreamLabels(props) && <p>Streams: {getStreamLabels(props)}</p>}
-      {getOtherLabels(props) && <p>Other labels: {getOtherLabels(props)}</p>}
+      {streamLabels && <p>Streams: {streamLabels}</p>}
+      {otherLabels && <p>Other labels: {otherLabels}</p>}
       {props.preq && props.preq.length > 0 && (
         <p>Prerequisites: {getPreqLabels(props.preq)}</p>
       )}

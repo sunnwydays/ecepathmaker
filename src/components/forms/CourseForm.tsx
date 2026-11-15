@@ -9,7 +9,7 @@ import {
 import Announcement from "../info/Announcement";
 import TextInput from "./TextInput";
 import SubmitButton from "../SubmitButton";
-import { useLayoutContext } from "../layout/Layout";
+import { useCurriculum, useLayoutContext } from "../layout/Layout";
 
 const CourseForm: FC<CourseFormProps> = ({
   customInfo,
@@ -27,6 +27,8 @@ const CourseForm: FC<CourseFormProps> = ({
     setCoursesOnGrid,
     setDependencies,
   } = useLayoutContext();
+
+  const curriculum = useCurriculum();
 
   const [errors, setErrors] = useState({
     code: false,
@@ -324,24 +326,30 @@ const CourseForm: FC<CourseFormProps> = ({
         </div>
 
         {/* Stream Flags */}
-        <div className="space-y-2">
-          <h3 className="font-semibold">Streams</h3>
-          <div className="grid grid-cols-3 gap-2">
-            {[1, 2, 3, 4, 5, 6].map((num) => (
-              <label key={num} className="flex items-center gap-2">
-                <input
-                  name="streams"
-                  type="checkbox"
-                  value={num}
-                  data-testid={`stream-${num}`}
-                  onChange={handleInputChange}
-                  checked={customInfo.streams?.includes(num)}
-                />
-                <span>Stream {num}</span>
-              </label>
-            ))}
+        {curriculum.membership ? (
+          <p className="text-sm text-gray-500 dark:text-gray-300">
+            Custom courses can't be assigned to group A, B or C yet.
+          </p>
+        ) : (
+          <div className="space-y-2">
+            <h3 className="font-semibold">Streams</h3>
+            <div className="grid grid-cols-3 gap-2">
+              {[1, 2, 3, 4, 5, 6].map((num) => (
+                <label key={num} className="flex items-center gap-2">
+                  <input
+                    name="streams"
+                    type="checkbox"
+                    value={num}
+                    data-testid={`stream-${num}`}
+                    onChange={handleInputChange}
+                    checked={customInfo.streams?.includes(num)}
+                  />
+                  <span>Stream {num}</span>
+                </label>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Term Availability */}
         <div className="space-y-2">

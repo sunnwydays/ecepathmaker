@@ -1,11 +1,15 @@
-// Based on ECE Iris
-const streamToColor: Record<number, string> = {
-    1: "#fa7274",
-    2: "#ff956b",
-    3: "#ffdd46",
-    4: "#79d675",
-    5: "#5db6ff",
-    6: "#ab8eee",
+import { getMembership } from "../requirements/evaluate";
+import { Curriculum } from "../requirements/types";
+import { CourseCardPropsWithoutCode } from "../types/types";
+
+// Group colours are based on ECE Iris and live in the curriculum
+export const getGroupColor = (
+    curriculum: Curriculum,
+    code: string,
+    course: CourseCardPropsWithoutCode,
+): string | undefined => {
+    const [first] = getMembership(curriculum, code, course).groups;
+    return curriculum.groups.find((g) => g.id === first)?.color;
 };
 
 const sciMathColor = "#f36aba";
@@ -15,13 +19,13 @@ const defaultColor = "#e0e0e0";
 
 export const getBackgroundColor = (
     color: string | undefined, 
-    stream?: number | undefined, 
+    groupColor?: string | undefined, 
     isSciMath?: boolean | undefined,
     isCS?: boolean | undefined,
     isHSS?: boolean | undefined,
 ): string => {
     if (color) return color.startsWith('#') ? color : `#${color}`;
-    if (stream) return streamToColor[stream];
+    if (groupColor) return groupColor;
     if (isSciMath) return sciMathColor;
     if (isHSS) return hssColor;
     if (isCS) return csColor;

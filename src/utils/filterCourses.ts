@@ -1,6 +1,8 @@
 import { CourseCardPropsWithoutCode, FilterState } from "../types/types";
+import { getMembership, hasFlag } from "../requirements/evaluate";
+import { Curriculum } from "../requirements/types";
 
-export const filterCourses = (filters: FilterState, courseCode: string, course: CourseCardPropsWithoutCode,): boolean => {
+export const filterCourses = (filters: FilterState, courseCode: string, course: CourseCardPropsWithoutCode, curriculum: Curriculum): boolean => {
     if (!course) return false;
 
     if (
@@ -13,7 +15,9 @@ export const filterCourses = (filters: FilterState, courseCode: string, course: 
 
     if (
         filters.streams.length > 0 &&
-        !course.streams?.some((stream) => filters.streams.includes(stream))
+        !getMembership(curriculum, courseCode, course).groups.some((group) =>
+            filters.streams.includes(group)
+        )
     ) {
         return false;
     }
@@ -23,7 +27,7 @@ export const filterCourses = (filters: FilterState, courseCode: string, course: 
 
     if (filters.isCS && !course.isCS) return false;
     if (filters.isHSS && !course.isHSS) return false;
-    if (filters.isSciMath && !course.isSciMath) return false;
+    if (filters.isSciMath && !hasFlag(curriculum, "isSciMath", courseCode, course)) return false;
     if (filters.isArtSci && !course.isArtSci) return false;
     if (filters.isEng && course.isArtSci) return false;
 

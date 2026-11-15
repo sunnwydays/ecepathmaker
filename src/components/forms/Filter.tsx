@@ -1,7 +1,7 @@
 import { FC, useEffect, useRef, useState } from "react";
 import { FilterState, GridPosition, YearTerm } from "../../types/types";
 import TextInput from "./TextInput";
-import { useLayoutContext } from "../layout/Layout";
+import { useCurriculum, useLayoutContext } from "../layout/Layout";
 import { addDependencies, filterCourses, getValidYearTerms } from "../../utils/utilImports";
 import { UniqueIdentifier } from "@dnd-kit/core";
 import Announcement from "../info/Announcement";
@@ -10,6 +10,8 @@ const Filter: FC<{
   filters: FilterState;
   setFilters: React.Dispatch<React.SetStateAction<FilterState>>;
 }> = ({ filters, setFilters }) => {
+  const curriculum = useCurriculum();
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, checked } = e.target;
 
@@ -18,10 +20,9 @@ const Filter: FC<{
         case "searchTerm":
           return { ...prev, searchTerm: value };
         case "streams": {
-          const streamNum = parseInt(value);
-          const streams = prev.streams.includes(streamNum)
-            ? prev.streams.filter((s) => s !== streamNum)
-            : [...prev.streams, streamNum];
+          const streams = prev.streams.includes(value)
+            ? prev.streams.filter((s) => s !== value)
+            : [...prev.streams, value];
           return { ...prev, streams };
         }
         default:
@@ -100,7 +101,7 @@ const Filter: FC<{
     let found = false;
 
     for (const [potentialCode, potentialPos] of Object.entries(coursesUsed)) {
-      if (filterCourses(filters, potentialCode, courses[potentialCode])) {
+      if (filterCourses(filters, potentialCode, courses[potentialCode], curriculum)) {
         // Check position before found in case another course matching filter is already on grid
         if (potentialPos) continue;
 
@@ -184,17 +185,17 @@ const Filter: FC<{
         <div className="space-y-2">
           <h3 className="font-medium">Streams</h3>
           <div className="flex gap-4 justify-center">
-            {[1, 2, 3, 4, 5, 6].map((num) => (
-              <label key={num} className="flex items-center gap-2">
+            {curriculum.groups.map((group) => (
+              <label key={group.id} className="flex items-center gap-2">
                 <input
                   name="streams"
                   type="checkbox"
-                  value={num}
+                  value={group.id}
                   onChange={handleInputChange}
-                  checked={filters.streams?.includes(num)}
-                  data-testid={`filter-stream-${num}`}
+                  checked={filters.streams?.includes(group.id)}
+                  data-testid={`filter-stream-${group.id}`}
                 />
-                <span>{num}</span>
+                <span>{group.label}</span>
               </label>
             ))}
           </div>

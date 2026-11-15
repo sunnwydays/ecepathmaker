@@ -179,7 +179,7 @@ export interface CourseFormProps {
 
 export interface FilterState {
     searchTerm: string;
-    streams: number[];
+    streams: string[]; // curriculum group ids
     availableF: boolean;
     availableS: boolean;
     isCS: boolean;

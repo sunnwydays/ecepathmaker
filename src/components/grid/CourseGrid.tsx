@@ -33,7 +33,7 @@ import { getYearTerm } from "../../utils/getYearTerm";
 import Announcement from "../info/Announcement";
 import { addDependencies } from "../../utils/utilImports";
 import { emptyGrid, filterCourses } from "../../utils/utilImports";
-import { evaluate } from "../../requirements/evaluate";
+import { evaluate, getMembership, hasFlag } from "../../requirements/evaluate";
 import { useCurriculum, useLayoutContext } from "../layout/Layout";
 
 enum DropError {
@@ -87,6 +87,13 @@ const CourseGrid: FC<CourseGridProps> = ({
   const [activeCourse, setActiveCourse] = useState<UniqueIdentifier | null>(null);
 
   const curriculum = useCurriculum();
+
+  // Group ids differ between curricula, so a stream filter cannot carry over
+  useEffect(() => {
+    setFilters((prev) =>
+      prev.streams.length ? { ...prev, streams: [] } : prev
+    );
+  }, [curriculum.id]);
   const result = useMemo(
     () => evaluate(curriculum, { courses, coursesOnGrid, coursesUsed }),
     [curriculum, coursesOnGrid, courses, coursesUsed]
@@ -345,25 +352,31 @@ const CourseGrid: FC<CourseGridProps> = ({
     const courseA = courses[codeA];
     const courseB = courses[codeB];
 
-    // Stream Number (ascending)
-    const streamA = courseA.streams && courseA.streams.length > 0 ? Math.min(...courseA.streams) : Infinity;
-    const streamB = courseB.streams && courseB.streams.length > 0 ? Math.min(...courseB.streams) : Infinity;
+    // Group order in the curriculum (ascending), no group last
+    const firstGroupIndex = (code: string, course: CourseCardPropsWithoutCode) => {
+      const indices = getMembership(curriculum, code, course).groups
+        .map((id) => curriculum.groups.findIndex((g) => g.id === id))
+        .filter((i) => i >= 0);
+      return indices.length ? Math.min(...indices) : Infinity;
+    };
+    const groupA = firstGroupIndex(codeA, courseA);
+    const groupB = firstGroupIndex(codeB, courseB);
 
-    if (streamA !== streamB) {
-      return streamA - streamB;
+    if (groupA !== groupB) {
+      return groupA - groupB;
     }
 
     // Rank: SciMath > CS non-HSS > HSS > Has prereqs > Others
-    const getPriority = (c: CourseCardPropsWithoutCode) => {
-      if (c.isSciMath) return 1;
+    const getPriority = (code: string, c: CourseCardPropsWithoutCode) => {
+      if (hasFlag(curriculum, "isSciMath", code, c)) return 1;
       if (c.isHSS) return 3;
       if (c.isCS) return 2;
       if (c.preq && c.preq.length > 0) return 4;
       return 5;
     };
 
-    const priorityA = getPriority(courseA);
-    const priorityB = getPriority(courseB);
+    const priorityA = getPriority(codeA, courseA);
+    const priorityB = getPriority(codeB, courseB);
 
     if (priorityA !== priorityB) {
       return priorityA - priorityB;
@@ -464,7 +477,7 @@ const CourseGrid: FC<CourseGridProps> = ({
           >
             {(() => {
               const filteredCourses = Object.entries(coursesUsed)
-                .filter(([courseCode]) => filterCourses(filters, courseCode, courses[courseCode]));
+                .filter(([courseCode]) => filterCourses(filters, courseCode, courses[courseCode], curriculum));
               const unusedFilteredCourses = filteredCourses
                 .filter(([, isUsed]) => !isUsed);
 

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   DndContext,
   DragEndEvent,
@@ -15,6 +15,8 @@ import { createPortal } from "react-dom";
 
 import { FilterState } from "../types/types";
 import { mockCourses } from "../utils/dataImports";
+import { filterCourses } from "../utils/filterCourses";
+import { useCurriculum } from "../components/layout/Layout";
 import { CourseCard, Filter } from "../utils/componentImports";
 import Seo from "../components/seo/Seo";
 import { SITE_URL } from "../lib/site";
@@ -60,36 +62,14 @@ const Courses = () => {
     isEng: false,
   });
 
-  const filterCourses = (courseCode: string): boolean => {
-    const course = mockCourses[courseCode];
-    if (!course) return false;
+  const curriculum = useCurriculum();
 
-    if (
-      filters.searchTerm &&
-      !courseCode.toLowerCase().includes(filters.searchTerm.toLowerCase()) &&
-      !course.name.toLowerCase().includes(filters.searchTerm.toLowerCase())
-    ) {
-      return false;
-    }
-
-    if (
-      filters.streams.length > 0 &&
-      !course.streams?.some((stream) => filters.streams.includes(stream))
-    ) {
-      return false;
-    }
-
-    if (!filters.availableF && course.onlyF) return false;
-    if (!filters.availableS && course.onlyS) return false;
-
-    if (filters.isCS && !course.isCS) return false;
-    if (filters.isHSS && !course.isHSS) return false;
-    if (filters.isSciMath && !course.isSciMath) return false;
-    if (filters.isArtSci && !course.isArtSci) return false;
-    if (filters.isEng && course.isArtSci) return false;
-
-    return true;
-  };
+  // Group ids differ between curricula, so a stream filter cannot carry over
+  useEffect(() => {
+    setFilters((prev) =>
+      prev.streams.length ? { ...prev, streams: [] } : prev
+    );
+  }, [curriculum.id]);
 
   const [coursesId, setCoursesId] = useState<string[]>(
     Object.keys(mockCourses)
@@ -132,7 +112,9 @@ const Courses = () => {
       >
         <SortableContext items={coursesId}>
           {(() => {
-            const filteredCourses = coursesId.filter(filterCourses);
+            const filteredCourses = coursesId.filter((code) =>
+              filterCourses(filters, code, mockCourses[code], curriculum)
+            );
 
             return filteredCourses.length ? (
               <div className="mt-6 grid xl:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4">
