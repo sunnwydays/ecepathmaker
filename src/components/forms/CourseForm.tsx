@@ -12,6 +12,7 @@ import TextInput from "./TextInput";
 import SubmitButton from "../SubmitButton";
 import { useCurriculum, useLayoutContext } from "../layout/Layout";
 import { useArmed } from "../../utils/useArmed";
+import { eyebrow, input } from "../../styles/ui";
 
 const CourseForm: FC<CourseFormProps> = ({
   customInfo,
@@ -332,9 +333,7 @@ const CourseForm: FC<CourseFormProps> = ({
               color={customInfo.color}
               onChange={handleColorChange}
               placeholder="Colour (e.g. E0E0E0)"
-              className="
-                w-full p-2 border rounded min-w-36
-              dark:bg-gray-500 dark:border-gray-400 dark:placeholder-gray-300"
+              className={`w-full min-w-36 ${input}`}
             />
             <button
               type="button"
@@ -351,7 +350,7 @@ const CourseForm: FC<CourseFormProps> = ({
         {/* Stream / Group Flags */}
         {curriculum.membership ? (
           <div className="space-y-2">
-            <h3 className="font-semibold">Group</h3>
+            <h3 className={eyebrow}>Group</h3>
             {officialGroup ? (
               <p className="text-sm text-gray-500 dark:text-gray-300">
                 Group {officialGroup} (set by the calendar)
@@ -389,7 +388,7 @@ const CourseForm: FC<CourseFormProps> = ({
           </div>
         ) : (
           <div className="space-y-2">
-            <h3 className="font-semibold">Streams</h3>
+            <h3 className={eyebrow}>Streams</h3>
             <div className="grid grid-cols-3 gap-2">
               {[1, 2, 3, 4, 5, 6].map((num) => (
                 <label key={num} className="flex items-center gap-2">
@@ -410,7 +409,7 @@ const CourseForm: FC<CourseFormProps> = ({
 
         {/* Term Availability */}
         <div className="space-y-2">
-          <h3 className="font-semibold">Term Availability</h3>
+          <h3 className={eyebrow}>Term Availability</h3>
           <div className="flex gap-4">
             <label className="flex items-center gap-2">
               <input
@@ -450,7 +449,7 @@ const CourseForm: FC<CourseFormProps> = ({
 
         {/* Course Type Flags */}
         <div className="space-y-2">
-          <h3 className="font-semibold">Course Type</h3>
+          <h3 className={eyebrow}>Course Type</h3>
           <div className="flex gap-4">
             <label className="flex items-center gap-2">
               <input

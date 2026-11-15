@@ -8,6 +8,7 @@ import {
 } from "../../requirements/types";
 import { ClickableTooltip } from "../../utils/componentImports";
 import { useDarkMode } from "../../utils/utilImports";
+import { panelEdge } from "../../styles/ui";
 
 interface WillYouGraduateProps {
   result: EvaluationResult;
@@ -163,9 +164,9 @@ const WillYouGraduate: FC<WillYouGraduateProps> = ({ result, curriculum }) => {
         </div>
       </div>
       <div
-        className="
+        className={`
                 mt-4 p-8 flex flex-col items-center justify-center 
-                w-full bg-neutral1 dark:bg-gray-800 rounded shadow"
+                w-full bg-neutral1 dark:bg-gray-800 ${panelEdge}`}
       >
         {result.graduates ? (
           <h2 className="text-2xl font-semibold text-green3">

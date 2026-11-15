@@ -1,6 +1,7 @@
 import { FC } from "react";
 import { curricula } from "../../requirements/curricula";
 import { useLayoutContext } from "../layout/Layout";
+import { input } from "../../styles/ui";
 
 const CurriculumPicker: FC = () => {
   const { curriculumId, setCurriculumId } = useLayoutContext();
@@ -12,9 +13,7 @@ const CurriculumPicker: FC = () => {
         value={curriculumId}
         onChange={(e) => setCurriculumId(e.target.value)}
         data-testid="curriculum-picker"
-        className="
-          p-2 border rounded
-          dark:bg-gray-500 dark:border-gray-400"
+        className={`${input} py-1.5`}
       >
         {curricula.map((curriculum) => (
           <option key={curriculum.id} value={curriculum.id}>

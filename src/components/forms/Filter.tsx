@@ -6,6 +6,8 @@ import { filterCourses } from "../../utils/utilImports";
 import { useAddToGrid } from "../../utils/useAddToGrid";
 import { UniqueIdentifier } from "@dnd-kit/core";
 import Announcement from "../info/Announcement";
+import { defaultFilters } from "../../utils/defaultFilters";
+import { eyebrow, panelEdge } from "../../styles/ui";
 
 const Filter: FC<{
   filters: FilterState;
@@ -99,26 +101,14 @@ const Filter: FC<{
     setFilters(prev => ({ ...prev, searchTerm: "" }));
   };
 
-  const resetFilters = () => {
-    setFilters({
-      searchTerm: "",
-      streams: [],
-      availableF: true,
-      availableS: true,
-      isCS: false,
-      isHSS: false,
-      isSciMath: false,
-      isArtSci: false,
-      isEng: false,
-    });
-  };
+  const resetFilters = () => setFilters({ ...defaultFilters });
 
   return (
     <div
-      className="
+      className={`
         p-4 mt-4 bg-green1 dark:bg-green3 bg-opacity-50 dark:bg-opacity-70 
-        rounded shadow text-center items-center flex flex-col dark:text-gray-50
-      "
+        ${panelEdge} text-center items-center flex flex-col dark:text-gray-50
+      `}
       data-testid="filter"
     >
       <form 
@@ -143,11 +133,12 @@ const Filter: FC<{
             placeholder="Search by code or name"
             onChange={handleInputChange}
             testId="filter-search"
+            searchIcon
           />
         </div>
 
         <div className="space-y-2">
-          <h3 className="font-medium">Streams</h3>
+          <h3 className={eyebrow}>Streams</h3>
           <div className="flex gap-4 justify-center">
             {curriculum.groups.map((group) => (
               <label key={group.id} className="flex items-center gap-2">
@@ -166,7 +157,7 @@ const Filter: FC<{
         </div>
 
         <div className="space-y-2">
-          <h3 className="font-medium">Term Availability</h3>
+          <h3 className={eyebrow}>Term Availability</h3>
           <div className="flex gap-4 justify-center">
             <label className="flex items-center gap-2">
               <input
@@ -193,7 +184,7 @@ const Filter: FC<{
         </div>
 
         <div className="space-y-2">
-          <h3 className="font-medium">Course Type</h3>
+          <h3 className={eyebrow}>Course Type</h3>
           <div className="flex gap-4 justify-center">
             <label className="flex items-center gap-2">
               <input

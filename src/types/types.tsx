@@ -183,6 +183,7 @@ export interface TextInputProps {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   testId?: string;
   minWidth?: string;
+  searchIcon?: boolean;
 }
 
 export interface CourseFormProps {

@@ -4,6 +4,7 @@ import TextInput from "./TextInput";
 import SubmitButton from "../SubmitButton";
 import { useLayoutContext } from "../layout/Layout";
 import { serializeLayout } from "../../utils/serializeLayout";
+import { buttonPrimary } from "../../styles/ui";
 
 enum Save {
   NONE,
@@ -100,13 +101,7 @@ const SaveLayout: FC = () => {
       </p>
       <button
         onClick={handleCopy}
-        className={`
-                    bg-green2 text-white px-4 py-2 rounded
-                    hover:bg-green3 transition-all
-                    dark:bg-green3 dark:hover:bg-green4
-                    mt-4
-                    ${copied && "opacity-80"}
-                `}
+        className={`${buttonPrimary} mt-4 ${copied ? "opacity-80" : ""}`}
       >
         {copied ? "Copied!" : "Copy"}
       </button>

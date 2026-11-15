@@ -3,9 +3,15 @@
 
 /** Text input and select */
 export const input =
-  "w-full rounded-lg border border-neutral3 bg-white px-3 py-2.5 " +
+  "rounded-lg border border-neutral3 bg-white px-3 py-2.5 " +
   "dark:border-gray-500 dark:bg-gray-800 dark:text-gray-50 dark:placeholder-gray-400 " +
   "focus:outline-none focus:ring-2 focus:ring-green2";
+
+/** Filled destructive button */
+export const buttonDanger =
+  "rounded-lg bg-comp2 px-4 py-2 text-sm font-medium text-white " +
+  "hover:bg-comp3 dark:bg-comp3 dark:hover:bg-comp4 " +
+  "transition-[background-color,transform] duration-200 ease-out active:scale-95";
 
 /** Filled button */
 export const buttonPrimary =
@@ -19,9 +25,12 @@ export const buttonSecondary =
   "hover:bg-neutral1 dark:border-gray-500 dark:hover:bg-gray-600 " +
   "transition-[background-color,transform] duration-200 ease-out active:scale-95";
 
+/** Border and corners of a panel, for surfaces that keep their own fill */
+export const panelEdge =
+  "rounded-xl border border-neutral2 dark:border-gray-500 transition-colors duration-150";
+
 /** Bordered surface */
-export const panel =
-  "rounded-xl border border-neutral2 bg-white dark:border-gray-500 dark:bg-gray-600";
+export const panel = `${panelEdge} bg-white dark:bg-gray-600`;
 
 /** Small uppercase label */
 export const eyebrow =

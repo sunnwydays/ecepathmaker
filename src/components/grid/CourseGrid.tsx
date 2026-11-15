@@ -33,6 +33,9 @@ import WillYouGraduate from "../info/WillYouGraduate";
 import { getValidYearTerms } from "../../utils/getValidYearTerms";
 import { getYearTerm } from "../../utils/getYearTerm";
 import Announcement from "../info/Announcement";
+import NoCourses from "../info/NoCourses";
+import { defaultFilters } from "../../utils/defaultFilters";
+import { buttonSecondary } from "../../styles/ui";
 import { addDependencies } from "../../utils/utilImports";
 import { emptyGrid, filterCourses } from "../../utils/utilImports";
 import { evaluate, getMembership, hasFlag } from "../../requirements/evaluate";
@@ -334,18 +337,6 @@ const CourseGrid: FC<CourseGridProps> = ({
     };
   }, [dropError]);
 
-  const buttonStyle = `
-        w-full px-4 py-1 
-        ring-1 ring-opacity-80
-        rounded-lg shadow-sm 
-        bg-white dark:bg-gray-700
-        hover:text-white hover:bg-opacity-90
-        dark:hover:text-gray-50 dark:hover:bg-opacity-90
-        font-medium
-        transition-all duration-300
-        hover:duration-100 active:scale-95
-    `; // specify default text- color, hover:bg- color, and ring- color
-
   // Clear goes straight through; the announcement offers Undo for a few seconds
   const UNDO_MS = 5000;
   const [undo, setUndo] = useState<{
@@ -507,24 +498,14 @@ const CourseGrid: FC<CourseGridProps> = ({
             <button
               onClick={handleCapture}
               // onClick={downloadScreenshot}
-              className={`
-                                ${buttonStyle}
-                                ring-green3 dark:ring-green2
-                                text-green3 dark:text-green2
-                                hover:bg-green2 dark:hover:bg-green4
-                            `}
+              className={`${buttonSecondary} w-full text-green3 dark:text-green2`}
             >
               Screenshot
             </button>
             <button
               onClick={clearGrid}
               data-testid="clear-grid"
-              className={`
-                                ${buttonStyle}
-                                ring-comp3 dark:ring-comp2
-                                text-comp3 dark:text-comp2
-                                hover:bg-comp2 dark:hover:bg-comp4
-                            `}
+              className={`${buttonSecondary} w-full text-comp3 dark:text-comp2`}
             >
               Clear
             </button>
@@ -583,12 +564,7 @@ const CourseGrid: FC<CourseGridProps> = ({
                     }
                   </ul>
                 ) : (
-                <div className="
-                                  w-full text-center 
-                                  text-neutral3 italic select-none"
-                >
-                  No courses match the current filter
-                </div>
+                <NoCourses onReset={() => setFilters({ ...defaultFilters })} />
                 )
               );
             })()}

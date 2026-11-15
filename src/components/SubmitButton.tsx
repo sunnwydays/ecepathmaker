@@ -1,26 +1,27 @@
 import { FC } from "react";
 import { SubmitButtonProps } from "../types/types";
+import { buttonDanger, buttonPrimary } from "../styles/ui";
 
-const SubmitButton: FC<SubmitButtonProps & { variant?: 'primary' | 'danger' }> = ({ 
-  children, 
-  additionalStyles, 
-  disabled, 
+const SubmitButton: FC<SubmitButtonProps & { variant?: 'primary' | 'danger' }> = ({
+  children,
+  additionalStyles,
+  disabled,
   testId,
   variant = 'primary'
 }) => {
   const variants = {
-    primary: "bg-green2 hover:bg-green3 dark:bg-green3 dark:hover:bg-green4 disabled:hover:bg-green2",
-    danger: "bg-comp2 hover:bg-comp3 dark:bg-comp3 dark:hover:bg-comp4 disabled:hover:bg-comp2"
+    primary: `${buttonPrimary} disabled:hover:bg-green2 dark:disabled:hover:bg-green3`,
+    danger: `${buttonDanger} disabled:hover:bg-comp2 dark:disabled:hover:bg-comp3`
   };
 
   return (
     <button
       type="submit"
       className={`
-        text-white px-4 py-2 rounded transition-all whitespace-nowrap
-        disabled:opacity-50 disabled:cursor-not-allowed 
+        whitespace-nowrap
+        disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100
         ${variants[variant]}
-        ${additionalStyles}
+        ${additionalStyles ?? ""}
       `}
       disabled={disabled}
       data-testid={testId}
