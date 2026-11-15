@@ -537,8 +537,8 @@ describe('2026 data sanity', () => {
     expect(missing).toEqual([]);
   });
 
-  it('the override courses exist in mockCourses with the expected flags', () => {
-    expect(mockCourses.ECE357.isSciMath).toBeUndefined();
+  it('the override courses have the expected state in mockCourses', () => {
+    expect(mockCourses.ECE357).toBeUndefined();
     expect(mockCourses.PHY358.isSciMath).toBe(true);
   });
 });

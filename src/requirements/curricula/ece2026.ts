@@ -99,7 +99,9 @@ const program = (
   groups,
   membership,
   // The calendar's Science/Math list for this curriculum adds ECE357 and no
-  // longer has PHY358.
+  // longer has PHY358. ECE357 is an Engineering Science course (prerequisite
+  // ECE259), so it is not in the default course list; it counts if a student
+  // adds it as a custom course.
   flagOverrides: { isSciMath: { include: ["ECE357"], exclude: ["PHY358"] } },
   requirements: rulesFor(main),
   designation: { type: "fixed", value },
