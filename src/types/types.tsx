@@ -40,6 +40,10 @@ export interface MakerCardProps extends DraggableCardProps {
     onToggleExtra?: () => void;
     // Smaller card for a grid cell while the sixth column is visible
     compact?: boolean;
+    // The copy that follows the pointer while dragging
+    overlay?: boolean;
+    // The user just dropped this card here: it fades in
+    landed?: boolean;
     setCustomInfo: React.Dispatch<React.SetStateAction<CourseCardProps>>;
     setPreqString: React.Dispatch<React.SetStateAction<string>>;
     setCoreqString: React.Dispatch<React.SetStateAction<string>>;

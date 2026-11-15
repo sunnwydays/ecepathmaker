@@ -13,6 +13,9 @@ import {
   getGroupColor,
 } from "../../utils/utilImports";
 
+// Details of an expanded card fade in once the size change is under way
+const DETAIL_IN = "animate-in fade-in duration-150 delay-150 fill-mode-backwards";
+
 const MakerCard: FC<MakerCardProps> = (props) => {
   const curriculum = useCurriculum();
   const textColor = getTextColor(props.color);
@@ -60,7 +63,7 @@ const MakerCard: FC<MakerCardProps> = (props) => {
   };
 
   return (
-    <Draggable id={props.id} compact={props.compact}>
+    <Draggable id={props.id} compact={props.compact} overlay={props.overlay} landed={props.landed}>
       {(isExpanded) => {
         // Compact only applies to the collapsed card; the expanded one is full size
         const compact = props.compact && !isExpanded;
@@ -122,14 +125,14 @@ const MakerCard: FC<MakerCardProps> = (props) => {
             </p>
           )}
           {isExpanded && props.preq && props.preq.length > 0 && (
-            <p>Preq: {getPreqLabels(props.preq)}</p>
+            <p className={DETAIL_IN}>Preq: {getPreqLabels(props.preq)}</p>
           )}
           {isExpanded && props.coreq && props.coreq.length > 0 && (
-            <p>Coreq: {getPreqLabels(props.coreq)}</p>
+            <p className={DETAIL_IN}>Coreq: {getPreqLabels(props.coreq)}</p>
           )}
           {isExpanded && props.onToggleExtra && (
             <div
-              className={`absolute top-0 right-10 text-[10px] font-medium leading-none rounded-full p-1 border border-black border-opacity-30 ${
+              className={`${DETAIL_IN} absolute top-0 right-10 text-[10px] font-medium leading-none rounded-full p-1 border border-black border-opacity-30 ${
                 props.isExtra ? "bg-black bg-opacity-30" : "bg-white bg-opacity-20"
               }`}
               onClick={(e) => {
@@ -152,7 +155,7 @@ const MakerCard: FC<MakerCardProps> = (props) => {
           )}
           {isExpanded && (
             <div // because button cannot be a child of a button
-              className="absolute top-0 right-4 text-xs rounded-full p-1"
+              className={`${DETAIL_IN} absolute top-0 right-4 text-xs rounded-full p-1`}
               onClick={handleEdit}
               onKeyDown={(e) => {
                 if (e.key !== "Enter" && e.key !== " ") return;

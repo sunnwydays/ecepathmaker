@@ -17,7 +17,7 @@ const Droppable: FC<DroppableProps> = (props) => {
   const { size, hover } = cellSize(props.compact);
   const styleClasses = `
         absolute
-        transition-all
+        transition-[background-color,width,height]
         flex items-center justify-center
         text-neutral3
         rounded-md

@@ -103,6 +103,14 @@ const CourseGrid: FC<CourseGridProps> = ({
   const [validYearTerms, setValidYearTerms] = useState<ValidYearTerms>(initialValidYearTerms);
   const [activeCourse, setActiveCourse] = useState<UniqueIdentifier | null>(null);
 
+  // The card the user just moved: it fades in at its new spot (and only then)
+  const [landed, setLanded] = useState<UniqueIdentifier | null>(null);
+  useEffect(() => {
+    if (landed === null) return;
+    const timer = setTimeout(() => setLanded(null), 300);
+    return () => clearTimeout(timer);
+  }, [landed]);
+
   const curriculum = useCurriculum();
 
   // Group ids differ between curricula, so a stream filter cannot carry over
@@ -124,7 +132,7 @@ const CourseGrid: FC<CourseGridProps> = ({
     }),
     useSensor(TouchSensor, {
       activationConstraint: {
-        delay: 100,
+        delay: 200,
         tolerance: 5,
       },
     })
@@ -248,7 +256,8 @@ const CourseGrid: FC<CourseGridProps> = ({
     const sourceContainer = coursesUsed[code];
       
     if (!over) {
-      checkPreqRemove(code, sourceContainer);
+      // a card dropped from the bucket onto nothing has not moved
+      if (checkPreqRemove(code, sourceContainer) && sourceContainer) setLanded(code);
       return;
     }
 
@@ -296,6 +305,8 @@ const CourseGrid: FC<CourseGridProps> = ({
       [over.id]: code,
       ...(sourceContainer && { [sourceContainer]: "" }),
     }));
+
+    setLanded(code);
 
     // put active course at the destination
     setCoursesUsed((prev) => ({
@@ -465,6 +476,7 @@ const CourseGrid: FC<CourseGridProps> = ({
                       valid={valid}
                       id={courseCode}
                       code={courseCode}
+                      landed={landed === courseCode}
                       compact={sixthVisible}
                       onToggleExtra={() =>
                         setCourses((prev) => toggleExtra(prev, courseCode))
@@ -548,6 +560,7 @@ const CourseGrid: FC<CourseGridProps> = ({
                     key={courseCode}
                     id={courseCode}
                     code={courseCode}
+                    landed={landed === courseCode}
                     setCustomInfo={setCustomInfo}
                     setPreqString={setPreqString}
                     setCoreqString={setCoreqString}
@@ -587,6 +600,7 @@ const CourseGrid: FC<CourseGridProps> = ({
           {activeCourse && (
             <MakerCard
               valid={true}
+              overlay
               id={activeCourse as string}
               code={activeCourse as string}
               setCustomInfo={setCustomInfo}
