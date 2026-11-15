@@ -25,10 +25,13 @@ This will remove your custom courses, undo your edits, and clear your layout. Th
             }
             }
 
+            // Theme and curriculum are settings, not layout data, so keep them
             const savedTheme = localStorage.getItem('theme');
+            const savedCurriculum = localStorage.getItem('curriculum');
             localStorage.clear();
 
             if (savedTheme) localStorage.setItem('theme', savedTheme);
+            if (savedCurriculum) localStorage.setItem('curriculum', savedCurriculum);
             window.location.reload();
             
         }
