@@ -37,8 +37,14 @@ import { evaluate, getMembership, hasFlag } from "../../requirements/evaluate";
 import { useCurriculum, useLayoutContext } from "../layout/Layout";
 import { clearExtra, toggleExtra } from "../../utils/extraCourses";
 
+// Display order of the grid. The XX row moves to the top in a later commit.
+const ROWS = ["3F", "3S", "4F", "4S", "XX"] as const;
+const FIVE_COLUMNS = [1, 2, 3, 4, 5];
+const SIX_COLUMNS = [1, 2, 3, 4, 5, 6];
+
 enum DropError {
   NONE = "NONE",
+  SIXTH = "SIXTH",
   PREREQ = "PREREQ",
   COREQ = "COREQ",
   DEPEND = "DEPEND",
@@ -59,7 +65,28 @@ const CourseGrid: FC<CourseGridProps> = ({
     setCoursesOnGrid,
     dependencies,
     setDependencies,
+    showSixth,
+    setShowSixth,
   } = useLayoutContext();
+
+  // A filled sixth slot keeps the column visible (a loaded layout, a saved
+  // slot or a signed-in account can have one)
+  const sixthFilled = ROWS.some((term) => coursesOnGrid[`${term}.6`]);
+  const sixthVisible = showSixth || sixthFilled;
+  const columns = sixthVisible ? SIX_COLUMNS : FIVE_COLUMNS;
+
+  const toggleSixth = () => {
+    if (!sixthVisible) {
+      setShowSixth(true);
+      return;
+    }
+    if (sixthFilled) {
+      setCourseToRemove("");
+      setDropError(DropError.SIXTH);
+      return;
+    }
+    setShowSixth(false);
+  };
 
   const [filters, setFilters] = useState<FilterState>({
     searchTerm: "",
@@ -398,23 +425,31 @@ const CourseGrid: FC<CourseGridProps> = ({
     >
       <section className="flex lg:flex-row flex-col gap-x-6 gap-y-4">
         <div
-          className="grid grid-cols-5 gap-2 size-max flex-shrink-0"
+          className={`grid ${
+            sixthVisible ? "grid-cols-6" : "grid-cols-5"
+          } gap-2 size-max flex-shrink-0`}
           ref={screenshotRef}
           data-testid="grid"
         >
-          {Object.keys(emptyGrid).filter((slot) => !slot.endsWith(".6")).map((slot) => {
-              const courseCode: string = coursesOnGrid[slot as GridPositionBase];
+          {ROWS.flatMap((term) =>
+            columns.map((column) => {
+              const slot = `${term}.${column}` as GridPositionBase;
+              const courseCode: string = coursesOnGrid[slot];
+              const valid = validYearTerms[term];
               return (
                 <Droppable
                   key={slot}
                   id={slot}
-                  valid={validYearTerms[getYearTerm(slot as GridPosition)]}
+                  valid={valid}
+                  compact={sixthVisible}
+                  sixth={column === 6}
                 >
                   {courseCode ? (
                     <MakerCard
-                      valid={validYearTerms[getYearTerm(slot as GridPosition)]}
+                      valid={valid}
                       id={courseCode}
                       code={courseCode}
+                      compact={sixthVisible}
                       onToggleExtra={() =>
                         setCourses((prev) => toggleExtra(prev, courseCode))
                       }
@@ -427,10 +462,9 @@ const CourseGrid: FC<CourseGridProps> = ({
                     slot
                   )}
                 </Droppable>
-              )
-          })}
-
-          
+              );
+            })
+          )}
         </div>
         <div>
           {/* Courses to choose from */}
@@ -464,6 +498,18 @@ const CourseGrid: FC<CourseGridProps> = ({
                             `}
             >
               Clear
+            </button>
+            <button
+              onClick={toggleSixth}
+              data-testid="toggle-sixth"
+              className={`
+                                ${buttonStyle}
+                                ring-neutral3 dark:ring-neutral2
+                                text-neutral3 dark:text-neutral2
+                                hover:bg-neutral3 dark:hover:bg-neutral3
+                            `}
+            >
+              {sixthVisible ? "Hide 6th column" : "Show 6th column"}
             </button>
           </div>
           <h2 className="lg:hidden block my-2 text-lg text-center dark:text-gray-50">
@@ -556,6 +602,9 @@ const CourseGrid: FC<CourseGridProps> = ({
               ? `${courseToRemove} is ${courses[courseToRemove].onlyF ? 
                 "fall" : "winter"} only!`
               : `Invalid term for this course!`;
+            break;
+          case DropError.SIXTH:
+            message = "Move the courses out of the 6th column first";
             break;
           case DropError.PREREQ:
             message = "Missing co/prerequisites!";

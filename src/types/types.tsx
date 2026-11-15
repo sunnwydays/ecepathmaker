@@ -38,6 +38,8 @@ export interface MakerCardProps extends DraggableCardProps {
     valid: boolean;
     // Only for cards on the grid: switches the extra (EXT) flag
     onToggleExtra?: () => void;
+    // Smaller card for a grid cell while the sixth column is visible
+    compact?: boolean;
     setCustomInfo: React.Dispatch<React.SetStateAction<CourseCardProps>>;
     setPreqString: React.Dispatch<React.SetStateAction<string>>;
     setCoreqString: React.Dispatch<React.SetStateAction<string>>;
@@ -63,6 +65,9 @@ export interface LayoutContextType {
 
   curriculumId: string;
   setCurriculumId: React.Dispatch<React.SetStateAction<string>>;
+
+  showSixth: boolean;
+  setShowSixth: React.Dispatch<React.SetStateAction<boolean>>;
 
   coursesVersion: number;
   setCoursesVersion: React.Dispatch<React.SetStateAction<number>>;

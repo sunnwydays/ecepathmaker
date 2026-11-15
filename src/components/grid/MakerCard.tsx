@@ -1,4 +1,5 @@
 import { FC } from "react";
+import { cellSize } from "./cellSize";
 import { MakerCardProps } from "../../types/types";
 import { Draggable } from "../../utils/componentImports";
 import { useCurriculum } from "../layout/Layout";
@@ -59,15 +60,18 @@ const MakerCard: FC<MakerCardProps> = (props) => {
   };
 
   return (
-    <Draggable id={props.id}>
-      {(isExpanded) => (
+    <Draggable id={props.id} compact={props.compact}>
+      {(isExpanded) => {
+        // Compact only applies to the collapsed card; the expanded one is full size
+        const compact = props.compact && !isExpanded;
+        return (
         <article
           className={`
                     text-xs
                     ${
                       isExpanded
                         ? "size-[10rem] border-2 border-black border-opacity-20"
-                        : "size-32"
+                        : cellSize(compact).size
                     }
                     transition-[width,height]
                     flex flex-col items-center justify-center 
@@ -87,16 +91,36 @@ const MakerCard: FC<MakerCardProps> = (props) => {
               : "rgba(255, 111, 97, 0.7)",
           }}
         >
-          <h1 className="text-xl font-medium">{props.code}</h1>
+          <h1 className={`${compact ? "text-base" : "text-xl"} font-medium`}>
+            {props.code}
+          </h1>
           <p
             className={`${
-              isExpanded ? "w-36 line-clamp-3" : "w-28 line-clamp-2"
-            } text-center text-sm transition-width]`}
+              isExpanded
+                ? "w-36 line-clamp-3 text-sm"
+                : compact
+                  ? "w-[5.5rem] line-clamp-2 text-xs leading-tight"
+                  : "w-28 line-clamp-2 text-sm"
+            } text-center transition-width]`}
           >
             {props.name}
           </p>
-          {streamLabels && <p>Stream: {streamLabels}</p>}
-          {otherLabels && <p>{otherLabels}</p>}
+          {streamLabels && (
+            <p className={compact ? "text-[10px] leading-tight" : ""}>
+              Stream: {streamLabels}
+            </p>
+          )}
+          {otherLabels && (
+            <p
+              className={
+                compact
+                  ? "text-[10px] leading-tight w-[5.5rem] truncate text-center"
+                  : ""
+              }
+            >
+              {otherLabels}
+            </p>
+          )}
           {isExpanded && props.preq && props.preq.length > 0 && (
             <p>Preq: {getPreqLabels(props.preq)}</p>
           )}
@@ -162,7 +186,8 @@ const MakerCard: FC<MakerCardProps> = (props) => {
             );
           })()}
         </article>
-      )}
+        );
+      }}
     </Draggable>
   );
 };

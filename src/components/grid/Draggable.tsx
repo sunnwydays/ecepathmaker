@@ -1,9 +1,11 @@
 import {useDraggable} from '@dnd-kit/core';
 import { FC, ReactNode, useEffect, useState, useCallback } from 'react';
+import { cellSize } from './cellSize';
 
 interface DraggableProps {
     children: (isExpanded: boolean) => ReactNode;
     id: string;
+    compact?: boolean;
 };
 
 const Draggable:FC<DraggableProps> = (props) => {
@@ -22,7 +24,7 @@ const Draggable:FC<DraggableProps> = (props) => {
   const styleClasses = `
     ${
       isDragging
-        ? "size-32 z-20 rounded-md shadow-lg"
+        ? `${cellSize(props.compact).size} z-20 rounded-md shadow-lg`
         : isExpanded
           ? "z-30"
           : "z-20"
