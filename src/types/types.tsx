@@ -22,6 +22,7 @@ interface ValidCourseTypeFlags {
     isHSS?: boolean;
     isArtSci?: boolean;
     isSciMath?: boolean;
+    isExtra?: boolean; // extra course: on the grid but not for degree credit
 };
 
 export type CourseCardProps = 

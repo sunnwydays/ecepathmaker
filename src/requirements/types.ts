@@ -29,6 +29,8 @@ export type Rule = RuleBase &
       { type: "count"; where: Selector; min: number }
     | // At least one of these course codes is on the grid.
       { type: "courses"; anyOf: string[] }
+    | // At most `max` courses on the grid for degree credit (EXT not counted).
+      { type: "maxCourses"; max: number }
     | // Both halves of one pair, both in the given year, in different terms.
       { type: "capstone"; pairs: [string, string][]; year: string }
     | // Pre-2026 breadth: `kernelAreas` kernel courses, each in a different

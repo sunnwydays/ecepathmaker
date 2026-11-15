@@ -93,10 +93,11 @@ describe('2026 curricula: complete valid plans', () => {
     expect(r.graduates).toBe(true);
     r.results.forEach((x) => {
       expect(x.met).toBe(true);
-      expect(x.have).toBe(x.need);
+      // The course limit is a maximum, so it has room to spare
+      if (x.id !== 'courseLimit') expect(x.have).toBe(x.need);
     });
     expect(r.results.map((x) => x.id)).toEqual([
-      'cs', 'hss', 'economics', 'capstone', 'breadth', 'depth', 'sciMath', 'techElectives',
+      'cs', 'hss', 'economics', 'capstone', 'courseLimit', 'breadth', 'depth', 'sciMath', 'techElectives',
     ]);
     expect(r.designation).toBe('EE');
     expect(r.curriculumId).toBe('ele-2026');
@@ -107,7 +108,8 @@ describe('2026 curricula: complete valid plans', () => {
     expect(r.graduates).toBe(true);
     r.results.forEach((x) => {
       expect(x.met).toBe(true);
-      expect(x.have).toBe(x.need);
+      // The course limit is a maximum, so it has room to spare
+      if (x.id !== 'courseLimit') expect(x.have).toBe(x.need);
     });
     expect(r.designation).toBe('CE');
   });
@@ -423,12 +425,13 @@ describe('evaluate(ecePre2026) results', () => {
   it('lists results in requirement order with have/need on an empty grid', () => {
     const r = evaluate(ecePre2026, { courses: {}, coursesOnGrid: { ...emptyGrid }, coursesUsed: {} });
     expect(r.results.map((x) => x.id)).toEqual([
-      'cs', 'hss', 'economics', 'capstone', 'breadth', 'depth', 'sciMath', 'techElectives',
+      'cs', 'hss', 'economics', 'capstone', 'courseLimit', 'breadth', 'depth', 'sciMath', 'techElectives',
     ]);
     expect(r.results.map((x) => [x.have, x.need])).toEqual([
-      [0, 4], [0, 2], [0, 1], [0, 1], [0, 4], [0, 4], [0, 1], [0, 3],
+      [0, 4], [0, 2], [0, 1], [0, 1], [0, 20], [0, 4], [0, 4], [0, 1], [0, 3],
     ]);
-    expect(r.results.every((x) => !x.met)).toBe(true);
+    // Only the course limit is met on an empty grid
+    expect(r.results.filter((x) => x.met).map((x) => x.id)).toEqual(['courseLimit']);
     expect(r.graduates).toBe(false);
     expect(r.designation).toBeNull();
     expect(r.depthGroups).toEqual([]);
@@ -465,6 +468,7 @@ describe('evaluate(ecePre2026) results', () => {
       ['hss', 2, 2, true],
       ['economics', 1, 1, true],
       ['capstone', 1, 1, true],
+      ['courseLimit', 19, 20, true],
       ['breadth', 4, 4, true],
       ['depth', 4, 4, true],
       ['sciMath', 1, 1, true],
@@ -784,5 +788,60 @@ describe('2026 data sanity', () => {
   it('the override courses have the expected state in mockCourses', () => {
     expect(mockCourses.ECE357).toBeUndefined();
     expect(mockCourses.PHY358).toBeUndefined();
+  });
+});
+
+describe('extra (EXT) courses and the course limit', () => {
+  const extra = (...codes: string[]): CourseList =>
+    Object.fromEntries(codes.map((c) => [c, { ...makeCourse(c), isExtra: true }]));
+  const fillers = (n: number) => Array.from({ length: n }, (_, i) => `FILL${i}`);
+
+  it('an EXT course fills no requirement', () => {
+    const plain = run(ele2026, ['CS1']);
+    expect(result(plain, 'cs')).toMatchObject({ have: 1 });
+    const ext = run(ele2026, ['CS1'], extra('CS1'));
+    expect(result(ext, 'cs')).toMatchObject({ have: 0, met: false });
+  });
+
+  it('an EXT course is absent from groupCounts', () => {
+    expect(run(ele2026, ['ECE313']).groupCounts.A).toBe(1);
+    expect(run(ele2026, ['ECE313'], extra('ECE313')).groupCounts.A).toBe(0);
+  });
+
+  it('marking the only kernel of a depth area EXT breaks depth', () => {
+    const plan = ['ECE311', 'ECE313', 'ECE314', 'ECE318', 'ECE320', 'ECE330', 'ECE410', 'ECE411'];
+    expect(result(run(ele2026, plan), 'depth')).toMatchObject({ met: true });
+    const r = run(ele2026, plan, extra('ECE311'));
+    expect(result(r, 'breadth').met).toBe(false);
+  });
+
+  it('an EXT capstone half fails the capstone rule', () => {
+    expect(result(run(ele2026, ['ECE496', 'ECE497']), 'capstone').met).toBe(true);
+    expect(result(run(ele2026, ['ECE496', 'ECE497'], extra('ECE497')), 'capstone').met).toBe(false);
+  });
+
+  it('20 courses pass the limit and 21 fail it', () => {
+    expect(result(run(ecePre2026, fillers(20)), 'courseLimit')).toMatchObject({ have: 20, need: 20, met: true });
+    expect(result(run(ecePre2026, fillers(21)), 'courseLimit')).toMatchObject({ have: 21, need: 20, met: false });
+  });
+
+  it('21 courses with one EXT pass the limit', () => {
+    const r = run(ecePre2026, fillers(21), extra('FILL0'));
+    expect(result(r, 'courseLimit')).toMatchObject({ have: 20, met: true });
+  });
+
+  it('XX courses count toward the limit', () => {
+    const coursesOnGrid = { ...emptyGrid } as CoursesOnGrid;
+    const codes = fillers(21);
+    codes.forEach((c, i) => {
+      coursesOnGrid[(i < 20 ? SLOTS[i] : 'XX.1') as GridPositionBase] = c;
+    });
+    const r = evaluate(ecePre2026, { courses: {}, coursesOnGrid, coursesUsed: {} });
+    expect(result(r, 'courseLimit')).toMatchObject({ have: 21, met: false });
+  });
+
+  it('is in both 2026 programs too', () => {
+    expect(ele2026.requirements.some((r) => r.id === 'courseLimit')).toBe(true);
+    expect(cpe2026.requirements.some((r) => r.id === 'courseLimit')).toBe(true);
   });
 });

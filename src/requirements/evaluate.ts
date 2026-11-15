@@ -71,8 +71,9 @@ export function evaluate(
   }
 ): EvaluationResult {
   const { courses, coursesOnGrid, coursesUsed } = input;
+  // Extra (EXT) courses are not for degree credit, so no rule sees them.
   const gridCourses = Object.values(coursesOnGrid).filter(
-    (code) => code !== ""
+    (code) => code !== "" && !courses[code]?.isExtra
   );
 
   // Membership per course, looked up once.
@@ -302,6 +303,11 @@ export function evaluate(
           met = rule.pairs.some(([a, b]) => isCapstone(a, b, rule.year));
           have = met ? 1 : 0;
           need = 1;
+          break;
+        case "maxCourses":
+          have = gridCourses.length;
+          need = rule.max;
+          met = have <= need;
           break;
         case "areaBreadth":
         case "areaDepth":
