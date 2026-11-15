@@ -45,7 +45,6 @@ const SIX_COLUMNS = [1, 2, 3, 4, 5, 6];
 
 enum DropError {
   NONE = "NONE",
-  SIXTH = "SIXTH",
   PREREQ = "PREREQ",
   COREQ = "COREQ",
   DEPEND = "DEPEND",
@@ -67,7 +66,6 @@ const CourseGrid: FC<CourseGridProps> = ({
     dependencies,
     setDependencies,
     showSixth,
-    setShowSixth,
   } = useLayoutContext();
 
   // A filled sixth slot keeps the column visible (a loaded layout, a saved
@@ -75,19 +73,6 @@ const CourseGrid: FC<CourseGridProps> = ({
   const sixthFilled = ROWS.some((term) => coursesOnGrid[`${term}.6`]);
   const sixthVisible = showSixth || sixthFilled;
   const columns = sixthVisible ? SIX_COLUMNS : FIVE_COLUMNS;
-
-  const toggleSixth = () => {
-    if (!sixthVisible) {
-      setShowSixth(true);
-      return;
-    }
-    if (sixthFilled) {
-      setCourseToRemove("");
-      setDropError(DropError.SIXTH);
-      return;
-    }
-    setShowSixth(false);
-  };
 
   const [filters, setFilters] = useState<FilterState>({
     searchTerm: "",
@@ -500,18 +485,6 @@ const CourseGrid: FC<CourseGridProps> = ({
             >
               Clear
             </button>
-            <button
-              onClick={toggleSixth}
-              data-testid="toggle-sixth"
-              className={`
-                                ${buttonStyle}
-                                ring-neutral3 dark:ring-neutral2
-                                text-neutral3 dark:text-neutral2
-                                hover:bg-neutral3 dark:hover:bg-neutral3
-                            `}
-            >
-              {sixthVisible ? "Hide 6th column" : "Show 6th column"}
-            </button>
           </div>
           <h2 className="lg:hidden block my-2 text-lg text-center dark:text-gray-50">
             ☝️ Hold and drag courses into the grid,
@@ -603,9 +576,6 @@ const CourseGrid: FC<CourseGridProps> = ({
               ? `${courseToRemove} is ${courses[courseToRemove].onlyF ? 
                 "fall" : "winter"} only!`
               : `Invalid term for this course!`;
-            break;
-          case DropError.SIXTH:
-            message = "Move the courses out of the 6th column first";
             break;
           case DropError.PREREQ:
             message = "Missing co/prerequisites!";

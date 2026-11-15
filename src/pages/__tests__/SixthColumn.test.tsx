@@ -30,12 +30,12 @@ describe('Sixth column', () => {
         renderMaker();
         expect(slotCount()).toBe(25);
         expect(grid()).toHaveClass('grid-cols-5');
-        expect(screen.getByTestId('toggle-sixth')).toHaveTextContent('Show 6th column');
+        expect(screen.getByTestId('toggle-sixth')).toHaveAttribute('aria-checked', 'false');
 
         fireEvent.click(screen.getByTestId('toggle-sixth'));
         expect(slotCount()).toBe(30);
         expect(grid()).toHaveClass('grid-cols-6');
-        expect(screen.getByTestId('toggle-sixth')).toHaveTextContent('Hide 6th column');
+        expect(screen.getByTestId('toggle-sixth')).toHaveAttribute('aria-checked', 'true');
         expect(within(grid()).getByText('3F.6')).toBeInTheDocument();
 
         fireEvent.click(screen.getByTestId('toggle-sixth'));

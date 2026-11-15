@@ -76,7 +76,7 @@ const usingTheMaker: FAQ = [
     },
     {
         question: "How do I plan an overloaded term (6 courses)?",
-        answer: "Click \"Show 6th column\" next to the Screenshot button, then drag a course into the sixth slot of the term. Six courses (3.00 credits) is the calendar's maximum, and students in second year or higher need approval from their advisor to take more than the normal five. The column stays visible while it holds a course."
+        answer: "Switch on the 6th column toggle above the grid, then drag a course into the sixth slot of the term. Six courses (3.00 credits) is the calendar's maximum, and students in second year or higher need approval from their advisor to take more than the normal five. The column stays visible while it holds a course."
     },
     {
         question: "Where do I put a summer course?",
