@@ -105,6 +105,10 @@ const requirements: FAQ = [
         answer: "No, minor/certificate check is not yet implemented, although I am considering adding it in the future."
     },
     {
+        question: "Why does a plan that used to pass now fail (admitted before 2026)?",
+        answer: "Each course now counts once among breadth, depth, science/math and technical electives, as Magellan does. A course in several areas counts for only one of them, and the check now also needs 3 technical electives. 'Possible depth streams' lists every area that can be depth in some valid arrangement."
+    },
+    {
         question: "Anything else that I should know when course planning?",
         answer: "While ECE Pathmaker checks most major requirements, some things are not checked. Make sure you also have:",
         bullets: [
