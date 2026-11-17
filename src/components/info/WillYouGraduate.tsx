@@ -44,12 +44,38 @@ const WillYouGraduate: FC<WillYouGraduateProps> = ({ result, curriculum }) => {
   const basics = result.results.filter((r) => r.section === "basics");
   const groupResults = result.results.filter((r) => r.section === "groups");
 
+  const designationLabel =
+    curriculum.designation.type === "derived" ? "CE/EE" : "Program";
+  const rowClass = "flex items-center gap-1 max-w-60";
+  const muted = "text-neutral-500 dark:text-gray-400";
+
   const renderResult = (r: RequirementResult) => (
-    <li key={r.id} className="flex items-center">
+    <li
+      key={r.id}
+      className={rowClass}
+      aria-label={`${r.label}: ${r.met ? "✅" : "❌"}${
+        r.showProgress ? ` (${r.have}/${r.need})` : ""
+      }`}
+    >
       {r.label}
-      <ClickableTooltip>{r.tooltip}</ClickableTooltip>:{" "}
-      <Tick met={r.met} />
-      {r.showProgress && ` (${r.have}/${r.need})`}
+      <ClickableTooltip>{r.tooltip}</ClickableTooltip>
+      <span className="ml-auto flex items-center gap-1.5 tabular-nums">
+        {r.showProgress && (
+          <span className={`text-sm ${muted}`}>
+            {r.have}/{r.need}
+          </span>
+        )}
+        <Tick met={r.met} />
+      </span>
+    </li>
+  );
+
+  // Indented note under a rule, e.g. which streams can be depth
+  const renderNote = (label: string, groups: string[]) => (
+    <li
+      className={`ml-1 pl-3 border-l-2 border-neutral-300 dark:border-gray-600 text-sm ${muted}`}
+    >
+      {label}: {groups.join(", ")}
     </li>
   );
 
@@ -86,36 +112,34 @@ const WillYouGraduate: FC<WillYouGraduateProps> = ({ result, curriculum }) => {
             {groupResults.map((r) => (
               <Fragment key={r.id}>
                 {renderResult(r)}
-                {r.id === "depth" && result.depthGroups.length > 0 && (
-                  <li>Possible depth streams:{result.depthGroups.join(", ")}</li>
-                )}
-                {r.id === "breadth" && result.breadthGroups.length > 0 && (
-                  <li>Other kernel streams:{result.breadthGroups.join(", ")}</li>
-                )}
+                {r.id === "depth" &&
+                  result.depthGroups.length > 0 &&
+                  renderNote("Depth streams", result.depthGroups)}
+                {r.id === "breadth" &&
+                  result.breadthGroups.length > 0 &&
+                  renderNote("Other kernel streams", result.breadthGroups)}
               </Fragment>
             ))}
 
-            {curriculum.designation.type === "derived" ? (
-              <li>
-                CE/EE:{" "}
+            <li
+              className={`${rowClass} mt-2 pt-2 border-t border-neutral-300 dark:border-gray-600`}
+              aria-label={`${designationLabel}: ${
+                result.designation
+                  ? DESIGNATION_TEXT[result.designation]
+                  : "none yet"
+              }`}
+            >
+              {designationLabel}
+              <span className="ml-auto">
                 {result.designation ? (
                   <b className="font-semibold">
                     {DESIGNATION_TEXT[result.designation]}
                   </b>
                 ) : (
-                  "none"
+                  <span className={muted}>none yet</span>
                 )}
-              </li>
-            ) : (
-              <li>
-                Program:{" "}
-                {result.designation && (
-                  <b className="font-semibold">
-                    {DESIGNATION_TEXT[result.designation]}
-                  </b>
-                )}
-              </li>
-            )}
+              </span>
+            </li>
           </ul>
         </div>
 

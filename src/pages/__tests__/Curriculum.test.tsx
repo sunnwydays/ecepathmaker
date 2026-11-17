@@ -73,8 +73,8 @@ describe('Curriculum picker on the Maker page', () => {
         [1, 2, 3, 4, 5, 6].forEach((n) => {
             expect(screen.getByTestId(`filter-stream-${n}`)).toBeInTheDocument();
         });
-        expect(screen.getByText(/CE\/EE:/)).toBeInTheDocument();
-        expect(screen.queryByText(/Program:/)).not.toBeInTheDocument();
+        expect(getRow(/^CE\/EE:/)).toBeInTheDocument();
+        expect(screen.queryByLabelText(/^Program:/)).not.toBeInTheDocument();
     });
 
     it('lists every curriculum as an option', () => {
@@ -97,7 +97,7 @@ describe('Curriculum picker on the Maker page', () => {
         [1, 2, 3, 4, 5, 6].forEach((n) => {
             expect(screen.queryByTestId(`filter-stream-${n}`)).not.toBeInTheDocument();
         });
-        expect(screen.getByText(/^Program:/).closest('li')).toHaveTextContent('Program: EE 🔌');
+        expect(getRow(/^Program: EE 🔌$/)).toBeInTheDocument();
         expect(screen.queryByText(/CE\/EE:/)).not.toBeInTheDocument();
         expect(localStorage.getItem('curriculum')).toBe('ele-2026');
 
@@ -107,7 +107,7 @@ describe('Curriculum picker on the Maker page', () => {
         expect(screen.getByTestId('filter-stream-A')).toBeInTheDocument();
 
         pick('cpe-2026');
-        expect(screen.getByText(/^Program:/).closest('li')).toHaveTextContent('Program: CE 🖥');
+        expect(getRow(/^Program: CE 🖥$/)).toBeInTheDocument();
         expect(localStorage.getItem('curriculum')).toBe('cpe-2026');
     });
 
