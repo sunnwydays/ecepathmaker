@@ -161,6 +161,37 @@ const WillYouGraduate: FC<WillYouGraduateProps> = ({ result, curriculum }) => {
               No courses in any stream yet
             </p>
           )}
+          <ul className="mt-2 text-sm space-y-0.5">
+            {curriculum.groups.map((g) => {
+              const list = result.groupCourses[g.id];
+              return (
+                <li key={g.id}>
+                  <span className="font-semibold">{g.label}:</span>{" "}
+                  {list.length === 0 ? (
+                    <span className="text-neutral3">none</span>
+                  ) : (
+                    list.map((c, i) => (
+                      <Fragment key={c.code}>
+                        {i > 0 && ", "}
+                        {c.kernel ? (
+                          <b className="font-semibold underline">{c.code}</b>
+                        ) : (
+                          c.code
+                        )}
+                      </Fragment>
+                    ))
+                  )}
+                </li>
+              );
+            })}
+            {curriculum.groups.some((g) =>
+              result.groupCourses[g.id].some((c) => c.kernel)
+            ) && (
+              <li className="text-neutral3">
+                <b className="font-semibold underline">Underlined</b> = kernel
+              </li>
+            )}
+          </ul>
         </div>
       </div>
       <div

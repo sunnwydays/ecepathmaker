@@ -97,6 +97,8 @@ export interface EvaluationResult {
   results: RequirementResult[];
   // Courses on the grid per group, one key for every group in the curriculum.
   groupCounts: Record<string, number>;
+  // Courses on the grid per group, in grid order, same keys as groupCounts.
+  groupCourses: Record<string, { code: string; kernel: boolean }[]>;
   // Only filled when the curriculum has areaDepth / areaBreadth rules.
   // When breadth and depth can be met: the groups that are depth in at least
   // one valid choice, and the other groups that give a kernel in at least

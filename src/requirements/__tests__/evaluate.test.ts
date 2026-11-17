@@ -316,6 +316,23 @@ describe('group counts and membership source', () => {
     expect(r.breadthGroups).toEqual(['7']);
   });
 
+  it('groupCourses lists each course under every declared group, with its kernel flag', () => {
+    const courses: CourseList = {
+      X: { name: 'X', streams: [7], kernel: true },
+      Y: { name: 'Y', streams: [2, 3], kernel: true },
+      Z: { name: 'Z', streams: [3] },
+    };
+    const r = evaluate(ecePre2026, build(['X', 'Y', 'Z'], courses));
+    expect(r.groupCourses).toEqual({
+      1: [],
+      2: [{ code: 'Y', kernel: true }],
+      3: [{ code: 'Y', kernel: true }, { code: 'Z', kernel: false }],
+      4: [],
+      5: [],
+      6: [],
+    });
+  });
+
   it("2026 ignores a course's own streams and kernel", () => {
     const courses: CourseList = {
       ECE313: { name: 'ECE313', streams: [5], kernel: false },

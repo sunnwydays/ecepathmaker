@@ -98,7 +98,11 @@ export function evaluate(
 
   // Group counts (declared groups only)
   const groupCounts: Record<string, number> = {};
-  curriculum.groups.forEach((g) => (groupCounts[g.id] = 0));
+  const groupCourses: EvaluationResult["groupCourses"] = {};
+  curriculum.groups.forEach((g) => {
+    groupCounts[g.id] = 0;
+    groupCourses[g.id] = [];
+  });
   // Every group id on the grid, even undeclared ones (a custom course or an
   // old layout may carry stream 7), and whether it has a kernel course. A
   // plain object keyed by group id keeps integer-like ids in ascending order.
@@ -106,7 +110,10 @@ export function evaluate(
   gridCourses.forEach((code) => {
     const { groups, kernel } = membershipOf.get(code)!;
     groups.forEach((g) => {
-      if (g in groupCounts) groupCounts[g]++;
+      if (g in groupCounts) {
+        groupCounts[g]++;
+        groupCourses[g].push({ code, kernel });
+      }
       if (!tally[g]) tally[g] = { hasKernel: false };
       if (kernel) tally[g].hasKernel = true;
     });
@@ -356,6 +363,7 @@ export function evaluate(
     curriculumId: curriculum.id,
     results,
     groupCounts,
+    groupCourses,
     depthGroups,
     breadthGroups,
     designation,
